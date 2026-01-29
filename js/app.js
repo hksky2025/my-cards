@@ -1,11 +1,11 @@
-// js/app.js
+// js/app.js - 秘書控制中樞
 
 window.currentMode = 'miles';
 
 async function init() {
     loadUserData(); // 來自 core.js
     
-    // 初始化分類選單
+    // 更新分類選單 (根據擁有的卡片)
     updateCategoryDropdown(userProfile.ownedCards);
 
     // 初始化假日資訊 (來自 core.js)
@@ -16,6 +16,7 @@ async function init() {
     refreshUI();
     initNewsScroller();
     
+    // 沒卡片就引導去設定
     if (!userProfile.ownedCards || userProfile.ownedCards.length === 0) switchTab('settings');
 }
 
@@ -26,7 +27,7 @@ function refreshUI() {
 }
 
 window.switchTab = function(t) {
-    document.querySelectorAll('.tab-view').forEach(v => v.classList.add('hidden'));
+    document.querySelectorAll('.tab-content').forEach(v => v.classList.add('hidden'));
     document.getElementById(`view-${t}`).classList.remove('hidden');
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('tab-active', 'text-gray-300'));
     document.getElementById(`btn-${t}`).classList.replace('text-gray-300', 'tab-active');
@@ -40,6 +41,12 @@ window.toggleMode = function(m) {
     const isMiles = m === 'miles';
     document.getElementById('btn-mode-miles').className = isMiles ? "flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-white shadow-sm text-pink-500" : "flex-1 py-2 rounded-xl text-xs font-bold text-gray-400";
     document.getElementById('btn-mode-cash').className = !isMiles ? "flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-white shadow-sm text-pink-500" : "flex-1 py-2 rounded-xl text-xs font-bold text-gray-400";
+    
+    const feeWrap = document.getElementById('fee-deduct-wrap');
+    if (feeWrap) {
+        if (m === 'cash') feeWrap.classList.remove('hidden');
+        else feeWrap.classList.add('hidden');
+    }
     runCalc();
 };
 
@@ -48,18 +55,18 @@ window.runCalc = function() {
     const cat = document.getElementById('category').value;
     const dateInput = document.getElementById('tx-date').value;
     const date = dateInput || new Date().toISOString().split('T')[0];
-    const isHoliday = HolidayManager.isHoliday(date);
+    const isHoliday = (typeof HolidayManager !== 'undefined') ? HolidayManager.isHoliday(date) : false;
     
-    // 假日 UI 提示
+    // 假日 UI 標籤
     const badge = document.getElementById('holiday-badge');
     if(badge) {
         if(isHoliday) badge.classList.remove('hidden');
         else badge.classList.add('hidden');
     }
 
-    // 調用核心計算 (來自 core.js)
+    // 嚴格調用原始核心計算邏輯 (core.js)
     const results = calculateResults(amt, cat, window.currentMode, userProfile, date, isHoliday, {
-        deductFcfForRanking: window.currentMode === 'cash'
+        deductFcfForRanking: !!userProfile.settings.deduct_fcf_ranking && window.currentMode === 'cash'
     });
     renderCalculatorResults(results, window.currentMode);
 };
@@ -68,7 +75,7 @@ window.handleRecord = function(name, dataStr) {
     const data = JSON.parse(decodeURIComponent(dataStr));
     if (!confirm(`確認記帳：${name} $${data.amount.toLocaleString()}？`)) return;
     
-    // 調用 core.js 的 commitTransaction
+    // 調用核心邏輯 (core.js 中的 commitTransaction)
     commitTransaction(data); 
     
     refreshUI();
@@ -101,17 +108,18 @@ window.saveDrop = function(k, v) {
     refreshUI();
 };
 
+window.toggleFeeDeduct = function(checked) {
+    userProfile.settings.deduct_fcf_ranking = checked;
+    saveUserData();
+    runCalc();
+}
+
 window.handleClearHistory = function() {
     if (confirm("清除全部筆記紀錄？")) { userProfile.transactions = []; saveUserData(); renderLedger([]); }
-};
+}
 
 function initNewsScroller() {
-    const news = [
-        "🌟 2026 恒生 Travel+ 海外高達 7% 回贈！",
-        "💻 HSBC Red 網購 4% 穩定發揮中 🚀",
-        "🍱 中銀 Cheers 指定餐飲 10X 積分達成！",
-        "✈️ EveryMile 指定里數低至 $2/里 🐾"
-    ];
+    const news = ["🌟 2026 恒生 Travel+ 海外高達 7%！", "💻 HSBC Red 網購 4% 穩！", "🍱 中銀 Cheers 指定餐飲 10X！", "✈️ EveryMile $2/里！"];
     let i = 0;
     setInterval(() => {
         const el = document.getElementById('news-scroller');
