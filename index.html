@@ -2,66 +2,88 @@
 <html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信用卡管家 Pro 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartWallet Pro 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#6366f1', // 專業靛藍
+                            secondary: '#10b981', // 回贈綠
+                            accent: '#f59e0b', // 金幣黃
+                            dark: '#0f172a'
+                        }
+                    },
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="max-w-md mx-auto bg-gray-50 min-h-screen relative shadow-2xl">
+<body class="bg-slate-50 max-w-md mx-auto min-h-screen pb-24 shadow-2xl shadow-slate-200">
 
-    <!-- Header -->
-    <div class="bg-white p-4 shadow-sm sticky top-0 z-20 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-wallet text-blue-600 mr-2"></i>信用卡管家</h1>
-        <span class="text-xs text-white bg-indigo-600 px-2 py-1 rounded-full font-mono">V2.0 PRO</span>
-    </div>
-
-    <!-- View: Dashboard (進度監控) -->
-    <div id="view-dashboard" class="p-4 space-y-4 tab-content">
-        <div id="dashboard-container"></div>
-        <h3 class="text-xs font-bold text-gray-400 uppercase ml-1 tracking-widest">額度監控 (Cap)</h3>
-        <div id="cap-monitors" class="space-y-3"></div>
-    </div>
-
-    <!-- View: Calculator (計算引擎) -->
-    <div id="view-calculator" class="p-4 space-y-4 tab-content hidden">
-        <div class="flex justify-center mb-4">
-            <div class="bg-gray-200 p-1 rounded-lg flex text-xs font-bold shadow-inner">
-                <button id="btn-mode-miles" onclick="toggleMode('miles')" class="px-4 py-1.5 rounded-md transition-all bg-white text-blue-600 shadow-sm">里數 (Miles)</button>
-                <button id="btn-mode-cash" onclick="toggleMode('cash')" class="px-4 py-1.5 rounded-md transition-all text-gray-500">現金 ($)</button>
-            </div>
+    <!-- App Header -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 p-5 flex justify-between items-center border-b border-slate-100">
+        <div>
+            <h1 class="text-xl font-extrabold text-brand-dark tracking-tight italic">SMART<span class="text-brand-primary">WALLET</span></h1>
+            <div id="date-status-area" class="mt-0.5"></div>
         </div>
-        
-        <div class="bg-white p-5 rounded-3xl shadow-sm space-y-4 border border-gray-100">
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">簽賬金額 (HKD)</label>
+        <div class="bg-brand-primary/10 px-3 py-1 rounded-full">
+            <span class="text-[10px] font-black text-brand-primary uppercase">v2.0 PRO</span>
+        </div>
+    </header>
+
+    <!-- Tab View: Dashboard -->
+    <main id="view-dashboard" class="tab-content active p-4 space-y-5">
+        <div id="top-summary-card"></div>
+        <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-1">進度追蹤 Progress</h2>
+        <div id="dashboard-widgets" class="space-y-4"></div>
+    </main>
+
+    <!-- Tab View: Calculator -->
+    <main id="view-calculator" class="tab-content p-4 space-y-4">
+        <div class="bg-white rounded-[2rem] shadow-xl shadow-indigo-100/40 p-6 border border-white">
+            <div class="flex bg-slate-100 p-1 rounded-2xl mb-6">
+                <button onclick="changeMode('miles')" id="mode-miles" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all bg-white text-brand-primary shadow-sm">里數 Miles</button>
+                <button onclick="changeMode('cash')" id="mode-cash" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all text-slate-500">現金 Cash</button>
+            </div>
+            
+            <div class="space-y-6">
                 <div class="relative">
-                    <span class="absolute left-4 top-3.5 text-gray-400 font-bold">$</span>
-                    <input type="number" id="amount" value="3000" class="w-full pl-8 p-3 bg-gray-50 rounded-2xl text-xl font-black text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" oninput="runCalc()">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">簽賬港幣金額</label>
+                    <input type="number" id="spend-amount" value="3000" oninput="executeLogic()" class="w-full text-4xl font-black p-2 bg-transparent border-b-4 border-slate-50 focus:border-brand-primary transition-all outline-none">
                 </div>
-            </div>
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 ml-1">類別</label>
-                <div class="flex gap-2">
-                    <select id="category" class="w-full p-3 bg-gray-50 rounded-2xl text-sm font-bold appearance-none border-none outline-none" onchange="runCalc()"></select>
-                    <button id="cat-help-btn" class="hidden px-4 bg-gray-50 text-blue-500 rounded-2xl"><i class="fas fa-lightbulb"></i></button>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">消費類別</label>
+                    <div class="relative mt-1">
+                        <select id="spend-category" onchange="executeLogic()" class="w-full p-4 bg-slate-50 rounded-2xl border-none font-extrabold text-slate-700 appearance-none focus:ring-2 focus:ring-brand-primary/20"></select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="calc-results" class="space-y-3 pb-10"></div>
-    </div>
+        <div id="results-engine-output" class="space-y-3 pb-10"></div>
+    </main>
 
-    <!-- View: Ledger & Settings (略，保持原始結構) -->
-    <div id="view-ledger" class="p-4 tab-content hidden"><div id="ledger-container"></div></div>
-    <div id="view-settings" class="p-4 tab-content hidden"><div id="settings-container"></div></div>
+    <!-- Tab View: Wallet & Ledger (省略展示，結構與專業版一致) -->
+    <main id="view-settings" class="tab-content p-4"><div id="wallet-container"></div></main>
+    <main id="view-ledger" class="tab-content p-4"><div id="ledger-container"></div></main>
 
-    <!-- Footer Navigation -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t border-gray-100 flex justify-around p-3 pb-6 z-20 max-w-md mx-auto">
-        <button onclick="switchTab('dashboard')" class="flex flex-col items-center text-blue-600 tab-btn w-1/4" id="btn-dashboard"><i class="fas fa-chart-pie text-xl"></i><span class="text-[10px] font-bold">進度</span></button>
-        <button onclick="switchTab('calculator')" class="flex flex-col items-center text-gray-400 tab-btn w-1/4" id="btn-calculator"><i class="fas fa-calculator text-xl"></i><span class="text-[10px] font-bold">計算</span></button>
-        <button onclick="switchTab('ledger')" class="flex flex-col items-center text-gray-400 tab-btn w-1/4" id="btn-ledger"><i class="fas fa-book text-xl"></i><span class="text-[10px] font-bold">記帳</span></button>
-        <button onclick="switchTab('settings')" class="flex flex-col items-center text-gray-400 tab-btn w-1/4" id="btn-settings"><i class="fas fa-cog text-xl"></i><span class="text-[10px] font-bold">設定</span></button>
-    </div>
+    <!-- Nav Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 px-8 py-4 pb-8 max-w-md mx-auto flex justify-between z-50">
+        <button onclick="switchTab('dashboard')" class="nav-item text-brand-primary" id="nav-dashboard"><i data-lucide="layout-dashboard"></i><span class="text-[9px] font-black mt-1 uppercase">主頁</span></button>
+        <button onclick="switchTab('calculator')" class="nav-item text-slate-300" id="nav-calculator"><i data-lucide="calculator"></i><span class="text-[9px] font-black mt-1 uppercase">計算</span></button>
+        <button onclick="switchTab('ledger')" class="nav-item text-slate-300" id="nav-ledger"><i data-lucide="book-open"></i><span class="text-[9px] font-black mt-1 uppercase">記帳</span></button>
+        <button onclick="switchTab('settings')" class="nav-item text-slate-300" id="nav-settings"><i data-lucide="settings-2"></i><span class="text-[9px] font-black mt-1 uppercase">設定</span></button>
+    </nav>
 
     <script src="js/data.js"></script>
     <script src="js/core.js"></script>
