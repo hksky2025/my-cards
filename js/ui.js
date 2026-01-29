@@ -1,37 +1,40 @@
-// js/ui.js
-const UI_Renderer = {
-    renderList: (results, mode) => {
-        const container = document.getElementById('results-engine-output');
-        container.innerHTML = results.map((r, i) => {
-            const isBest = i === 0;
-            return `
-            <div class="bg-white p-5 rounded-[2rem] border-2 ${isBest ? 'border-brand-primary' : 'border-transparent'} shadow-sm flex justify-between items-center animate-in fade-in slide-in-from-bottom-2">
-                <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-brand-dark text-white uppercase tracking-tighter">${r.bank}</span>
-                        ${r.isCapped ? '<span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase">Cap reached</span>' : ''}
-                    </div>
-                    <div class="font-extrabold text-slate-800 text-lg">${r.name}</div>
-                    <div class="text-[10px] text-brand-primary font-bold mt-0.5">${r.desc || "基本回贈"}</div>
+function createProgressCard(config) {
+    const { title, theme, sections, actionButton } = config;
+    const t = { pink: 'bg-[#FFECF0] border-[#FFD1DC] text-[#FF8BA7]', blue: 'bg-[#EBF8FF] border-[#BEE3F8] text-[#4299E1]', yellow: 'bg-[#FFF9E6] border-[#FAF089] text-[#B7791F]' }[theme] || 'bg-gray-50';
+    return `
+        <div class="${t} border-2 rounded-[2rem] p-5 shadow-sm mb-4">
+            <h3 class="font-black text-sm mb-4">${title}</h3>
+            ${sections.map(s => `
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[10px] font-bold"><span>${s.label}</span><span>${s.val}</span></div>
+                    <div class="w-full bg-white/50 rounded-full h-3"><div class="progress-fill bg-current h-full" style="width:${s.pct}%"></div></div>
                 </div>
-                <div class="text-right">
-                    <div class="text-2xl font-black text-brand-dark">${r.val}<span class="text-xs ml-1 text-slate-400">${r.unit}</span></div>
-                    <div class="flex items-center justify-end gap-1 text-brand-secondary">
-                        <i data-lucide="trending-up" class="w-3 h-3"></i>
-                        <span class="text-[8px] font-black uppercase tracking-widest">Optimized</span>
-                    </div>
-                </div>
-            </div>`;
-        }).join('');
-        lucide.createIcons(); // 每次渲染後啟動 Lucide 圖標
-    },
+            `).join('')}
+            ${actionButton ? `<button onclick="${actionButton.onClick}" class="w-full mt-4 bg-white py-2 rounded-xl font-black text-xs shadow-sm">${actionButton.label}</button>` : ''}
+        </div>`;
+}
 
-    updateStatus: () => {
-        const el = document.getElementById('date-status-area');
-        const isRed = LogicEngine.checkRedDay();
-        el.innerHTML = isRed 
-            ? `<div class="flex items-center gap-1 text-red-500 font-bold text-[10px] uppercase tracking-wider"><i data-lucide="calendar-heart" class="w-3 h-3"></i> 🔴 紅日模式 (BOC 5%+)</div>`
-            : `<div class="flex items-center gap-1 text-slate-400 font-bold text-[10px] uppercase tracking-wider"><i data-lucide="calendar" class="w-3 h-3"></i> ⚪ 平日模式 Normal</div>`;
-        lucide.createIcons();
-    }
-};
+function renderDashboard(profile) {
+    const container = document.getElementById('dashboard-container');
+    document.getElementById('total-rebate').innerText = `$${Math.floor(profile.stats.totalVal)}`;
+    document.getElementById('total-spend').innerText = `$${profile.stats.totalSpend}`;
+    let html = "";
+    profile.ownedCards.forEach(id => {
+        const card = cardsDB.find(c => c.id === id);
+        html += createProgressCard({ title: card.name, theme: 'blue', sections: [{ label: '基本進度', val: '進行中', pct: 50 }] });
+    });
+    container.innerHTML = html || `<div class="text-center py-10 text-gray-400 font-bold">秘書在等你新增卡片 🐾</div>`;
+}
+
+function renderCalculatorResults(results, mode) {
+    const container = document.getElementById('calc-results');
+    container.innerHTML = results.map((res, i) => `
+        <div class="relative p-5 rounded-[2rem] border-2 ${i===0?'bg-chiikawa-yellow border-yellow-200':'bg-white border-gray-100'} shadow-sm mb-4 cursor-pointer" onclick="handleRecord('${res.cardName}','${encodeURIComponent(JSON.stringify(res))}')">
+            ${i===0?'<span class="absolute -top-3 -left-2 bg-yellow-400 text-white text-[10px] px-2 py-1 rounded-lg font-black shadow-sm z-10">秘書推介 🎀</span>':''}
+            <div class="flex justify-between items-center">
+                <div><div class="font-black text-gray-800 text-sm">${res.cardName}</div><div class="text-[10px] text-gray-400 font-bold">${res.breakdown.join(' + ')}</div></div>
+                <div class="text-right"><div class="text-xl font-black text-blue-500">${res.displayVal}<span class="text-[10px] ml-1">${res.displayUnit}</span></div><div class="text-[10px] text-gray-400 font-bold">+ 記一筆 📝</div></div>
+            </div>
+        </div>
+    `).join('');
+}
