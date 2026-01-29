@@ -31,6 +31,14 @@ function toggleCard(id) {
     renderSettings();
 }
 
+function runCalc() {
+    const amt = document.getElementById('amount').value;
+    const cat = document.getElementById('category').value;
+    // 呼叫 Core 引擎
+    const results = Engine.calculateResults(amt, cat, currentMode);
+    // 呼叫 UI 渲染
+    renderCalculatorResults(results, currentMode);
+}
 function renderSettings() {
     const container = document.getElementById('card-selection');
     container.innerHTML = CARDS.map(c => `
@@ -46,5 +54,6 @@ function init() {
     renderSettings();
     updateCalc();
 }
+
 
 init();
