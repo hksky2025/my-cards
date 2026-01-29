@@ -1,57 +1,37 @@
 // js/ui.js
+const UI_Renderer = {
+    renderList: (results, mode) => {
+        const container = document.getElementById('results-engine-output');
+        container.innerHTML = results.map((r, i) => {
+            const isBest = i === 0;
+            return `
+            <div class="bg-white p-5 rounded-[2rem] border-2 ${isBest ? 'border-brand-primary' : 'border-transparent'} shadow-sm flex justify-between items-center animate-in fade-in slide-in-from-bottom-2">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-brand-dark text-white uppercase tracking-tighter">${r.bank}</span>
+                        ${r.isCapped ? '<span class="text-[8px] font-black px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase">Cap reached</span>' : ''}
+                    </div>
+                    <div class="font-extrabold text-slate-800 text-lg">${r.name}</div>
+                    <div class="text-[10px] text-brand-primary font-bold mt-0.5">${r.desc || "基本回贈"}</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-2xl font-black text-brand-dark">${r.val}<span class="text-xs ml-1 text-slate-400">${r.unit}</span></div>
+                    <div class="flex items-center justify-end gap-1 text-brand-secondary">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span class="text-[8px] font-black uppercase tracking-widest">Optimized</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        lucide.createIcons(); // 每次渲染後啟動 Lucide 圖標
+    },
 
-function createProgressCard(config) {
-    const { title, icon, theme, badge, sections } = config;
-    const themeMap = {
-        'blue': { bg: 'bg-blue-50', border: 'border-blue-100', text: 'text-blue-700', bar: 'bg-blue-500' },
-        'red': { bg: 'bg-red-50', border: 'border-red-100', text: 'text-red-700', bar: 'bg-red-500' },
-        'yellow': { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800', bar: 'bg-yellow-400' }
-    };
-    const t = themeMap[theme] || themeMap['blue'];
-
-    let sectionsHtml = sections.map(sec => `
-        <div>
-            <div class="flex justify-between text-xs mb-1">
-                <span class="${t.text} font-bold">${sec.label}</span>
-                <span class="text-gray-500 font-mono">${sec.valueText}</span>
-            </div>
-            <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                <div class="${t.bar} h-full transition-all duration-700" style="width: ${sec.progress}%"></div>
-            </div>
-        </div>
-    `).join('');
-
-    return `
-    <div class="bg-white border-2 ${t.border} rounded-3xl shadow-sm overflow-hidden mb-4">
-        <div class="${t.bg} p-4 border-b ${t.border} flex justify-between items-center">
-            <h3 class="${t.text} font-black text-sm uppercase tracking-wider"><i class="${icon} mr-2"></i>${title}</h3>
-            ${badge ? `<span class="bg-white/50 text-[10px] px-2 py-0.5 rounded-full font-bold">${badge}</span>` : ''}
-        </div>
-        <div class="p-5 space-y-4">${sectionsHtml}</div>
-    </div>`;
-}
-
-function renderDashboard(userProfile) {
-    const container = document.getElementById('dashboard-container');
-    // 範例：渲染 Motion 的 6% 進度條
-    let html = createProgressCard({
-        title: "信銀 Motion 6%",
-        icon: "fas fa-bolt",
-        theme: "blue",
-        badge: "每月重置",
-        sections: [
-            { label: "簽賬進度", valueText: `$${userProfile.usage.motion_spend || 0} / $3,333`, progress: Math.min(100, (userProfile.usage.motion_spend || 0)/3333*100) }
-        ]
-    });
-    // 範例：渲染 HSBC Red 的 4% 進度條
-    html += createProgressCard({
-        title: "HSBC Red 網購",
-        icon: "fas fa-shopping-cart",
-        theme: "red",
-        badge: "Cap: $10,000",
-        sections: [
-            { label: "網購額度", valueText: `$${userProfile.usage.red_spend || 0} / $10,000`, progress: Math.min(100, (userProfile.usage.red_spend || 0)/10000*100) }
-        ]
-    });
-    container.innerHTML = html;
-}
+    updateStatus: () => {
+        const el = document.getElementById('date-status-area');
+        const isRed = LogicEngine.checkRedDay();
+        el.innerHTML = isRed 
+            ? `<div class="flex items-center gap-1 text-red-500 font-bold text-[10px] uppercase tracking-wider"><i data-lucide="calendar-heart" class="w-3 h-3"></i> 🔴 紅日模式 (BOC 5%+)</div>`
+            : `<div class="flex items-center gap-1 text-slate-400 font-bold text-[10px] uppercase tracking-wider"><i data-lucide="calendar" class="w-3 h-3"></i> ⚪ 平日模式 Normal</div>`;
+        lucide.createIcons();
+    }
+};
