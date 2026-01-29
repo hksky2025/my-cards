@@ -3,42 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>信用卡秘書 - Chiikawa</title>
+    <title>信用卡秘書 - Chiikawa Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
         body { font-family: 'Nunito', sans-serif; background-color: #FFFBF0; -webkit-tap-highlight-color: transparent; }
-        .chiikawa-card { border-radius: 2rem; border: 2px solid #F3F4F6; background: white; }
+        .chiikawa-card { border-radius: 2.5rem; border: 2px solid #F3F4F6; background: white; }
         .bg-chiikawa-pink { background-color: #FFECF0; }
         .bg-chiikawa-blue { background-color: #EBF8FF; }
         .bg-chiikawa-yellow { background-color: #FFF9E6; }
-        .tab-active { color: #FF8BA7 !important; border-top: 4px solid #FF8BA7; }
-        .progress-fill { transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 999px; }
-        .tab-content { transition: opacity 0.2s ease-in-out; }
+        .tab-active { color: #FF8BA7 !important; border-top: 4px solid #FF8BA7; font-weight: 900; }
+        .progress-fill { transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1); border-radius: 999px; }
     </style>
 </head>
 <body class="max-w-md mx-auto min-h-screen pb-28 px-4">
-
     <!-- Header -->
-    <div class="pt-8 pb-4 flex justify-between items-center">
+    <div class="pt-8 pb-4 flex justify-between items-center px-2">
         <div>
             <h1 class="text-2xl font-black text-gray-800">信用卡秘書 <span class="text-pink-400">🎀</span></h1>
-            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Chiikawa 2026</p>
+            <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">2026 Updated Version</p>
         </div>
         <div class="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center border-2 border-pink-100 text-2xl">🐰</div>
     </div>
 
-    <!-- News -->
-    <div class="bg-chiikawa-yellow border-2 border-yellow-100 p-3 rounded-2xl mb-6 flex items-center gap-3">
+    <!-- News Ticker -->
+    <div class="bg-chiikawa-yellow border-2 border-yellow-100 p-3 rounded-[1.5rem] mb-6 flex items-center gap-3 overflow-hidden shadow-sm">
         <span class="bg-yellow-400 text-white text-[10px] px-2 py-1 rounded-lg font-bold">NEWS</span>
-        <div id="news-scroller" class="text-xs text-gray-600 font-bold truncate tracking-tight">🌟 秘書正在讀取 2026 年最新回贈邏輯...</div>
+        <div id="news-scroller" class="text-xs text-gray-600 font-bold truncate">🌟 正在準備 2026 年最新回贈攻略...</div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Views -->
     <main>
-        <!-- Dashboard -->
-        <div id="view-dashboard" class="tab-content space-y-6">
+        <div id="view-dashboard" class="tab-view space-y-6">
             <div class="bg-white border-2 border-gray-100 p-6 chiikawa-card shadow-sm">
                 <div class="flex justify-between items-end">
                     <div>
@@ -52,52 +49,54 @@
                 </div>
             </div>
             <div class="space-y-4">
-                <h3 class="text-sm font-black text-gray-400 ml-2">回贈進度條 🐾</h3>
-                <div id="dashboard-container"></div>
+                <h3 class="text-sm font-black text-gray-400 ml-4">我的回贈進度 🐾</h3>
+                <div id="dashboard-container" class="space-y-4"></div>
             </div>
         </div>
 
-        <!-- Calculator -->
-        <div id="view-calculator" class="tab-content hidden space-y-4">
+        <div id="view-calculator" class="tab-view hidden space-y-4">
             <div class="bg-white border-2 border-gray-100 p-6 chiikawa-card shadow-sm space-y-6">
                 <div class="flex bg-gray-100 p-1 rounded-2xl">
-                    <button id="btn-mode-miles" onclick="toggleMode('miles')" class="flex-1 py-2 rounded-xl text-xs font-bold bg-white shadow-sm text-pink-500">里數 Miles</button>
+                    <button id="btn-mode-miles" onclick="toggleMode('miles')" class="flex-1 py-2 rounded-xl text-xs font-bold transition-all bg-white shadow-sm text-pink-500">里數 Miles</button>
                     <button id="btn-mode-cash" onclick="toggleMode('cash')" class="flex-1 py-2 rounded-xl text-xs font-bold text-gray-400">現金 Cash</button>
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 ml-1">簽賬金額 (HKD)</label>
+                    <label class="block text-[10px] font-black text-gray-400 mb-2 ml-1 uppercase">簽賬金額 (HKD)</label>
                     <input type="number" id="amount" value="3000" class="w-full p-4 bg-chiikawa-blue rounded-2xl text-xl font-black outline-none border-2 border-transparent focus:border-blue-200" oninput="runCalc()">
                 </div>
                 <div>
-                    <label class="block text-xs font-black text-gray-400 mb-2 ml-1">消費類別</label>
-                    <div class="flex gap-2">
-                        <select id="category" class="w-full p-4 bg-chiikawa-pink rounded-2xl text-sm font-bold appearance-none outline-none" onchange="runCalc()"></select>
-                    </div>
+                    <label class="block text-[10px] font-black text-gray-400 mb-2 ml-1 uppercase">在哪裡消費？</label>
+                    <select id="category" class="w-full p-4 bg-chiikawa-pink rounded-2xl text-sm font-bold appearance-none outline-none" onchange="runCalc()"></select>
                 </div>
                 <div class="flex justify-between items-center px-1">
-                    <div class="text-[10px] font-bold text-gray-400 uppercase">📅 簽賬日期</div>
-                    <input type="date" id="tx-date" class="text-[10px] font-bold p-1 bg-gray-100 rounded" onchange="runCalc()">
+                    <div id="holiday-badge" class="hidden text-[10px] font-bold text-red-500 bg-red-50 px-2 py-1 rounded-lg border border-red-100">🔴 公眾假期</div>
+                    <input type="date" id="tx-date" class="text-[10px] font-bold p-1 bg-gray-50 rounded" onchange="runCalc()">
                 </div>
             </div>
-            <div id="calc-results" class="space-y-3"></div>
+            <div id="calc-results" class="space-y-4"></div>
         </div>
 
-        <!-- Ledger -->
-        <div id="view-ledger" class="tab-content hidden"><div id="ledger-container"></div></div>
-
-        <!-- Settings -->
-        <div id="view-settings" class="tab-content hidden"><div id="settings-container"></div></div>
+        <div id="view-ledger" class="tab-view hidden"><div id="ledger-container"></div></div>
+        <div id="view-settings" class="tab-view hidden"><div id="settings-container"></div></div>
     </main>
 
     <!-- Nav Bar -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100 flex justify-around p-3 pb-8 z-50 max-w-md mx-auto">
-        <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center w-1/4 tab-active" id="btn-dashboard"><i class="fas fa-paw text-xl mb-1"></i><span class="text-[10px] font-bold">進度</span></button>
-        <button onclick="switchTab('calculator')" class="nav-btn flex flex-col items-center w-1/4 text-gray-300" id="btn-calculator"><i class="fas fa-calculator text-xl mb-1"></i><span class="text-[10px] font-bold">計算</span></button>
-        <button onclick="switchTab('ledger')" class="nav-btn flex flex-col items-center w-1/4 text-gray-300" id="btn-ledger"><i class="fas fa-book-open text-xl mb-1"></i><span class="text-[10px] font-bold">記帳</span></button>
-        <button onclick="switchTab('settings')" class="nav-btn flex flex-col items-center w-1/4 text-gray-300" id="btn-settings"><i class="fas fa-cookie-bite text-xl mb-1"></i><span class="text-[10px] font-bold">設定</span></button>
+        <button onclick="switchTab('dashboard')" class="nav-btn flex flex-col items-center w-1/4 tab-active" id="btn-dashboard">
+            <i class="fas fa-paw text-xl mb-1"></i><span class="text-[10px] font-bold">進度</span>
+        </button>
+        <button onclick="switchTab('calculator')" class="nav-btn flex flex-col items-center w-1/4 text-gray-300" id="btn-calculator">
+            <i class="fas fa-calculator text-xl mb-1"></i><span class="text-[10px] font-bold">計算</span>
+        </button>
+        <button onclick="switchTab('ledger')" class="nav-btn flex flex-col items-center w-1/4 text-gray-300" id="btn-ledger">
+            <i class="fas fa-book-open text-xl mb-1"></i><span class="text-[10px] font-bold">記帳</span>
+        </button>
+        <button onclick="switchTab('settings')" class="nav-btn flex flex-col items-center w-1/4 text-gray-300" id="btn-settings">
+            <i class="fas fa-cookie-bite text-xl mb-1"></i><span class="text-[10px] font-bold">設定</span>
+        </button>
     </nav>
 
-    <!-- 腳本加載：順序極其重要 -->
+    <!-- Scripts 加載順序不能亂 -->
     <script src="js/data_cards.js"></script>
     <script src="js/data_categories.js"></script>
     <script src="js/data_modules.js"></script>
