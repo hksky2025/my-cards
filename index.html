@@ -3,116 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>信用卡秘書 - Minimalist</title>
+    <title>信用卡秘書 - Minimalist 2026</title>
+    <!-- 這兩段是介面的靈魂，必須保留 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f8fafc; color: #1e293b; }
+        body { background-color: #f1f5f9; color: #334155; -webkit-tap-highlight-color: transparent; }
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .nav-btn.active { color: #2563eb; border-top: 2px solid #2563eb; }
-        input, select { border: 1px solid #e2e8f0; }
+        .tab-content.active { display: block; animation: fadeIn 0.2s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .nav-btn.active { color: #2563eb; border-top: 3px solid #2563eb; }
     </style>
 </head>
-<body class="max-w-md mx-auto min-h-screen pb-20">
+<body class="max-w-md mx-auto min-h-screen pb-24">
 
     <!-- Header -->
-    <div class="bg-white border-b border-gray-200 p-4 sticky top-0 z-50 flex justify-between items-center">
-        <h1 class="text-lg font-bold flex items-center gap-2">
-            <i class="fas fa-credit-card text-blue-600"></i> 信用卡秘書
+    <div class="bg-white border-b border-gray-200 p-4 sticky top-0 z-50 flex justify-between items-center shadow-sm">
+        <h1 class="text-xl font-extrabold text-gray-800 tracking-tight">
+            <i class="fas fa-wallet text-blue-600 mr-2"></i>信用卡秘書
         </h1>
-        <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold uppercase">V2.0 穩定版</span>
+        <span class="text-[10px] bg-blue-600 text-white px-2 py-0.5 rounded-md font-bold">STABLE 2.1</span>
     </div>
 
-    <!-- News (Optional) -->
+    <!-- News Banner -->
     <div class="p-4">
-        <div class="bg-blue-50 border border-blue-100 p-3 rounded-lg flex items-center gap-3">
-            <div class="bg-blue-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">NEW</div>
-            <div id="news-scroller" class="text-xs text-blue-800 font-medium truncate">歡迎使用！數據已更新至 2026 年最新政策。</div>
+        <div class="bg-white border border-blue-100 p-3 rounded-xl flex items-center gap-3 shadow-sm">
+            <div class="bg-blue-100 text-blue-700 text-[10px] px-2 py-1 rounded font-black">NEWS</div>
+            <div id="news-scroller" class="text-xs text-gray-600 font-bold truncate">🌟 2026 數據已就緒，請在設定中開啟你的信用卡。</div>
         </div>
     </div>
 
-    <!-- Views -->
-    <main class="px-4 pb-10">
-        <!-- Dashboard -->
+    <!-- Main Content -->
+    <main class="px-4">
+        <!-- Dashboard (進度) -->
         <div id="view-dashboard" class="tab-content active space-y-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                <div class="flex justify-between items-end">
+            <div class="bg-gradient-to-br from-blue-600 to-blue-700 p-6 rounded-2xl shadow-lg text-white">
+                <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-gray-400 text-xs font-bold uppercase tracking-wider">本月預計回贈</p>
-                        <h2 id="total-rebate" class="text-3xl font-bold text-gray-900">$0</h2>
+                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">本月預計省下</p>
+                        <h2 id="total-rebate" class="text-3xl font-black">$0</h2>
                     </div>
-                    <div class="text-right text-gray-500">
-                        <p class="text-[10px] font-bold uppercase">總簽賬</p>
-                        <p id="total-spend" class="text-sm font-bold">$0</p>
+                    <div class="text-right">
+                        <p class="text-blue-100 text-[10px] font-bold uppercase tracking-widest mb-1">總簽賬額</p>
+                        <p id="total-spend" class="text-lg font-bold text-blue-50 leading-none">$0</p>
                     </div>
                 </div>
             </div>
             <div id="dashboard-container" class="space-y-3"></div>
         </div>
 
-        <!-- Calculator -->
+        <!-- Calculator (計算) -->
         <div id="view-calculator" class="tab-content space-y-4">
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 space-y-5">
-                <!-- Mode Switcher -->
-                <div class="flex bg-gray-100 p-1 rounded-lg">
-                    <button id="btn-mode-miles" onclick="toggleMode('miles')" class="flex-1 py-1.5 rounded-md text-xs font-bold transition-all bg-white text-blue-600 shadow-sm">顯示里數</button>
-                    <button id="btn-mode-cash" onclick="toggleMode('cash')" class="flex-1 py-1.5 rounded-md text-xs font-bold text-gray-500">顯示現金 ($)</button>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-5">
+                <!-- 里數/現金 切換 -->
+                <div class="flex bg-gray-100 p-1 rounded-xl">
+                    <button id="btn-mode-miles" onclick="toggleMode('miles')" class="flex-1 py-2 rounded-lg text-xs font-black transition-all bg-white text-blue-600 shadow-sm">里數 MILES</button>
+                    <button id="btn-mode-cash" onclick="toggleMode('cash')" class="flex-1 py-2 rounded-lg text-xs font-black text-gray-500">現金 CASH</button>
                 </div>
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-widest">簽賬金額 (HKD)</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-3.5 text-gray-400 text-sm">$</span>
-                            <input type="number" id="amount" value="3000" class="w-full pl-7 p-3 bg-gray-50 rounded-lg text-lg font-bold focus:ring-2 focus:ring-blue-500 outline-none transition-all" oninput="runCalc()">
-                        </div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-widest ml-1">簽賬金額 (HKD)</label>
+                        <input type="number" id="amount" value="3000" class="w-full p-3 bg-gray-50 rounded-xl text-xl font-bold outline-none border border-transparent focus:border-blue-300 transition-all" oninput="runCalc()">
                     </div>
 
                     <div>
-                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-widest">消費類別</label>
-                        <select id="category" class="w-full p-3 bg-gray-50 rounded-lg text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none appearance-none" onchange="runCalc()"></select>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1 tracking-widest ml-1">消費類別</label>
+                        <select id="category" class="w-full p-3 bg-gray-50 rounded-xl text-sm font-bold outline-none border border-transparent focus:border-blue-300 appearance-none" onchange="runCalc()"></select>
                     </div>
 
-                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                        <span class="text-[10px] font-bold text-gray-400 uppercase">📅 簽賬日期</span>
-                        <input type="date" id="tx-date" class="text-xs font-bold bg-transparent outline-none" onchange="runCalc()">
+                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
+                        <span class="text-[10px] font-black text-gray-400 uppercase">📅 簽賬日期</span>
+                        <input type="date" id="tx-date" class="text-xs font-bold bg-transparent outline-none cursor-pointer" onchange="runCalc()">
                     </div>
                 </div>
             </div>
             <div id="calc-results" class="space-y-3"></div>
         </div>
 
-        <!-- Ledger -->
+        <!-- Ledger (記帳) -->
         <div id="view-ledger" class="tab-content space-y-4">
-            <div class="flex justify-between items-center px-1 pt-2">
-                <h3 class="font-bold text-gray-800 text-sm uppercase tracking-wider">最近記錄</h3>
-                <button onclick="handleClearHistory()" class="text-[10px] text-red-500 font-bold hover:underline">清除紀錄</button>
+            <div class="flex justify-between items-center px-1">
+                <h3 class="font-black text-gray-800 text-sm uppercase tracking-widest">最近消費記錄</h3>
+                <button onclick="handleClearHistory()" class="text-[10px] text-red-500 font-bold hover:underline">清除</button>
             </div>
-            <div id="ledger-container" class="space-y-3"></div>
+            <div id="ledger-container" class="space-y-2"></div>
         </div>
 
-        <!-- Settings -->
+        <!-- Settings (設定) -->
         <div id="view-settings" class="tab-content space-y-4">
-            <div id="settings-container" class="space-y-4 pt-2"></div>
+            <div id="settings-container" class="space-y-4"></div>
         </div>
     </main>
 
-    <!-- Navigation -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-2 pb-6 z-50 max-w-md mx-auto shadow-lg">
+    <!-- Bottom Nav -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-2 pb-8 z-50 max-w-md mx-auto">
         <button onclick="switchTab('dashboard')" class="nav-btn active flex flex-col items-center w-1/4 pt-2" id="btn-dashboard">
-            <i class="fas fa-chart-pie text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">進度</span>
+            <i class="fas fa-chart-line text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">進度</span>
         </button>
         <button onclick="switchTab('calculator')" class="nav-btn flex flex-col items-center w-1/4 pt-2 text-gray-400" id="btn-calculator">
             <i class="fas fa-calculator text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">計算</span>
         </button>
         <button onclick="switchTab('ledger')" class="nav-btn flex flex-col items-center w-1/4 pt-2 text-gray-400" id="btn-ledger">
-            <i class="fas fa-receipt text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">記帳</span>
+            <i class="fas fa-history text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">記錄</span>
         </button>
         <button onclick="switchTab('settings')" class="nav-btn flex flex-col items-center w-1/4 pt-2 text-gray-400" id="btn-settings">
-            <i class="fas fa-cog text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">設定</span>
+            <i class="fas fa-sliders-h text-xl mb-1"></i><span class="text-[10px] font-bold uppercase">設定</span>
         </button>
     </nav>
 
-    <!-- 原始數據與邏輯檔案 -->
+    <!-- 加載數據與邏輯 -->
     <script src="js/data_cards.js"></script>
     <script src="js/data_categories.js"></script>
     <script src="js/data_modules.js"></script>
