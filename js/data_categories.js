@@ -1,7 +1,11 @@
+// js/data_categories.js
+
 const redHotCategories = {
     "dining": ["dining"],
-    "world": ["overseas", "overseas_jkt", "overseas_tw", "overseas_cn", "overseas_other"],
-    "home": ["grocery", "telecom"],
+    "world": ["overseas", "china_consumption"],
+    "home": ["grocery", "telecom", "electronics", "moneyback_merchant"],
     "enjoyment": ["transport", "entertainment", "travel"],
-    "style": ["apparel", "health_beauty"]
+    "style": ["apparel", "department_store", "health_beauty"]
 };
+
+// 2. 模組邏輯
