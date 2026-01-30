@@ -1,186 +1,940 @@
-// js/ui.js
+// js/ui.js - V10.10 (Fix Winter Promo Reward Bar)
 
+function escapeHtml(input) {
+    return String(input)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+// Helper: Calculate days remaining
+function getDaysLeft(dateStr) {
+    if (!dateStr) return null;
+    const end = new Date(dateStr);
+    const now = new Date();
+    const diff = end - now;
+    if (diff < 0) return 0;
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+}
+
+// Helper: Standard Date Display (YYYY-MM-DD (剩 X 日))
+function formatDateWithDaysLeft(dateStr) {
+    if (!dateStr) return "";
+    const days = getDaysLeft(dateStr);
+    return `${dateStr} (剩 ${days} 日)`;
+}
+
+// Helper: Reset Date Display (重置於 YYYY-MM-DD (剩 X 日))
+function formatResetDate(dateStr) {
+    if (!dateStr) return "";
+    const days = getDaysLeft(dateStr);
+    return `於 ${dateStr} 重置 (剩 ${days} 日)`;
+}
+
+// Helper: Promo End Date Display (推廣期至 YYYY-MM-DD (剩 X 日))
+function formatPromoDate(dateStr) {
+    if (!dateStr) return "";
+    const days = getDaysLeft(dateStr);
+    return `推廣期至 ${dateStr} (剩 ${days} 日)`;
+}
+
+// Helper: Get Month End Date String (e.g. "2026-01-31")
+function getMonthEndStr() {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(lastDay.getDate()).padStart(2, '0');
+    return `${now.getFullYear()}-${m}-${d}`;
+}
+
+// Helper: Get Quarter End Date String (e.g. "2026-03-31")
+function getQuarterEndStr() {
+    const now = new Date();
+    const currentMonth = now.getMonth(); // 0-11
+    const endMonth = Math.floor(currentMonth / 3) * 3 + 2;
+    const year = now.getFullYear();
+    const lastDay = new Date(year, endMonth + 1, 0);
+    const m = String(endMonth + 1).padStart(2, '0');
+    const d = String(lastDay.getDate()).padStart(2, '0');
+    return `${year}-${m}-${d}`;
+}
+
+function getMonthTotals(transactions) {
+    if (!Array.isArray(transactions)) return { spend: 0, reward: 0, count: 0 };
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth();
+    let spend = 0;
+    let reward = 0;
+    let count = 0;
+    transactions.forEach(tx => {
+        const d = tx.date ? new Date(tx.date) : null;
+        if (!d || Number.isNaN(d.getTime())) return;
+        if (d.getFullYear() !== y || d.getMonth() !== m) return;
+        spend += Number(tx.amount) || 0;
+        reward += Number(tx.rebateVal) || 0;
+        count += 1;
+    });
+    return { spend, reward, count };
+}
+
+// Helper: Render Warning Card (Yellow/Black for Not Registered)
+function renderWarningCard(title, icon, description, settingKey) {
+    return `<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-xl shadow-sm mb-4">
+        <div class="flex items-start">
+            <div class="flex-shrink-0">
+                <i class="fas fa-exclamation-triangle text-yellow-600 text-xl mt-1"></i>
+            </div>
+            <div class="ml-3 w-full">
+                <h3 class="text-sm font-bold text-yellow-800">${title}</h3>
+                <div class="mt-1 text-xs text-yellow-700 font-bold mb-2">
+                    ⚠️ 尚未登記 (NOT REGISTERED)
+                </div>
+                <div class="text-[10px] text-yellow-600 mb-2">${description || "請前往設定頁面開啟此推廣。"}</div>
+                <button onclick="toggleSetting('${settingKey}'); refreshUI();" class="text-xs bg-yellow-200 hover:bg-yellow-300 text-yellow-800 px-3 py-1.5 rounded-lg font-bold transition-colors">
+                    立即開啟
+                </button>
+            </div>
+        </div>
+    </div>`;
+}
+
+// Helper: Toggle Collapsible Section
+function toggleCollapsible(id) {
+    const content = document.getElementById(id);
+    const icon = document.getElementById(id + '-icon');
+    if (content && icon) {
+        content.classList.toggle('expanded');
+        icon.classList.toggle('expanded');
+    }
+}
+
+// Shared Category Definitions
 const CATEGORY_DEF = [
-    { v: "general", t: "🛒 本地零售 (General)" },
-    { v: "dining", t: "🍱 肚子餓了 (Dining)" },
+    { v: "general", t: "🛒 本地零售 (Local Retail)" },
+    { v: "dining", t: "🍱 餐飲 (Dining)" },
     { v: "online", t: "💻 網上購物 (Online)" },
+    // Split Overseas Category - 3 Way
     { v: "overseas_jkt", t: "🇯🇵🇰🇷🇹🇭 海外 (日韓泰)" },
     { v: "overseas_tw", t: "🇹🇼 海外 (台灣)" },
     { v: "overseas_cn", t: "🇨🇳🇲🇴 海外 (內地澳門)" },
     { v: "overseas_other", t: "🌎 海外 (其他)" },
     { v: "alipay", t: "📱 Alipay / WeChat Pay" },
-    { v: "transport", t: "🚌 交通出行 (Transport)" },
-    { v: "grocery", t: "🥦 超市補貨 (Grocery)" },
-    { v: "travel", t: "🧳 想要旅遊 (Travel)" },
-    { v: "entertainment", t: "🎬 看場電影 (Cinema)" },
-    { v: "apparel", t: "👕 買漂亮衣服 (Apparel)" },
-    { v: "health_beauty", t: "💄 美妝護理 (Beauty)" },
-    { v: "telecom", t: "📱 電訊電器 (Telecom)" },
-    { v: "moneyback_merchant", t: "🅿️ 易賞錢商戶 (百佳/屈臣氏)", req: 'hsbc_easy' },
-    { v: "tuition", t: "🎓 大學學費 (Tuition)", req: 'hsbc_gold_student' },
-    { v: "red_designated", t: "🌹 Red 指定 8% 商戶", req: 'hsbc_red' },
-    { v: "em_designated_spend", t: "🚋 EveryMile $2/里商戶", req: 'hsbc_everymile' },
-    { v: "smart_designated", t: "🛍️ Smart 指定 5% 商戶", req: 'sc_smart' },
-    { v: "chill_merchant", t: "☕ Chill 指定 10% 商戶", req: 'boc_chill' },
-    { v: "go_merchant", t: "🚀 Go 商戶", req: 'boc_go_diamond' }
+    { v: "gym", t: "🏋️ 健身/運動服飾" },
+    { v: "medical", t: "👨‍⚕️ 醫療服務" },
+    { v: "transport", t: "🚌 交通 (Transport)" },
+    { v: "grocery", t: "🥦 超市 (Grocery)" },
+    { v: "travel", t: "🧳 旅遊商戶 (Travel)" },
+    { v: "entertainment", t: "🎬 娛樂/電影 (Entertainment)" },
+    { v: "apparel", t: "👕 服飾/百貨 (Apparel/Dept)" },
+    { v: "health_beauty", t: "💄 美妝/護理 (Beauty/Watsons)" },
+    { v: "telecom", t: "📱 電訊/電器 (Telecom/Elec)" },
+    // Dynamic/Card-specific
+    { v: "moneyback_merchant", t: "🅿️ 易賞錢商戶 (百佳/屈臣氏/豐澤)", req: 'hsbc_easy' },
+    { v: "tuition", t: "🎓 學費 (Tuition)", req: 'hsbc_gold_student' },
+    { v: "red_designated", t: "🌹 Red 指定商戶 (8%)", req: 'hsbc_red' },
+    { v: "em_designated_spend", t: "🚋 EveryMile 指定 ($2/里)", req: 'hsbc_everymile' },
+    { v: "smart_designated", t: "🛍️ Smart 指定商戶 (5%)", req: 'sc_smart' },
+    { v: "cathay_hkexpress", t: "🛫 國泰/HK Express ($2/里)", req: (cards) => cards.some(id => id.startsWith('sc_cathay')) },
+    { v: "citi_club_merchant", t: "🛍️ The Club 指定商戶 (4%)", req: 'citi_club' },
+    { v: "chill_merchant", t: "🎬 Chill商戶 (影視/咖啡/Uniqlo)", req: 'boc_chill' },
+    { v: "go_merchant", t: "🚀 Go商戶", req: 'boc_go_diamond' }
 ];
 
-function renderDashboard(profile) {
-    const container = document.getElementById('dashboard-container');
-    document.getElementById('total-rebate').innerText = `$${Math.floor(profile.stats.totalVal).toLocaleString()}`;
-    document.getElementById('total-spend').innerText = `$${Math.floor(profile.stats.totalSpend).toLocaleString()}`;
+function updateCategoryDropdown(ownedCards) {
+    const select = document.getElementById('category');
+    const currentVal = select.value;
 
-    let html = "";
-    const renderedCaps = new Set();
-
-    profile.ownedCards.forEach(cardId => {
-        const card = cardsDB.find(c => c.id === cardId);
-        if (!card || !card.modules) return;
-        card.modules.forEach(mid => {
-            const mod = modulesDB[mid];
-            if (!mod || !mod.cap_key || renderedCaps.has(mod.cap_key)) return;
-            renderedCaps.add(mod.cap_key);
-            const used = profile.usage[mod.cap_key] || 0;
-            const pct = Math.min(100, (used / mod.cap_limit) * 100);
-            html += `
-                <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[11px] font-bold text-gray-700 uppercase">${card.name}</span>
-                        <span class="text-[10px] font-mono text-gray-400">${Math.floor(used).toLocaleString()} / ${mod.cap_limit.toLocaleString()}</span>
-                    </div>
-                    <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-blue-500 h-full" style="width: ${pct}%"></div>
-                    </div>
-                    <p class="text-[9px] text-gray-400 font-bold uppercase mt-1 italic">${mod.desc}</p>
-                </div>`;
-        });
+    let options = CATEGORY_DEF.filter(cat => {
+        if (!cat.req) return true;
+        if (typeof cat.req === 'function') return cat.req(ownedCards);
+        return ownedCards.includes(cat.req);
     });
-    container.innerHTML = html || `<div class="text-center py-10 text-gray-300 text-xs">未有進度資料 🐾</div>`;
+
+    select.innerHTML = options.map(o => `<option value="${o.v}">${o.t}</option>`).join('');
+    if (options.some(o => o.v === currentVal)) select.value = currentVal;
+    else select.value = "general";
+
+    toggleCategoryHelp();
 }
 
-function renderCalculatorResults(results, mode) {
-    const container = document.getElementById('calc-results');
-    container.innerHTML = results.map((res, i) => {
-        const dataStr = encodeURIComponent(JSON.stringify(res));
-        // 核心：里數與現金完全分離顯示
-        let val = mode === 'miles' ? res.displayVal : res.estValue.toFixed(1);
-        let unit = mode === 'miles' ? '里' : 'HKD';
-        
-        return `
-            <div class="bg-white p-4 rounded-xl border ${i===0?'border-blue-400 bg-blue-50/20':'border-gray-100'} flex justify-between items-center shadow-sm cursor-pointer" 
-                 onclick="handleRecord('${res.cardName}','${dataStr}')">
-                <div class="max-w-[65%]">
-                    <div class="font-bold text-gray-800 text-sm truncate">${res.cardName} ${i===0?'⭐':''}</div>
-                    <div class="text-[9px] text-gray-400 font-medium truncate uppercase tracking-tighter">${res.breakdown.join(' + ')}</div>
+function toggleCategoryHelp() {
+    const cat = document.getElementById('category').value;
+    const helpBtn = document.getElementById('cat-help-btn');
+
+    const helpMap = {
+        'red_designated': showRedMerchantList,
+        'em_designated_spend': showEveryMileMerchantList,
+        'grocery': showSupermarketList,
+        'china_consumption': showChinaTips,
+        'smart_designated': showSmartMerchantList,
+        'citi_club_merchant': showClubMerchantList
+    };
+
+    let handler = helpMap[cat];
+    if (cat === 'transport' && userProfile.ownedCards.includes('citi_octopus')) {
+        handler = showOctopusTips;
+    }
+
+    if (handler) {
+        helpBtn.classList.remove('hidden');
+        helpBtn.onclick = handler;
+    } else {
+        helpBtn.classList.add('hidden');
+    }
+}
+
+function showClubMerchantList() { alert("【Citi The Club 指定商戶 (4%)】\n\n🛍️ Club Shopping\n☕ Starbucks\n🍔 McDonald's\n🐼 Foodpanda (部分)\n📱 1010 / csl 服務月費\n\n回贈為 Clubpoints。"); }
+function showOctopusTips() { alert("【Citi Octopus 交通神卡攻略 (15%)】\n\n🚌 適用：九巴、港鐵、渡輪、電車\n\n💰 門檻/上限：\n1. 月簽 $4,000：回贈上限 $300 (即交通簽 $2,000)\n2. 月簽 $10,000：回贈上限 $500\n\n⚡ 0成本達標大法：\n每月增值電子錢包 (PayMe/Alipay/WeChat) 各 $1,000，輕鬆達標 $3,000！\n\n🎁 疊加政府補貼：可賺高達 30%+ 回贈！"); }
+function showSmartMerchantList() { alert("【SC Smart 指定商戶 (5%)】\n\n🥦 超市：百佳, 759, Donki\n🍽️ 餐飲：麥當勞, Deliveroo, Foodpanda\n💊 零售：HKTVmall, 屈臣氏, Klook, Decathlon\n\n⚠️ 每年最高簽賬 HK$60,000。"); }
+function showSupermarketList() { alert("【🥦 超市類別定義】\n\n✅ 認可：百佳, Donki, 759, AEON\n⚠️ HSBC陷阱：❌ 不包惠康, Market Place, 萬寧"); }
+function showRedMerchantList() { alert("【HSBC Red 指定 (8%)】\n\n🍽️ 壽司郎, 譚仔, Coffee Academïcs\n👕 GU, Decathlon, Uniqlo\n🎮 NAMCO"); }
+function showEveryMileMerchantList() { alert("【EveryMile 指定 ($2/里)】\n\n🚌 交通 (港鐵/巴士/Uber)\n☕ 咖啡 (Starbucks/Pacific)\n🌏 旅遊 (Klook/Agoda)"); }
+function showChinaTips() { alert("【🇨🇳 中國內地/澳門】\n\n推薦：Pulse (手機支付+2%)、EveryMile ($2/里)、MMPower (6%)"); }
+
+// Helper: Create Progress Card Component
+function createProgressCard(config) {
+    const { title, icon, theme, badge, subTitle, sections, warning, actionButton } = config;
+
+    // Theme mapping
+    const themeMap = {
+        'purple': { bg: 'bg-purple-50', border: 'border-purple-100', text: 'text-purple-800', bar: 'bg-purple-500', badge: 'bg-purple-600', subText: 'text-purple-600' },
+        'red': { bg: 'bg-red-50', border: 'border-red-100', text: 'text-red-700', bar: 'bg-red-500', badge: 'bg-red-600', subText: 'text-red-600' },
+        'blue': { bg: 'bg-blue-50', border: 'border-blue-100', text: 'text-blue-700', bar: 'bg-blue-500', badge: 'bg-blue-600', subText: 'text-blue-600' },
+        'yellow': { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-800', bar: 'bg-yellow-400', badge: 'bg-yellow-500', subText: 'text-yellow-700' },
+        'green': { bg: 'bg-green-50', border: 'border-green-100', text: 'text-green-700', bar: 'bg-green-500', badge: 'bg-green-600', subText: 'text-green-600' },
+        'indigo': { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', bar: 'bg-indigo-500', badge: 'bg-indigo-600', subText: 'text-indigo-800' },
+        'black': { bg: 'bg-gray-100', border: 'border-gray-300', text: 'text-gray-800', bar: 'bg-gray-800', badge: 'bg-black', subText: 'text-gray-600' },
+        'gray': { bg: 'bg-gray-100', border: 'border-gray-300', text: 'text-gray-800', bar: 'bg-gray-500', badge: 'bg-gray-600', subText: 'text-gray-600' }
+    };
+
+    const t = themeMap[theme] || themeMap['blue'];
+    const badgeHtml = badge ? `<span class="${t.badge} text-white text-[10px] px-2 py-0.5 rounded-full">${badge}</span>` : '';
+    const subTitleHtml = subTitle ? `<span class="text-[10px] ${t.subText}">${subTitle}</span>` : '';
+    const warningHtml = warning ? `<div>${warning}</div>` : '';
+    const actionButtonHtml = actionButton ? `<div class="mt-3 pt-3 border-t border-gray-200">
+        <button onclick="${actionButton.onClick}" class="${actionButton.className || 'w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2'}">
+            ${actionButton.icon ? `<i class="${actionButton.icon}"></i>` : ''}${actionButton.label}
+        </button>
+    </div>` : '';
+
+    let sectionsHtml = [];
+    if (sections) {
+        sectionsHtml = sections.map(sec => {
+            const barColor = sec.barColor || t.bar;
+            // Support split bar (e.g. Winter Promo Lv1/Lv2 markers)
+            let markersHtml = '';
+            if (sec.markers) {
+                if (Array.isArray(sec.markers) && sec.markers.length > 0 && typeof sec.markers[0] === 'object') {
+                    const items = sec.markers.map(m => {
+                        const pos = Math.max(0, Math.min(100, Number(m.pos) || 0));
+                        const align = pos === 0 ? 'left' : (pos === 100 ? 'right' : 'center');
+                        const translate = align === 'center' ? 'translateX(-50%)' : (align === 'right' ? 'translateX(-100%)' : 'translateX(0)');
+                        return `<span style="left:${pos}%; transform:${translate}" class="absolute text-[8px] text-gray-400">${m.label}</span>`;
+                    }).join('');
+                    markersHtml = `<div class="relative h-3 mt-0.5 px-1">${items}</div>`;
+                } else {
+                    markersHtml = `<div class="flex justify-between text-[8px] text-gray-400 mt-0.5 px-1">${sec.markers}</div>`;
+                }
+            }
+            const subTextHtml = sec.subText ? `<div class="text-[10px] text-right mt-1">${sec.subText}</div>` : '';
+
+            return `<div>
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="${t.text} font-bold">${sec.label}</span>
+                    <span class="text-gray-500 font-mono">${sec.valueText}</span>
                 </div>
-                <div class="text-right">
-                    <div class="text-lg font-bold text-blue-600">${val}<span class="text-[9px] ml-1 text-gray-400">${unit}</span></div>
-                    <div class="text-[9px] text-gray-300 font-bold uppercase mt-1">📝 點擊記帳</div>
+                <div class="w-full bg-gray-100 rounded-full h-3 relative overflow-hidden">
+                    <div class="${barColor} h-3 rounded-full transition-all duration-700 ${sec.striped ? 'progress-stripe' : ''}" style="width: ${sec.progress}%"></div>
+                    ${sec.overlay || ''}
                 </div>
+                ${markersHtml}
+                ${subTextHtml}
             </div>`;
-    }).join('');
+        }).join('');
+    }
+
+    return `<div class="bg-white border-2 ${t.border} rounded-2xl shadow-sm overflow-hidden mb-4">
+        <div class="${t.bg} p-3 border-b ${t.border} flex justify-between items-center">
+            <div class="flex flex-col">
+                <h3 class="${t.text} font-bold text-sm"><i class="${icon} mr-1"></i>${title}</h3>
+                ${subTitleHtml}
+            </div>
+            ${badgeHtml}
+        </div>
+        <div class="p-4 space-y-4">
+            ${warningHtml}
+            ${sectionsHtml}
+            ${actionButtonHtml}
+        </div>
+    </div>`;
 }
 
-function renderSettings(profile) {
-    const container = document.getElementById('settings-container');
-    const groups = [
-        { name: "🦁 HSBC 滙豐", filter: id => id.startsWith('hsbc_') },
-        { name: "🔵 STANDARD CHARTERED 渣打", filter: id => id.startsWith('sc_') },
-        { name: "🏦 CITI 花旗", filter: id => id.startsWith('citi_') },
-        { name: "⚫ DBS 星展", filter: id => id.startsWith('dbs_') },
-        { name: "🌿 HANG SENG 恒生", filter: id => id.startsWith('hangseng_') },
-        { name: "🏛️ BOC 中銀", filter: id => id.startsWith('boc_') },
-        { name: "🏛️ AMERICAN EXPRESS", filter: id => id.startsWith('ae_') },
-        { name: "🏦 FUBON 富邦", filter: id => id.startsWith('fubon_') },
-        { name: "💳 SIM / AEON / WEWA", filter: id => ['sim_','aeon_','wewa','earnmore','mox_'].some(p => id.startsWith(p)) }
-    ];
-
-    let html = `<h2 class="text-sm font-bold text-gray-800 mb-4 px-1 uppercase tracking-widest border-b pb-2">我的錢包</h2>`;
-    
-    groups.forEach(g => {
-        const cards = cardsDB.filter(c => g.filter(c.id));
-        if (cards.length === 0) return;
-        html += `<h3 class="text-[10px] font-bold text-gray-400 mt-6 mb-2 px-1 uppercase tracking-widest">${g.name}</h3>`;
-        html += `<div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">`;
-        cards.forEach(c => {
-            const checked = profile.ownedCards.includes(c.id) ? 'checked' : '';
-            html += `
-                <div class="flex justify-between items-center p-4 border-b border-gray-50 last:border-0">
-                    <span class="text-sm font-medium text-gray-700">${c.name}</span>
-                    <label class="flex items-center cursor-pointer relative">
-                        <input type="checkbox" class="sr-only" ${checked} onchange="toggleCard('${c.id}')">
-                        <div class="block bg-gray-200 w-10 h-6 rounded-full"></div>
-                        <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full"></div>
-                    </label>
-                </div>`;
-        });
-        html += `</div>`;
-    });
-
-    // 設定區域 (對接截圖 5-6)
-    html += `<h2 class="text-sm font-bold text-gray-800 mt-10 mb-4 px-1 uppercase tracking-widest border-b pb-2">設定</h2>`;
-    html += `<div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-6">`;
-    
-    // Guru Select
-    html += `<div><label class="text-[10px] font-bold text-gray-400 uppercase block mb-2">Travel Guru</label>
-        <select onchange="saveDrop('guru_level', this.value)" class="w-full p-2 bg-gray-50 rounded-lg text-sm font-bold outline-none border border-gray-100">
-            <option value="0" ${profile.settings.guru_level == 0 ? 'selected' : ''}>無</option>
-            <option value="1" ${profile.settings.guru_level == 1 ? 'selected' : ''}>GO級</option>
-            <option value="2" ${profile.settings.guru_level == 2 ? 'selected' : ''}>GING級</option>
-            <option value="3" ${profile.settings.guru_level == 3 ? 'selected' : ''}>GURU級</option>
-        </select></div>`;
-
-    // 最紅自主分配
-    const rh = profile.settings.red_hot_allocation;
-    html += `<div class="border p-4 rounded-xl space-y-3"><div class="flex justify-between items-center"><label class="text-[11px] font-bold text-red-500">已登記「最紅自主獎賞」</label>
-        <input type="checkbox" ${profile.settings.red_hot_rewards_enabled ? 'checked' : ''} onchange="toggleSetting('red_hot_rewards_enabled')"></div>
-        <div class="text-[9px] text-gray-400">分配 5X 獎賞錢 (總和: ${Object.values(rh).reduce((a,b)=>a+b,0)}/5)</div>
-        ${["dining", "world", "enjoyment", "home", "style"].map(k => `
-            <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
-                <span class="text-[10px] font-bold text-gray-600 capitalize">${k}</span>
-                <div class="flex items-center gap-3">
-                    <button onclick="changeAllocation('${k}',-1)" class="w-6 h-6 bg-white border rounded text-gray-500 font-bold">-</button>
-                    <span class="text-xs font-mono w-4 text-center">${rh[k]}</span>
-                    <button onclick="changeAllocation('${k}',1)" class="w-6 h-6 bg-white border rounded text-gray-500 font-bold">+</button>
-                </div>
-            </div>`).join('')}
+// Helper: Create Calculator Result Card
+function createResultCard(res, dataStr, mainValHtml, redemptionHtml) {
+    return `<div class="card-enter bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-start cursor-pointer hover:bg-blue-50 mb-3" onclick="handleRecord('${res.cardName}','${dataStr}')">
+        <div class="w-2/3 pr-2">
+            <div class="font-bold text-gray-800 text-sm truncate">${res.cardName}</div>
+            <div class="text-xs text-gray-500 mt-1">${res.breakdown.join(" + ") || "基本回贈"}</div>
+        </div>
+        <div class="text-right w-1/3 flex flex-col items-end">
+            ${mainValHtml}
+            ${redemptionHtml}
+            <div class="text-[10px] text-blue-500 font-bold mt-2 bg-blue-50 inline-block px-2 py-1 rounded-full border border-blue-100">+ 記一筆</div>
+        </div>
     </div>`;
+}
 
-    // 推廣開關 (截圖 6)
-    const promos = [
-        { id: 'winter_promo_enabled', name: '冬日賞 2026', color: 'bg-red-50' },
-        { id: 'boc_amazing_enabled', name: 'BOC 狂賞派 + 狂賞飛', color: 'bg-blue-50' },
-        { id: 'mmpower_promo_enabled', name: 'MMPower +FUN Dollars', color: 'bg-gray-100' },
-        { id: 'em_promo_enabled', name: 'EM 推廣', color: 'bg-purple-50' }
-    ];
-    
-    promos.forEach(p => {
-        html += `<div class="flex justify-between items-center ${p.color} p-3 rounded-xl border border-gray-50">
-            <span class="text-xs font-bold text-gray-700">${p.name}</span>
-            <input type="checkbox" ${profile.settings[p.id] ? 'checked' : ''} onchange="toggleSetting('${p.id}')">
-        </div>`;
+function renderDashboard(userProfile) {
+    const container = document.getElementById('dashboard-container');
+    const monthEndStr = getMonthEndStr();
+    const quarterEndStr = getQuarterEndStr();
+    const renderedCaps = new Set();
+    const monthTotals = getMonthTotals(userProfile.transactions);
+    const totalSpend = monthTotals.spend;
+    const totalVal = monthTotals.reward;
+    const txCount = monthTotals.count;
+    let html = `<div class="bg-gradient-to-r from-blue-600 to-blue-500 text-white p-5 rounded-2xl shadow-lg mb-4"><div class="flex justify-between items-start"><div><h2 class="text-blue-100 text-xs font-bold uppercase tracking-wider">本月總簽賬</h2><div class="text-3xl font-bold mt-1">$${totalSpend.toLocaleString()}</div></div><div class="text-right"><h2 class="text-blue-100 text-xs font-bold uppercase tracking-wider">預估總回贈</h2><div class="text-xl font-bold mt-1 text-yellow-300">≈ $${Math.floor(totalVal).toLocaleString()}</div></div></div><div class="mt-4 pt-4 border-t border-blue-400/30 flex justify-between text-xs text-blue-100"><span>已記錄 ${txCount} 筆</span></div></div>`;
+
+    // 1. Travel Guru
+    const level = parseInt(userProfile.settings.guru_level);
+    if (level > 0) {
+        const upgConfig = { 1: { next: "GING級", target: 30000 }, 2: { next: "GURU級", target: 70000 }, 3: { next: "保級", target: 70000 } };
+        const rebateConfig = { 1: { cap: 500 }, 2: { cap: 1200 }, 3: { cap: 2200 } };
+        const curUpg = upgConfig[level]; const curRebate = rebateConfig[level];
+        const spendAccum = Number(userProfile.usage["guru_spend_accum"]) || 0;
+        const rcUsed = Number(userProfile.usage["guru_rc_used"]) || 0;
+        const upgPct = Math.min(100, (spendAccum / curUpg.target) * 100);
+        const rebatePct = Math.min(100, (rcUsed / curRebate.cap) * 100);
+        const isMaxed = rcUsed >= curRebate.cap;
+        const lvName = { 1: "GO級", 2: "GING級", 3: "GURU級" }[level];
+
+        // Show upgrade button if spending threshold met and not at max level
+        const canUpgrade = spendAccum >= curUpg.target && level < 3;
+        const upgradeButton = canUpgrade ? {
+            label: `🎉 升級至 ${curUpg.next}`,
+            icon: "fas fa-level-up-alt",
+            onClick: "handleGuruUpgrade()"
+        } : null;
+
+        html += createProgressCard({
+            title: "Travel Guru", icon: "fas fa-trophy", theme: "yellow", badge: lvName,
+            sections: [
+                { label: "🚀 升級進度", valueText: `$${spendAccum.toLocaleString()} / $${curUpg.target.toLocaleString()}`, progress: upgPct, barColor: "bg-blue-500", striped: true },
+                { label: "💰 本級回贈", valueText: `${Math.floor(rcUsed)} / ${curRebate.cap}`, progress: rebatePct, barColor: isMaxed ? "bg-red-500" : "bg-yellow-400" }
+            ],
+            actionButton: upgradeButton
+        });
+    }
+
+    // Promotions (data-driven)
+    if (typeof PROMOTIONS !== 'undefined') {
+        PROMOTIONS.forEach(promo => {
+            const eligible = promo.cards.some(id => userProfile.ownedCards.includes(id));
+            if (!eligible) return;
+
+            const reg = (typeof PROMO_REGISTRY !== 'undefined') ? PROMO_REGISTRY[promo.id] : null;
+            if (reg && reg.settingKey && userProfile.settings[reg.settingKey] === false) {
+                html += renderWarningCard(reg.warningTitle || promo.name, promo.icon, reg.warningDesc || "需登記以賺取回贈", reg.settingKey);
+                if (promo.capKeys) promo.capKeys.forEach(k => renderedCaps.add(k));
+                return;
+            }
+
+            const sections = [];
+            let missionUnlockTarget = null;
+            let missionUnlockValue = null;
+            const isWinterPromo = promo.id === "winter_promo";
+            const winterTier1 = Math.max(0, Number(userProfile.settings.winter_tier1_threshold) || 0);
+            const winterTier2Raw = Math.max(0, Number(userProfile.settings.winter_tier2_threshold) || 0);
+            const winterTier2 = Math.max(winterTier1, winterTier2Raw);
+
+            const getModule = (key) => (key && modulesDB && modulesDB[key]) ? modulesDB[key] : null;
+            const getCapFromModule = (key) => {
+                const m = getModule(key);
+                return m && m.cap_limit ? { cap: m.cap_limit, capKey: m.cap_key || null } : null;
+            };
+
+            promo.sections.forEach(sec => {
+                if (sec.type === "mission") {
+                    let spend = 0;
+                    if (sec.usageKeys) spend = sec.usageKeys.reduce((s, k) => s + (Number(userProfile.usage[k]) || 0), 0);
+                    else spend = Number(userProfile.usage[sec.usageKey]) || 0;
+                    const target = isWinterPromo ? winterTier2 : sec.target;
+                    missionUnlockTarget = target;
+                    missionUnlockValue = spend;
+                    const pct = target > 0 ? Math.min(100, (spend / target) * 100) : 0;
+                    const unlocked = spend >= target;
+                    let markers = null;
+                    const markersSrc = isWinterPromo ? [winterTier1, winterTier2] : sec.markers;
+                    if (markersSrc) {
+                        const list = Array.isArray(markersSrc) ? markersSrc.slice() : [];
+                        if (list.length > 0 && list[0] !== 0) list.unshift(0);
+                        markers = list.map(m => `<span>${m.toLocaleString()}</span>`).join('');
+                    }
+
+                    sections.push({
+                        label: sec.label || "🎯 任務進度",
+                        valueText: `$${spend.toLocaleString()} / $${target.toLocaleString()}`,
+                        progress: isWinterPromo ? 100 : pct,
+                        barColor: isWinterPromo ? "bg-gray-200" : (unlocked ? "bg-blue-500" : "bg-gray-400 opacity-50"),
+                        overlay: isWinterPromo ? (() => {
+                            const t1 = winterTier1;
+                            const t2 = Math.max(t1, winterTier2);
+                            const totalCap = t2 || 1;
+                            const seg1Width = (t1 / totalCap) * 100;
+                            const seg2Width = 100 - seg1Width;
+                            const seg1Fill = t1 > 0 ? Math.min(1, spend / t1) * seg1Width : 0;
+                            const seg2Fill = t2 > t1 ? Math.min(1, Math.max(0, spend - t1) / (t2 - t1)) * seg2Width : 0;
+                            const seg1WidthSafe = Math.max(0, Math.min(100, seg1Width));
+                            const seg2WidthSafe = Math.max(0, Math.min(100, seg2Width));
+                            return `<div class="absolute inset-0">
+                                <div class="absolute inset-0 flex">
+                                    <div style="width:${seg1WidthSafe}%" class="h-3"></div>
+                                    <div style="width:${seg2WidthSafe}%" class="bg-gray-200 h-3"></div>
+                                </div>
+                                <div class="absolute inset-0 flex">
+                                    <div style="width:${seg1Fill}%" class="bg-blue-500 h-3"></div>
+                                    <div style="width:${seg2Fill}%" class="bg-blue-400 h-3"></div>
+                                </div>
+                                <div class="absolute top-0 bottom-0" style="left:${seg1WidthSafe}%; width:1px; background:rgba(0,0,0,0.08)"></div>
+                            </div>`;
+                        })() : null,
+                        subText: unlocked ? `<span class="text-green-600 font-bold">✅ 已達標</span>` : `<span class="text-gray-400">🔒尚欠 $${Math.max(0, target - spend).toLocaleString()}</span>`,
+                        markers: markers
+                    });
+                }
+
+                if (sec.type === "cap_rate") {
+                    const used = Number(userProfile.usage[sec.usageKey]) || 0;
+                    let capVal = sec.cap;
+                    if (sec.capModule) {
+                        const capInfo = getCapFromModule(sec.capModule);
+                        if (capInfo && capInfo.cap) capVal = capInfo.cap;
+                    }
+                    const reward = Math.min(capVal, used * sec.rate);
+                    const pct = Math.min(100, (reward / capVal) * 100);
+                    const unlocked = missionUnlockValue !== null ? missionUnlockValue >= sec.unlockTarget : true;
+                    const barCls = unlocked ? (reward >= capVal ? "bg-red-500" : "bg-green-500") : "bg-gray-400 opacity-50";
+                    const unit = sec.unit || "";
+
+                    sections.push({
+                        label: sec.label || "💰 回贈進度",
+                        valueText: `${Math.floor(reward).toLocaleString()} / ${capVal} ${unit}`.trim(),
+                        progress: pct,
+                        striped: true,
+                        barColor: barCls,
+                        subText: unlocked ? (reward >= capVal ? '⚠️ 已爆 Cap' : '✅ 賺取中') : `<span class="text-gray-400 font-bold"><i class="fas fa-lock"></i> 待解鎖: ${Math.floor(reward)} ${unit}</span>`
+                    });
+                }
+
+                if (sec.type === "tier_cap") {
+                    const total = Number(userProfile.usage[sec.totalKey]) || 0;
+                    const eligibleVal = Number(userProfile.usage[sec.eligibleKey]) || 0;
+                    const tiers = (isWinterPromo && Array.isArray(sec.tiers) && sec.tiers.length >= 2) ? [
+                        { ...sec.tiers[0], threshold: winterTier1 },
+                        { ...sec.tiers[1], threshold: winterTier2 }
+                    ] : sec.tiers;
+                    let cap = tiers[0].cap;
+                    let reward = 0;
+                    if (total >= tiers[1].threshold) {
+                        cap = tiers[1].cap;
+                        reward = Math.min(tiers[1].cap, eligibleVal * tiers[1].rate);
+                    } else if (total >= tiers[0].threshold) {
+                        cap = tiers[0].cap;
+                        reward = Math.min(tiers[0].cap, eligibleVal * tiers[0].rate);
+                    }
+                    const pct = Math.min(100, cap > 0 ? (reward / cap) * 100 : 0);
+                    const unlocked = total >= tiers[0].threshold;
+                    const barCls = unlocked ? (reward >= cap ? "bg-red-500" : "bg-green-500") : "bg-gray-400 opacity-50";
+                    let overlay = null;
+                    let subText = unlocked ? (reward >= cap ? '⚠️ 已達等級上限' : '✅ 賺取中') : `<span class="text-gray-400 font-bold"><i class="fas fa-lock"></i> 待解鎖: ${Math.floor(reward)} RC</span>`;
+                    let cap1 = null;
+                    let cap2 = null;
+                    let rewardLocked = false;
+
+                    if (isWinterPromo) {
+                        cap1 = tiers[0].cap || 0;
+                        cap2 = Math.max(cap1, tiers[1].cap || 0);
+                        const capTotal = cap2 || 1;
+                        const seg1Width = (cap1 / capTotal) * 100;
+                        const seg2Width = 100 - seg1Width;
+                        const rewardTier1 = Math.min(cap1, eligibleVal * tiers[0].rate);
+                        const rewardTier2 = Math.min(cap2, eligibleVal * tiers[1].rate);
+                        const t1 = tiers[0].threshold || 0;
+                        const t2 = Math.max(t1, tiers[1].threshold || 0);
+                        const tier1Unlocked = total >= t1;
+                        const tier2Unlocked = total >= t2;
+                        rewardLocked = !tier1Unlocked;
+                        const seg1Fill = tier1Unlocked && cap1 > 0 ? Math.min(1, rewardTier1 / cap1) * seg1Width : 0;
+                        const seg2Fill = tier2Unlocked && cap2 > cap1 ? Math.min(1, Math.max(0, rewardTier2 - cap1) / (cap2 - cap1)) * seg2Width : 0;
+                        const seg1WidthSafe = Math.max(0, Math.min(100, seg1Width));
+                        const seg2WidthSafe = Math.max(0, Math.min(100, seg2Width));
+                        overlay = `<div class="absolute inset-0">
+                            ${rewardLocked ? '' : `<div class="absolute inset-0 flex">
+                                <div style="width:${seg1WidthSafe}%" class="h-3"></div>
+                                <div style="width:${seg2WidthSafe}%" class="bg-gray-200 h-3"></div>
+                            </div>`}
+                            <div class="absolute inset-0 flex">
+                                <div style="width:${seg1Fill}%" class="bg-green-500 h-3"></div>
+                                <div style="width:${seg2Fill}%" class="bg-green-600 h-3"></div>
+                            </div>
+                            ${rewardLocked ? '' : `<div class="absolute top-0 bottom-0" style="left:${seg1WidthSafe}%; width:1px; background:rgba(0,0,0,0.08)"></div>`}
+                            ${rewardLocked ? `<div class="absolute inset-0 flex items-center justify-center text-gray-500 text-xs"><i class="fas fa-lock"></i></div>` : ''}
+                        </div>`;
+
+                        if (total >= t2) {
+                            subText = '✅ 已達 Tier 2';
+                        } else if (total >= t1) {
+                            subText = `<span class="text-gray-500">🔒 Tier 2 待解鎖：${Math.floor(rewardTier2).toLocaleString()} / ${tiers[1].cap}</span>`;
+                        } else {
+                            subText = `<span class="text-gray-400">🔒 未達 Tier 1</span>`;
+                        }
+                    }
+
+                    sections.push({
+                        label: sec.label || "💰 回贈進度",
+                        valueText: `${Math.floor(reward)} / ${cap}`,
+                        progress: isWinterPromo ? 100 : pct,
+                        striped: !isWinterPromo,
+                        barColor: isWinterPromo ? (rewardLocked ? "bg-gray-300" : "bg-gray-200") : barCls,
+                        overlay: overlay,
+                        subText: subText,
+                        markers: isWinterPromo ? (() => {
+                            const total = cap2 || 1;
+                            return [
+                                { label: "0", pos: 0 },
+                                { label: cap1.toLocaleString(), pos: (cap1 / total) * 100 },
+                                { label: cap2.toLocaleString(), pos: 100 }
+                            ];
+                        })() : null
+                    });
+                }
+
+                if (sec.type === "cap") {
+                    let capKey = sec.capKey;
+                    let capVal = sec.cap;
+                    if (sec.capModule) {
+                        const capInfo = getCapFromModule(sec.capModule);
+                        if (capInfo) {
+                            capVal = capInfo.cap;
+                            capKey = capInfo.capKey || capKey;
+                        }
+                    }
+                    const used = Number(userProfile.usage[capKey]) || 0;
+                    const pct = Math.min(100, (used / capVal) * 100);
+                    const unlocked = missionUnlockTarget ? (missionUnlockValue >= missionUnlockTarget) : true;
+                    const unit = sec.unit || '';
+                    const prefix = unit ? '' : '$';
+
+                    sections.push({
+                        label: sec.label || "💰 回贈進度",
+                        valueText: `${prefix}${Math.floor(used).toLocaleString()}${unit} / ${prefix}${capVal.toLocaleString()}${unit}`,
+                        progress: pct,
+                        striped: true,
+                        barColor: used >= capVal ? "bg-red-500" : (unlocked ? "bg-green-500" : "bg-gray-400 opacity-50"),
+                        subText: used >= capVal ? '⚠️ 已爆 Cap' : (unlocked ? `尚餘 ${prefix}${Math.max(0, capVal - used).toLocaleString()}${unit}` : '🔒 需達到簽賬門檻')
+                    });
+                    if (capKey) renderedCaps.add(capKey);
+                }
+            });
+
+            if (promo.capKeys) promo.capKeys.forEach(k => renderedCaps.add(k));
+
+            let badgeText = "";
+            if (promo.badge) {
+                if (promo.badge.type === "month_end") badgeText = formatResetDate(monthEndStr);
+                if (promo.badge.type === "quarter_end") badgeText = formatResetDate(quarterEndStr);
+                if (promo.badge.type === "promo_end" && promo.badge.moduleKey) {
+                    const mod = modulesDB[promo.badge.moduleKey];
+                    if (mod && mod[promo.badge.field]) badgeText = formatPromoDate(mod[promo.badge.field]);
+                    if (promo.badge.staticDate) badgeText = formatPromoDate(promo.badge.staticDate);
+                }
+            }
+
+            html += createProgressCard({
+                title: promo.name, icon: promo.icon, theme: promo.theme, badge: badgeText,
+                sections: sections
+            });
+        });
+    }
+
+    // 5. Remaining Caps as Promotion Cards (no separate cap monitors)
+    userProfile.ownedCards.forEach(cardId => {
+        const card = cardsDB.find(c => c.id === cardId);
+        if (!card || !Array.isArray(card.modules)) return;
+        card.modules.forEach(modId => {
+            const mod = modulesDB[modId];
+            if (!mod || !mod.cap_limit || !mod.cap_key) return;
+            if (mod.cap_key === 'boc_amazing_local_weekday_cap' || mod.cap_key === 'boc_amazing_local_holiday_cap' || mod.cap_key === 'boc_amazing_online_weekday_cap' || mod.cap_key === 'boc_amazing_online_holiday_cap') return;
+            if (renderedCaps.has(mod.cap_key)) return;
+            if (mod.setting_key && userProfile.settings[mod.setting_key] === false) {
+                html += renderWarningCard(`${card.name} ${mod.desc}`, "fas fa-exclamation-triangle", "需登記以顯示進度", mod.setting_key);
+                renderedCaps.add(mod.cap_key);
+                return;
+            }
+
+            renderedCaps.add(mod.cap_key);
+
+            const rawUsage = Number(userProfile.usage[mod.cap_key]) || 0;
+            const isRewardCap = mod.cap_mode === 'reward';
+            const currentVal = isRewardCap ? rawUsage : rawUsage * (mod.rate || 0);
+            const maxVal = isRewardCap ? mod.cap_limit : mod.cap_limit * (mod.rate || 0);
+            const pct = Math.min(100, (currentVal / maxVal) * 100);
+            const remaining = Math.max(0, maxVal - currentVal);
+
+            let unit = '$';
+            if (card.redemption && card.redemption.unit) unit = card.redemption.unit;
+            else if (card.currency === 'CASH_Direct' || card.currency === 'Fun_Dollars') unit = '元';
+
+            const displayUnit = (unit === '分' || unit === 'RC') ? unit : ((unit === '元' || unit === '$') ? '' : unit);
+            const displayPrefix = (unit === '元' || unit === '$') ? '$' : '';
+
+            const sections = [];
+
+            if (mod.req_mission_spend && mod.req_mission_key) {
+                const thresholdSpend = Number(userProfile.usage[mod.req_mission_key]) || 0;
+                const thresholdPct = Math.min(100, (thresholdSpend / mod.req_mission_spend) * 100);
+                const thresholdMet = thresholdSpend >= mod.req_mission_spend;
+                sections.push({
+                    label: "🎯 門檻任務",
+                    valueText: `$${thresholdSpend.toLocaleString()} / $${mod.req_mission_spend.toLocaleString()}`,
+                    progress: thresholdPct,
+                    barColor: thresholdMet ? "bg-green-500" : "bg-gray-400 opacity-50",
+                    subText: thresholdMet ? '<span class="text-green-600 font-bold">✅ 已達標</span>' : `<span class="text-gray-400">🔒尚欠 $${(mod.req_mission_spend - thresholdSpend).toLocaleString()}</span>`
+                });
+            }
+
+            sections.push({
+                label: "💰 回贈進度",
+                valueText: `${displayPrefix}${Math.floor(currentVal).toLocaleString()}${displayUnit} / ${displayPrefix}${Math.floor(maxVal).toLocaleString()}${displayUnit}`,
+                progress: pct,
+                striped: true,
+                barColor: currentVal >= maxVal ? "bg-red-500" : "bg-blue-500",
+                subText: currentVal >= maxVal ? '⚠️ 已爆 Cap' : `尚餘 ${displayPrefix}${Math.ceil(remaining).toLocaleString()}${displayUnit}`
+            });
+
+            html += createProgressCard({
+                title: `${card.name} ${mod.desc}`,
+                icon: "fas fa-chart-line",
+                theme: "gray",
+                badge: formatResetDate(monthEndStr),
+                sections: sections
+            });
+        });
     });
 
-    html += `<button onclick="localStorage.clear();location.reload();" class="w-full text-[10px] text-red-400 font-bold uppercase tracking-widest pt-4">Reset All</button></div>`;
-    
     container.innerHTML = html;
 }
 
-function renderLedger(transactions) {
+function renderCalculatorResults(results, currentMode) {
+    let html = "";
+    const onlineToggle = document.getElementById('tx-online');
+    const isOnline = onlineToggle ? !!onlineToggle.checked : false;
+
+    results.forEach((res, index) => {
+        // Prepare Rebate Text (User specific request)
+        // Miles -> "400里", Cash -> "$40", RC -> "400 RC"
+        let resultText = "";
+        const u = res.displayUnit;
+        const v = res.displayVal;
+
+        if (v === '---') {
+            resultText = '---';
+        } else if (u === 'Miles' || u === '里') {
+            resultText = `${v}里`;
+        } else if (u === 'RC') {
+            resultText = `${v} RC`;
+        } else if (u === '$' || u === 'HKD' || u === '元') {
+            resultText = `$${v}`;
+        } else {
+            resultText = `${v} ${u}`; // Fallback
+        }
+
+        // Foreign Currency Fee Logic
+        let feeNetValue = null;
+        let feeNetPotential = null;
+        let feeLineHtml = '';
+        let hasFee = false;
+        const showFeeEquation = currentMode === 'cash' && userProfile && userProfile.settings && userProfile.settings.deduct_fcf_ranking;
+        const allowFeeNet = showFeeEquation && res.supportsCash;
+        const cardConfig = cardsDB.find(c => c.id === res.cardId);
+        // Check if category implies foreign currency
+        const isForeign = res.category.startsWith('overseas') || res.category === 'foreign' || res.category === 'travel_plus_tier1';
+
+        if (cardConfig && cardConfig.fcf > 0 && isForeign) {
+            const fee = res.amount * cardConfig.fcf;
+            const feeVal = fee.toFixed(1);
+            const net = res.estCash - fee;
+            const netPotential = res.estCashPotential - fee;
+            hasFee = true;
+            feeNetValue = Math.floor(net).toLocaleString();
+            feeNetPotential = Math.floor(netPotential).toLocaleString();
+            feeLineHtml = `<div class="text-xs text-red-400 mt-0.5"><i class="fas fa-money-bill-wave mr-1"></i>外幣手續費: $${feeVal} (${(cardConfig.fcf * 100).toFixed(2)}%)</div>`;
+        }
+
+        const dataStr = encodeURIComponent(JSON.stringify({
+            amount: res.amount, trackingKey: res.trackingKey, estValue: res.estValue,
+            guruRC: res.guruRC, missionTags: res.missionTags, category: res.category,
+            cardId: res.cardId,
+            rewardTrackingKey: res.rewardTrackingKey,
+            secondaryRewardTrackingKey: res.secondaryRewardTrackingKey,
+            generatedReward: res.generatedReward,
+            resultText: resultText,
+            pendingUnlocks: res.pendingUnlocks || [],
+            isOnline
+        }));
+        let displayVal = res.displayVal;
+        let displayUnit = res.displayUnit;
+        let valClass = res.displayVal === '---' ? 'text-gray-400 font-medium' : 'text-red-600 font-bold';
+
+        if (allowFeeNet && hasFee && feeNetValue !== null) {
+            displayVal = feeNetValue;
+            displayUnit = "HKD";
+            valClass = 'text-blue-600 font-bold';
+        }
+
+        let mainValHtml = `<div class="text-xl ${valClass}">${displayVal} <span class="text-xs text-gray-400">${displayUnit}</span></div>`;
+        let potentialHtml = "";
+        if (res.displayValPotential && res.displayValPotential !== res.displayVal && res.displayValPotential !== "---") {
+            let potentialVal = res.displayValPotential;
+            let potentialUnit = res.displayUnitPotential;
+            if (allowFeeNet && hasFee && feeNetPotential !== null) {
+                potentialVal = feeNetPotential;
+                potentialUnit = "HKD";
+            }
+            potentialHtml = `<div class="text-[10px] text-gray-500 mt-0.5">🔓 解鎖後：${potentialVal} ${potentialUnit}</div>`;
+        }
+        let redemptionHtml = "";
+        if (potentialHtml && !res.redemptionConfig) {
+            mainValHtml += potentialHtml;
+        }
+
+        if (res.redemptionConfig) {
+            const rd = res.redemptionConfig;
+            if (res.displayVal !== '---') {
+                mainValHtml = `
+                    <div class="text-xl ${valClass}">${displayVal} <span class="text-xs text-gray-400">${displayUnit}</span></div>
+                    <div class="text-xs text-gray-500 mt-0.5 font-mono">(${Math.floor(res.nativeVal).toLocaleString()} ${rd.unit})</div>
+                    ${potentialHtml}
+                `;
+            } else {
+                mainValHtml = `
+                    <div class="text-xl text-gray-400 font-medium">---</div>
+                    <div class="text-xs text-gray-500 mt-0.5 font-mono">${Math.floor(res.nativeVal).toLocaleString()} ${rd.unit}</div>
+                    ${potentialHtml}
+                `;
+            }
+
+            redemptionHtml = `
+                <div class="mt-1 flex justify-end">
+                    <button onclick="alert('【兌換詳情】\\n💰 手續費: ${rd.fee}\\n📉 最低兌換: ${rd.min.toLocaleString()} ${rd.unit}\\n🔄 比率: ${rd.ratio}')" 
+                        class="text-[10px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded flex items-center gap-1 hover:bg-yellow-200 transition-colors">
+                        <i class="fas fa-exclamation-circle"></i> 條款
+                    </button>
+                </div>`;
+        }
+
+        // Add top result styling for top 3
+        const isTop = index < 3 && res.displayVal !== '---';
+        const topClass = isTop ? ' top-result relative' : '';
+        const topBadge = index === 0 && res.displayVal !== '---' ? '<span class="top-result-badge">🏆 最佳</span>' : '';
+
+        html += `<div class="card-enter bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-start cursor-pointer hover:bg-blue-50 mb-3${topClass}" onclick="handleRecord('${res.cardName}','${dataStr}')">
+            ${topBadge}
+            <div class="w-2/3 pr-2">
+                <div class="font-bold text-gray-800 text-sm truncate">${res.cardName}</div>
+                <div class="text-xs text-gray-500 mt-1">${res.breakdown.join(" + ") || "基本回贈"}</div>
+                ${hasFee && !showFeeEquation ? feeLineHtml : ''}
+            </div>
+            <div class="text-right w-1/3 flex flex-col items-end">
+                ${mainValHtml}
+                ${redemptionHtml}
+                <div class="text-[10px] text-blue-500 font-bold mt-2 bg-blue-50 inline-block px-2 py-1 rounded-full border border-blue-100">+ 記一筆</div>
+            </div>
+        </div>`;
+    });
+
+    if (results.length === 0) html = `<div class="text-center text-gray-400 py-10 text-sm">請先在「設定」頁面新增卡片</div>`;
+    document.getElementById('calc-results').innerHTML = html;
+}
+
+function renderSettings(userProfile) {
+    const list = document.getElementById('settings-container');
+    const bankGroups = [
+        { name: "🦁 HSBC 滙豐", filter: id => id.startsWith('hsbc_') },
+        { name: "🔵 Standard Chartered 渣打", filter: id => id.startsWith('sc_') },
+        { name: "🏦 Citi 花旗", filter: id => id.startsWith('citi_') },
+        { name: "⚫ DBS 星展", filter: id => id.startsWith('dbs_') },
+        { name: "🌿 Hang Seng 恒生", filter: id => id.startsWith('hangseng_') },
+        { name: "🏛️ BOC 中銀", filter: id => id.startsWith('boc_') },
+        { name: "🏛️ American Express", filter: id => id.startsWith('ae_') },
+        { name: "🏦 Fubon 富邦", filter: id => id.startsWith('fubon_') },
+        { name: "💳 sim / AEON / WeWa", filter: id => id.startsWith('sim_') || id.startsWith('aeon_') || id.startsWith('wewa') || id.startsWith('earnmore') || id.startsWith('mox_') },
+        { name: "💎 Others 其他", filter: id => !id.startsWith('hsbc_') && !id.startsWith('sc_') && !id.startsWith('citi_') && !id.startsWith('dbs_') && !id.startsWith('hangseng_') && !id.startsWith('boc_') && !id.startsWith('ae_') && !id.startsWith('fubon_') && !id.startsWith('sim_') && !id.startsWith('aeon_') && !id.startsWith('wewa') && !id.startsWith('earnmore') && !id.startsWith('mox_') }
+    ];
+
+    // Data Management Section
+    let html = `<div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-2xl shadow-sm border-2 border-blue-200 mb-4">
+        <h2 class="text-sm font-bold text-blue-800 uppercase mb-3 flex items-center gap-2">
+            <i class="fas fa-database"></i> 數據管理
+        </h2>
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="exportData()" 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                <i class="fas fa-download"></i> 匯出數據
+            </button>
+            <label class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fas fa-upload"></i> 匯入數據
+                <input type="file" accept=".json" onchange="importData(event)" class="hidden">
+            </label>
+        </div>
+        <p class="text-xs text-blue-700 mt-3 bg-blue-100 p-2 rounded-lg">
+            💡 建議定期匯出數據作備份，以免瀏覽器清除數據時遺失記錄。
+        </p>
+    </div>`;
+
+    html += `<div class="bg-white p-5 rounded-2xl shadow-sm"><h2 class="text-sm font-bold text-gray-800 uppercase mb-4 border-b pb-2">我的錢包</h2><div class="space-y-6">`;
+    bankGroups.forEach(group => {
+        const groupCards = cardsDB.filter(c => group.filter(c.id));
+        if (groupCards.length > 0) {
+            html += `<div><h3 class="text-xs font-bold text-gray-400 uppercase mb-2 pl-1 tracking-wider">${group.name}</h3><div class="bg-gray-50 rounded-xl px-3 py-1 border border-gray-100">`;
+            groupCards.forEach(c => {
+                const ch = userProfile.ownedCards.includes(c.id) ? 'checked' : '';
+                html += `<div class="flex justify-between items-center py-3 border-b border-gray-200 last:border-0"><span class="text-sm text-gray-700 font-medium">${c.name}</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" class="sr-only peer" ${ch} onchange="toggleCard('${c.id}')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div></label></div>`;
+            });
+            html += `</div></div>`;
+        }
+    });
+
+    html += `</div></div><div class="bg-white p-5 rounded-2xl shadow-sm mt-4"><h2 class="text-sm font-bold text-gray-800 uppercase mb-4 border-b pb-2">設定</h2><div class="space-y-4">`;
+    html += `<div class="mb-4"><label class="text-xs font-bold text-gray-500">Travel Guru</label><select id="st-guru" class="w-full p-2 bg-gray-50 rounded" onchange="saveDrop('guru_level',this.value)"><option value="0">無</option><option value="1">GO級</option><option value="2">GING級</option><option value="3">GURU級</option></select></div>`;
+
+    // Live Fresh Preference
+    html += `<div class="mb-4"><label class="text-xs font-bold text-teal-600">DBS Live Fresh 自選類別 (4選1)</label>
+        <select id="st-live-fresh" class="w-full p-2 bg-teal-50 rounded border border-teal-100" onchange="saveDrop('live_fresh_pref',this.value)">
+            <option value="none">未設定</option>
+            <option value="online_foreign">網上外幣簽賬 (Online Foreign Currency)</option>
+            <option value="travel">旅遊娛樂探索達人 (Entertainment & Travel Expert)</option>
+            <option value="fashion">潮流教主 (Fashionista)</option>
+            <option value="charity">慈善關愛者 (Sustainability & Charity)</option>
+        </select>
+    </div>`;
+
+    const rhEnabled = userProfile.settings.red_hot_rewards_enabled !== false;
+    html += `<div class="mb-4 border p-3 rounded-xl bg-gray-50"><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-red-600">已登記「最紅自主獎賞」</label><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-rh-enabled" class="sr-only peer" ${rhEnabled ? 'checked' : ''} onchange="toggleSetting('red_hot_rewards_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-red-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"></div></label></div><div id="rh-allocator-container" class="${rhEnabled ? '' : 'hidden'} space-y-2 transition-all"><div class="text-[10px] text-gray-400 mb-2">分配 5X 獎賞錢 (總和: <span id="rh-total" class="text-blue-600">5</span>/5)</div>${renderAllocatorRow("dining", "賞滋味 (Dining)", userProfile.settings.red_hot_allocation.dining)}${renderAllocatorRow("world", "賞世界 (World)", userProfile.settings.red_hot_allocation.world)}${renderAllocatorRow("enjoyment", "賞享受 (Enjoyment)", userProfile.settings.red_hot_allocation.enjoyment)}${renderAllocatorRow("home", "賞家居 (Home)", userProfile.settings.red_hot_allocation.home)}${renderAllocatorRow("style", "賞購物 (Style)", userProfile.settings.red_hot_allocation.style)}</div></div>`;
+
+    html += `<div class="flex justify-between items-center bg-red-50 p-2 rounded border border-red-100"><span>冬日賞 2026</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-winter" class="sr-only peer" ${userProfile.settings.winter_promo_enabled ? 'checked' : ''} onchange="toggleSetting('winter_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-red-500"></div></label></div>`;
+    html += `<div class="grid grid-cols-2 gap-2 text-xs bg-red-50/50 border border-red-100 rounded-lg p-2">
+        <div>
+            <label class="block text-red-700 font-bold mb-1">Tier 1 門檻</label>
+            <input id="st-winter-tier1" type="number" min="0" class="w-full p-2 rounded bg-white border border-red-100" value="${Number(userProfile.settings.winter_tier1_threshold) || 0}" onchange="saveWinterThresholds()">
+        </div>
+        <div>
+            <label class="block text-red-700 font-bold mb-1">Tier 2 門檻</label>
+            <input id="st-winter-tier2" type="number" min="0" class="w-full p-2 rounded bg-white border border-red-100" value="${Number(userProfile.settings.winter_tier2_threshold) || 0}" onchange="saveWinterThresholds()">
+        </div>
+    </div>`;
+    html += `<div class="flex justify-between items-center bg-blue-50 p-2 rounded border border-blue-100"><span>BOC 狂賞派 + 狂賞飛</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-boc-amazing" class="sr-only peer" ${userProfile.settings.boc_amazing_enabled ? 'checked' : ''} onchange="toggleSetting('boc_amazing_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-blue-600"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-gray-100 p-2 rounded border border-gray-300"><span>DBS Black $2/里推廣</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-dbs-black" class="sr-only peer" ${userProfile.settings.dbs_black_promo_enabled ? 'checked' : ''} onchange="toggleSetting('dbs_black_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-gray-800"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-gray-200 p-2 rounded border border-gray-300"><span>MMPower +FUN Dollars</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-mmpower" class="sr-only peer" ${userProfile.settings.mmpower_promo_enabled ? 'checked' : ''} onchange="toggleSetting('mmpower_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-gray-800"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-purple-50 p-2 rounded border border-purple-100"><span>Travel+ 外幣回贈</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-travel-plus" class="sr-only peer" ${userProfile.settings.travel_plus_promo_enabled ? 'checked' : ''} onchange="toggleSetting('travel_plus_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-purple-600"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-purple-50 p-2 rounded border border-purple-100"><span>Fubon iN 網購20X</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-fubon-in" class="sr-only peer" ${userProfile.settings.fubon_in_promo_enabled ? 'checked' : ''} onchange="toggleSetting('fubon_in_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-purple-600"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-green-50 p-2 rounded border border-green-100"><span>sim 8%網購推廣</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-sim" class="sr-only peer" ${userProfile.settings.sim_promo_enabled ? 'checked' : ''} onchange="toggleSetting('sim_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-green-600"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-gray-800 text-white p-2 rounded border border-gray-600"><span>Mox 活期任務 (+$250k)</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-mox" class="sr-only peer" ${userProfile.settings.mox_deposit_task_enabled ? 'checked' : ''} onchange="toggleSetting('mox_deposit_task_enabled')"><div class="w-9 h-5 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer peer-checked:bg-green-400"></div></label></div>`;
+    html += `<div class="flex justify-between items-center bg-purple-50 p-2 rounded border border-purple-100"><span>EM 推廣</span><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" id="st-em" class="sr-only peer" ${userProfile.settings.em_promo_enabled ? 'checked' : ''} onchange="toggleSetting('em_promo_enabled')"><div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-purple-600"></div></label></div>`;
+    html += `</div><div class="text-center mt-4"><button onclick="if(confirm('清除資料?')){localStorage.clear();location.reload();}" class="text-red-400 text-xs">Reset All</button></div></div>`;
+
+    list.innerHTML = html;
+    document.getElementById('st-guru').value = userProfile.settings.guru_level;
+    document.getElementById('st-live-fresh').value = userProfile.settings.live_fresh_pref || "none";
+    if (rhEnabled) updateAllocationTotal();
+}
+
+function renderAllocatorRow(key, label, value) {
+    const safeValue = Number(value) || 0;
+    return `<div class="flex justify-between items-center bg-white p-2 rounded border"><span class="text-xs font-bold text-gray-700">${label}</span><div class="flex items-center gap-3"><button class="w-6 h-6 bg-gray-200 rounded text-gray-600 font-bold" onclick="changeAllocation('${key}', -1)">-</button><span class="text-sm font-mono w-4 text-center" id="alloc-${key}">${safeValue}</span><button class="w-6 h-6 bg-gray-200 rounded text-gray-600 font-bold" onclick="changeAllocation('${key}', 1)">+</button></div></div>`;
+}
+function changeAllocation(key, delta) {
+    const current = userProfile.settings.red_hot_allocation[key];
+    const total = Object.values(userProfile.settings.red_hot_allocation).reduce((a, b) => a + b, 0);
+    if (delta > 0 && total >= 5) return;
+    if (delta < 0 && current <= 0) return;
+    userProfile.settings.red_hot_allocation[key] += delta;
+    saveUserData();
+    document.getElementById(`alloc-${key}`).innerText = userProfile.settings.red_hot_allocation[key];
+    updateAllocationTotal();
+}
+function updateAllocationTotal() { const total = Object.values(userProfile.settings.red_hot_allocation).reduce((a, b) => a + b, 0); const el = document.getElementById('rh-total'); if (el) { el.innerText = total; if (total === 5) el.className = "text-green-600 font-bold"; else el.className = "text-red-500 font-bold"; } }// --- LEDGER ---
+window.renderLedger = function (transactions) {
     const container = document.getElementById('ledger-container');
-    if (!transactions.length) {
-        container.innerHTML = `<div class="text-center py-20 text-gray-300 text-xs">筆記本是空的 📖</div>`;
+    if (!transactions || transactions.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-gray-400 mt-20">
+                <i class="fas fa-receipt text-5xl mb-4 text-gray-200"></i>
+                <p>暫無簽賬記錄</p>
+                <button onclick="switchTab('calculator')" class="mt-4 text-blue-500 text-sm font-bold">立即去記賬 ></button>
+            </div>`;
         return;
     }
-    container.innerHTML = transactions.map(tx => `
-        <div class="bg-white p-3 rounded-lg border border-gray-100 flex justify-between items-center shadow-sm">
-            <div class="flex flex-col">
-                <span class="text-[9px] font-bold text-gray-400 uppercase">${new Date(tx.date).toLocaleDateString()}</span>
-                <span class="text-xs font-bold text-gray-700">${tx.cardId}</span>
-            </div>
-            <div class="text-right">
-                <div class="text-sm font-bold text-gray-800">$${tx.amount.toLocaleString()}</div>
-                <div class="text-[10px] font-bold text-green-600">+${tx.rebateText}</div>
-            </div>
-        </div>`).join('');
+
+    let html = `<div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-gray-800">最近記錄 (${transactions.length})</h3>
+        <button onclick="handleClearHistory()" class="text-xs text-red-500 bg-red-50 px-2 py-1 rounded">清除所有</button>
+    </div>
+    <div class="space-y-3">`;
+
+    transactions.forEach(tx => {
+        const date = new Date(tx.date);
+        const dateStr = `${date.getMonth() + 1}/${date.getDate()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        // Try to get nice card name if possible, else use ID
+        // Note: cardsDB is defined in data.js, but might be 'const' in global scope.
+        // We can access 'cardsDB' directly as it is loaded first.
+        let cardName = tx.cardId;
+        if (typeof cardsDB !== 'undefined') {
+            const c = cardsDB.find(x => x.id === tx.cardId);
+            if (c) cardName = c.name;
+        }
+
+        const amountNum = Number(tx.amount) || 0;
+        const rebateText = escapeHtml(tx.rebateText || "");
+        const safeDateStr = escapeHtml(dateStr);
+        const safeCardName = escapeHtml(cardName);
+
+        html += `
+            <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-bold bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded">${safeDateStr}</span>
+                        <span class="text-xs text-gray-500 truncate max-w-[120px]">${safeCardName}</span>
+                    </div>
+                     <div class="text-sm font-bold text-gray-800">
+                        ${(() => {
+                const def = CATEGORY_DEF.find(d => d.v === tx.category);
+                const label = def ? def.t.split(' (')[0] : (tx.desc || tx.category);
+                return escapeHtml(label);
+            })()}
+                    </div>
+                </div>
+                <div class="text-right flex items-center gap-2">
+                    <div>
+                        <div class="text-base font-bold">$${escapeHtml(amountNum.toLocaleString())}</div>
+                        <div class="text-xs text-green-600 font-medium">+${rebateText}</div>
+                    </div>
+                    <button onclick="handleDeleteTx(${tx.id})" class="text-xs text-gray-400 hover:text-red-500 px-2 py-1 rounded border border-gray-200">刪除</button>
+                </div>
+            </div>`;
+    });
+
+    html += `</div>`;
+    container.innerHTML = html;
+}
+
+window.handleClearHistory = function () {
+    if (confirm("確定要清除所有記帳記錄嗎？此操作無法復原。")) {
+        userProfile.transactions = [];
+        saveUserData();
+        renderLedger([]);
+    }
 }
