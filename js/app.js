@@ -186,8 +186,9 @@ async function handleAnalyze() {
             const dateOk = today >= new Date(p.startDate) && today <= new Date(p.endDate);
             const bankMatch = p.bank === c.bank;
             const cardMatch = !p.cardId || p.cardId === c.id; // 指定卡片才觸發
+            const notExcluded = !p.excludeSubs || !sub || !p.excludeSubs.includes(sub); // 排除已有專屬優惠的商戶
             const amtOk = amt >= p.minAmt;
-            if (keywordMatch && dateOk && bankMatch && cardMatch && amtOk) {
+            if (keywordMatch && dateOk && bankMatch && cardMatch && notExcluded && amtOk) {
                 extraCash += calcPromoBonus(p, params);
                 activePromos.push(p.name);
             }
