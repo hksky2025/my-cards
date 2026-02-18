@@ -146,12 +146,14 @@ export function calcPromoBonus(promo, params) {
         const redExtra = isRedDay ? Math.min(amt * b.redDayRate, b.redDayCap) : 0;
         return base + redExtra;
     }
-    // Red 指定商戶：8%回贈，每月首$1,250封頂，超額降回基本0.4%
+    // Red 指定商戶：只計差額（8% - 0.4% = 7.6%），因基本0.4%已在 calcBaseReward 計算
+    // 超額部分：基本率已包含0.4%，故差額為0
     if (b.type === 'red_designated') {
+        const BASE_RATE = 0.004;
         if (amt <= b.cashCap) {
-            return amt * b.cashRate;
+            return amt * (b.cashRate - BASE_RATE); // 7.6% 差額
         } else {
-            return (b.cashCap * b.cashRate) + ((amt - b.cashCap) * b.overCapRate);
+            return b.cashCap * (b.cashRate - BASE_RATE); // 只有首$1,250有差額，超額部分差額=0
         }
     }
     return 0;
