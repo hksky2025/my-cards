@@ -146,10 +146,13 @@ export function calcPromoBonus(promo, params) {
         const redExtra = isRedDay ? Math.min(amt * b.redDayRate, b.redDayCap) : 0;
         return base + redExtra;
     }
-    // Red 指定商戶：8%回贈，每月首$1,250封頂，超額降回基本1%
+    // Red 指定商戶：8%回贈，每月首$1,250封頂，超額降回基本0.4%
     if (b.type === 'red_designated') {
-        const bonus = Math.min(amt * b.cashRate, b.cashCap) - Math.min(amt * b.overCapRate, b.cashCap * b.overCapRate);
-        return Math.max(bonus, 0);
+        if (amt <= b.cashCap) {
+            return amt * b.cashRate;
+        } else {
+            return (b.cashCap * b.cashRate) + ((amt - b.cashCap) * b.overCapRate);
+        }
     }
     return 0;
 }
