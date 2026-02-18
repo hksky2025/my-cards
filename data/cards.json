@@ -5,13 +5,26 @@
     "bank": "sc",
     "type": "miles",
     "color": "#006b4d",
-    "notes": "國泰消費$4/里，餐飲/旅遊/海外$4/里，其他$6/里",
+    "notes": "國泰/HKExpress簽賬$2/里；餐飲/酒店/海外$4/里；其他$6/里",
     "logic": {
       "type": "miles_tiered",
       "tiers": [
-        { "condition": "sub_includes:CX", "ratePerMile": 4 },
-        { "condition": "cat_in:Dining,Travel,Overseas", "ratePerMile": 4 },
-        { "condition": "default", "ratePerMile": 6 }
+        {
+          "condition": "sub_includes:CX",
+          "ratePerMile": 2
+        },
+        {
+          "condition": "sub_includes:CX_CRAZY",
+          "ratePerMile": 2
+        },
+        {
+          "condition": "cat_in:Dining,Travel,Overseas",
+          "ratePerMile": 4
+        },
+        {
+          "condition": "default",
+          "ratePerMile": 6
+        }
       ]
     }
   },
@@ -25,8 +38,14 @@
     "logic": {
       "type": "miles_tiered",
       "tiers": [
-        { "condition": "meth_in:Online,ApplePay", "ratePerMile": 3 },
-        { "condition": "default", "ratePerMile": 15 }
+        {
+          "condition": "meth_in:Online,ApplePay",
+          "ratePerMile": 3
+        },
+        {
+          "condition": "default",
+          "ratePerMile": 15
+        }
       ]
     }
   },
@@ -40,7 +59,10 @@
     "crazyEligible": true,
     "logic": {
       "type": "cheers",
-      "bonusCats": ["Dining", "Overseas"],
+      "bonusCats": [
+        "Dining",
+        "Overseas"
+      ],
       "bonusRatePerMile": 1.5,
       "bonusCashRate": 0.04,
       "baseRatePerMile": 15,
@@ -58,9 +80,18 @@
     "logic": {
       "type": "miles_tiered",
       "tiers": [
-        { "condition": "sub_eq:EM", "ratePerMile": 2 },
-        { "condition": "cat_in:Transport,Overseas,Coffee", "ratePerMile": 2 },
-        { "condition": "default", "ratePerMile": 5 }
+        {
+          "condition": "sub_eq:EM",
+          "ratePerMile": 2
+        },
+        {
+          "condition": "cat_in:Transport,Overseas,Coffee",
+          "ratePerMile": 2
+        },
+        {
+          "condition": "default",
+          "ratePerMile": 5
+        }
       ]
     }
   },
@@ -107,8 +138,14 @@
     "notes": "家居/電器/超市類3.6%，其他0.4%",
     "logic": {
       "type": "vs",
-      "bonusSubs": ["VS"],
-      "bonusCats": ["Home", "Electronics", "Super"],
+      "bonusSubs": [
+        "VS"
+      ],
+      "bonusCats": [
+        "Home",
+        "Electronics",
+        "Super"
+      ],
       "bonusRate": 0.036,
       "baseRate": 0.004
     }
@@ -152,7 +189,10 @@
     "notes": "餐飲/網購首$3636共6%，超額0.5%；其他0.5%",
     "logic": {
       "type": "motion",
-      "bonusCats": ["Dining", "Online"],
+      "bonusCats": [
+        "Dining",
+        "Online"
+      ],
       "bonusRate": 0.06,
       "bonusCap": 3636,
       "overCapRate": 0.005,
