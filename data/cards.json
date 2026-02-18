@@ -101,14 +101,15 @@
     "bank": "hsbc",
     "type": "both",
     "color": "#db0011",
-    "notes": "指定商戶8%；網購4%(首$10000)；其他1%",
+    "notes": "指定商戶8%(每月首$1,250)；網購4%無上限；超市2%；其他0.4%",
     "logic": {
       "type": "red",
       "sub8Rate": 0.08,
+      "sub8Cap": 1250,
       "onlineRate": 0.04,
-      "onlineCap": 10000,
-      "baseRate": 0.01,
-      "overCapRate": 0.01
+      "superRate": 0.02,
+      "baseRate": 0.004,
+      "overCapRate": 0.004
     }
   },
   {
