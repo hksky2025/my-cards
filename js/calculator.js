@@ -125,14 +125,21 @@ export function calcCrazyBonus(card, params) {
     if (!card.crazyEligible) return 0;
     const { amt, meth, isMet, isRedDay } = params;
 
+    // 必須達當月累積 $5,000 門檻
     if (!isMet) return 0;
 
-    if (meth === 'ApplePay' && amt >= 500) {
-        return isRedDay ? Math.min(amt * 0.05, 300) : Math.min(amt * 0.02, 120);
-    }
     if (meth === 'Online') {
+        // 網購：不限單筆金額
+        // 平日額外2%，上限$60；紅日額外5%，上限$200
         return isRedDay ? Math.min(amt * 0.05, 200) : Math.min(amt * 0.02, 60);
     }
+
+    // 本地實體店（ApplePay 或其他）：單筆須 $500 或以上
+    if (amt >= 500) {
+        // 平日額外2%，上限$120；紅日額外5%，上限$300
+        return isRedDay ? Math.min(amt * 0.05, 300) : Math.min(amt * 0.02, 120);
+    }
+
     return 0;
 }
 
