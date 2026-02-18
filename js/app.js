@@ -1,4 +1,4 @@
-// app.js — 主程式入口 (v2.1: 修復卡片選擇器)
+// app.js — 主程式入口 (v2.2: 修復卡片選擇器時序問題)
 
 import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js';
 import { loadMerchants, findMerchant } from './matcher.js';
@@ -18,41 +18,27 @@ let allCards = [], allPromos = [], cardStatus = {};
 let globalMethod = 'ApplePay', isRedDay = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
+
+    // 步驟一：先載入所有 JSON（確保 allCards 有值先）
     const [merchants, cards, promos] = await Promise.all([
         fetchJSON('./data/merchants.json'),
         fetchJSON('./data/cards.json'),
         fetchJSON('./data/promotions.json')
     ]);
-    allCards = cards; allPromos = promos;
+    allCards = cards;
+    allPromos = promos;
     loadMerchants(merchants);
+
+    console.log('✅ JSON 載入完成，卡片數量:', allCards.length);
+
+    // 步驟二：預設全部啟用（Firebase 載入前先填充選擇器）
+    allCards.forEach(c => cardStatus[c.id] = true);
+    populateCardSelect(); // ← 提前呼叫，唔等 Firebase
 
     document.getElementById('txnDate').value = new Date().toISOString().split('T')[0];
     checkDateStatus();
 
-    await initAuth(async () => {
-        const saved = await loadCardStatus();
-
-        // 預設全部啟用，再用 saved 覆蓋
-        allCards.forEach(c => cardStatus[c.id] = true);
-        if (saved) Object.assign(cardStatus, saved);
-        else await saveCardStatus(cardStatus);
-
-        renderCardManager(allCards, cardStatus, handleCardToggle);
-
-        // 填充卡片選擇器 — 顯示全部13張，啟用狀態另外標示
-        populateCardSelect();
-
-        const txnData = await loadTransactions();
-        initTransactions(txnData, () => {
-            syncMonthTotal();
-            refreshProgress();
-            renderTransactions(allCards);
-        });
-        syncMonthTotal();
-        refreshProgress();
-        renderTransactions(allCards);
-    });
-
+    // 步驟三：綁定所有事件
     document.getElementById('merchantSearch').addEventListener('input', handleMerchantSearch);
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
@@ -61,11 +47,44 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+    // 步驟四：Firebase 異步初始化（完成後更新狀態）
+    await initAuth(async () => {
+        console.log('✅ Firebase Auth 完成');
+
+        const saved = await loadCardStatus();
+        console.log('✅ 讀取卡片狀態:', saved);
+
+        if (saved) {
+            Object.assign(cardStatus, saved);
+        } else {
+            await saveCardStatus(cardStatus);
+        }
+
+        // 用 Firebase 狀態更新 UI
+        renderCardManager(allCards, cardStatus, handleCardToggle);
+        populateCardSelect(); // 再次更新（反映 Firebase 的啟用狀態）
+
+        const txnData = await loadTransactions();
+        console.log('✅ 載入交易記錄:', txnData.length, '筆');
+
+        initTransactions(txnData, () => {
+            syncMonthTotal();
+            refreshProgress();
+            renderTransactions(allCards);
+        });
+
+        syncMonthTotal();
+        refreshProgress();
+        renderTransactions(allCards);
+    });
 });
 
-// ── 填充卡片選擇器（全部13張） ────────────────────────
+// ── 填充卡片選擇器 ────────────────────────────────────
 function populateCardSelect() {
     const sel = document.getElementById('txnCardSelect');
+    if (!sel) return;
+    const current = sel.value; // 保留已選的值
     sel.innerHTML = '<option value="">-- 選擇信用卡 --</option>';
     allCards.forEach(c => {
         const opt = document.createElement('option');
@@ -73,6 +92,8 @@ function populateCardSelect() {
         opt.textContent = cardStatus[c.id] ? c.name : `${c.name}（未啟用）`;
         sel.appendChild(opt);
     });
+    if (current) sel.value = current; // 還原選擇
+    console.log('✅ 卡片選擇器已填充，共', allCards.length, '張');
 }
 
 // ── Tab 切換 ──────────────────────────────────────────
@@ -105,7 +126,7 @@ function updateMethod(m) {
 async function handleCardToggle(cardId, newStatus) {
     cardStatus[cardId] = newStatus;
     await saveCardStatus(cardStatus);
-    populateCardSelect(); // 同步更新選擇器標示
+    populateCardSelect();
     refreshProgress();
 }
 
@@ -132,7 +153,6 @@ async function handleAddTransaction() {
     alert(`✅ 已記錄：${merchant} $${amt}`);
 }
 
-// 全局刪除（供 transactions.js renderer 呼叫）
 window.handleDeleteTxn = async (id) => {
     if (!confirm('確定刪除此記錄？')) return;
     await removeTransaction(id);
@@ -157,7 +177,8 @@ async function handleAnalyze() {
     const processed = allCards.filter(c => cardStatus[c.id]).map(c => {
         const baseRes = calcBaseReward(c, params);
         const crazyBonus = isCrazyCat(cat, sub) ? calcCrazyBonus(c, params) : 0;
-        let extraCash = 0; const activePromos = [];
+        let extraCash = 0;
+        const activePromos = [];
         if (crazyBonus > 0) activePromos.push('狂賞派');
         allPromos.forEach(p => {
             const kw = rawInput.toLowerCase();
@@ -174,16 +195,15 @@ async function handleAnalyze() {
     renderResults(processed);
 }
 
-// ── 進度刷新 ──────────────────────────────────────────
+// ── 進度 ──────────────────────────────────────────────
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal);
 }
 
 function syncMonthTotal() {
-    const total = getCurrentMonthTotal();
     const el = document.getElementById('currentSpent');
-    if (el) el.value = total;
+    if (el) el.value = getCurrentMonthTotal();
 }
 
 function isCrazyCat(cat, sub) {
