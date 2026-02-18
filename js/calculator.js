@@ -37,12 +37,16 @@ export function calcBaseReward(card, params) {
         }
 
         case 'red': {
-            // Red8 指定商戶：首$1250@8%，超額@0.4%（calcPromoBonus 會另計差額，故此只計基本0.4%，由promo補差）
-            // 注意：Red8_HSBC 商戶交由 calcPromoBonus 處理8%差額，此處只計0.4%基本
+            // Red8_HSBC 指定商戶：calcPromoBonus 負責計8%差額，此處只計基本0.4%
             if (meth === 'Online') {
-                if (amt <= logic.onlineCap) return { val: amt * logic.onlineRate, rate: `${logic.onlineRate * 100}%` };
-                return { val: logic.onlineCap * logic.onlineRate + (amt - logic.onlineCap) * logic.overCapRate, rate: `${logic.onlineRate * 100}% (封頂後${logic.overCapRate * 100}%)` };
+                // 網購4%，無上限
+                return { val: amt * logic.onlineRate, rate: `${logic.onlineRate * 100}% (網購)` };
             }
+            if (cat === 'Super') {
+                // 超市2%
+                return { val: amt * logic.superRate, rate: `${logic.superRate * 100}% (超市)` };
+            }
+            // 其他零售0.4%
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
 
