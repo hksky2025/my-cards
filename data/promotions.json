@@ -1,0 +1,19 @@
+[
+  {
+    "id": "hsbc_mannings_2026",
+    "bank": "hsbc",
+    "name": "HSBC 萬寧冬日優惠",
+    "startDate": "2025-12-01",
+    "endDate": "2026-02-28",
+    "keywords": ["萬寧", "mannings"],
+    "minAmt": 500,
+    "remarks": "⚠️ 需登記！簽滿$1000計。紅日最高+5% RC。",
+    "bonus": {
+      "type": "percentage_cap",
+      "baseRate": 0.05,
+      "baseCap": 300,
+      "redDayRate": 0.05,
+      "redDayCap": 150
+    }
+  }
+]

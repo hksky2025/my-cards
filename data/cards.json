@@ -1,0 +1,203 @@
+[
+  {
+    "id": "sc_cathay",
+    "name": "渣打國泰卡",
+    "bank": "sc",
+    "type": "miles",
+    "color": "#006b4d",
+    "notes": "國泰消費$4/里，餐飲/旅遊/海外$4/里，其他$6/里",
+    "logic": {
+      "type": "miles_tiered",
+      "tiers": [
+        { "condition": "sub_includes:CX", "ratePerMile": 4 },
+        { "condition": "cat_in:Dining,Travel,Overseas", "ratePerMile": 4 },
+        { "condition": "default", "ratePerMile": 6 }
+      ]
+    }
+  },
+  {
+    "id": "ccb_eye",
+    "name": "建銀 eye卡",
+    "bank": "ccb",
+    "type": "miles",
+    "color": "#003b8e",
+    "notes": "手機支付/網購$3/里，其他$15/里",
+    "logic": {
+      "type": "miles_tiered",
+      "tiers": [
+        { "condition": "meth_in:Online,ApplePay", "ratePerMile": 3 },
+        { "condition": "default", "ratePerMile": 15 }
+      ]
+    }
+  },
+  {
+    "id": "cheers",
+    "name": "中銀 Cheers VI",
+    "bank": "boc",
+    "type": "both",
+    "color": "#b31d28",
+    "notes": "達$5000門檻且餐飲/海外：$1.5/里(4%)，否則$15/里(0.4%)",
+    "crazyEligible": true,
+    "logic": {
+      "type": "cheers",
+      "bonusCats": ["Dining", "Overseas"],
+      "bonusRatePerMile": 1.5,
+      "bonusCashRate": 0.04,
+      "baseRatePerMile": 15,
+      "baseCashRate": 0.004,
+      "requiresMet": true
+    }
+  },
+  {
+    "id": "everymile",
+    "name": "HSBC EveryMile",
+    "bank": "hsbc",
+    "type": "miles",
+    "color": "#db0011",
+    "notes": "交通/咖啡/海外$2/里，其他$5/里",
+    "logic": {
+      "type": "miles_tiered",
+      "tiers": [
+        { "condition": "sub_eq:EM", "ratePerMile": 2 },
+        { "condition": "cat_in:Transport,Overseas,Coffee", "ratePerMile": 2 },
+        { "condition": "default", "ratePerMile": 5 }
+      ]
+    }
+  },
+  {
+    "id": "red",
+    "name": "HSBC Red",
+    "bank": "hsbc",
+    "type": "both",
+    "color": "#db0011",
+    "notes": "指定商戶8%；網購4%(首$10000)；其他1%",
+    "logic": {
+      "type": "red",
+      "sub8Rate": 0.08,
+      "onlineRate": 0.04,
+      "onlineCap": 10000,
+      "baseRate": 0.01,
+      "overCapRate": 0.01
+    }
+  },
+  {
+    "id": "mmpower",
+    "name": "恒生 MMPOWER",
+    "bank": "hangseng",
+    "type": "both",
+    "color": "#008154",
+    "notes": "達門檻：海外6%，網購5%；未達門檻0.4%，本地1%",
+    "logic": {
+      "type": "mmpower",
+      "baseRate": 0.004,
+      "localRate": 0.01,
+      "overseasRate": 0.06,
+      "overseaCapBonus": 500,
+      "onlineRate": 0.05,
+      "onlineCapBonus": 500,
+      "requiresMet": true
+    }
+  },
+  {
+    "id": "vs",
+    "name": "HSBC VS (賞家居)",
+    "bank": "hsbc",
+    "type": "both",
+    "color": "#db0011",
+    "notes": "家居/電器/超市類3.6%，其他0.4%",
+    "logic": {
+      "type": "vs",
+      "bonusSubs": ["VS"],
+      "bonusCats": ["Home", "Electronics", "Super"],
+      "bonusRate": 0.036,
+      "baseRate": 0.004
+    }
+  },
+  {
+    "id": "sogo",
+    "name": "中銀 Sogo Visa",
+    "bank": "boc",
+    "type": "both",
+    "color": "#b31d28",
+    "notes": "ApplePay首$2000共5.4%，超額0.4%；其他0.4%",
+    "crazyEligible": true,
+    "logic": {
+      "type": "sogo",
+      "applePayRate": 0.054,
+      "applePayCap": 2000,
+      "overCapRate": 0.004,
+      "baseRate": 0.004
+    }
+  },
+  {
+    "id": "go",
+    "name": "中銀 Go銀聯卡",
+    "bank": "boc",
+    "type": "both",
+    "color": "#b31d28",
+    "notes": "超市5%，其他0.4%",
+    "crazyEligible": true,
+    "logic": {
+      "type": "go",
+      "superRate": 0.05,
+      "baseRate": 0.004
+    }
+  },
+  {
+    "id": "motion",
+    "name": "中信 Motion",
+    "bank": "citic",
+    "type": "cash",
+    "color": "#ed1c24",
+    "notes": "餐飲/網購首$3636共6%，超額0.5%；其他0.5%",
+    "logic": {
+      "type": "motion",
+      "bonusCats": ["Dining", "Online"],
+      "bonusRate": 0.06,
+      "bonusCap": 3636,
+      "overCapRate": 0.005,
+      "baseRate": 0.005,
+      "onlineBonus": true
+    }
+  },
+  {
+    "id": "mox",
+    "name": "Mox Credit",
+    "bank": "mox",
+    "type": "cash",
+    "color": "#05d5a1",
+    "notes": "超市3%，其他1%",
+    "logic": {
+      "type": "mox",
+      "superRate": 0.03,
+      "baseRate": 0.01
+    }
+  },
+  {
+    "id": "aia",
+    "name": "建銀 AIA卡",
+    "bank": "ccb",
+    "type": "cash",
+    "color": "#003b8e",
+    "notes": "所有消費0.5%",
+    "logic": {
+      "type": "flat",
+      "rate": 0.005
+    }
+  },
+  {
+    "id": "waku",
+    "name": "Aeon Wakuwaku",
+    "bank": "aeon",
+    "type": "cash",
+    "color": "#800080",
+    "notes": "網購首$3571共6%，超額0.5%；其他0.5%",
+    "logic": {
+      "type": "waku",
+      "onlineRate": 0.06,
+      "onlineCap": 3571,
+      "overCapRate": 0.005,
+      "baseRate": 0.005
+    }
+  }
+]
