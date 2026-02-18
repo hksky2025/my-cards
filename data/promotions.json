@@ -48,7 +48,7 @@
       "cashRate": 0.08,
       "cashCap": 1250,
       "milesRate": 1.25,
-      "overCapRate": 0.01
+      "overCapRate": 0.004
     }
   }
 ]
