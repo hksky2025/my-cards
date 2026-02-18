@@ -1,143 +1,171 @@
-
 <!DOCTYPE html>
 <html lang="zh-HK">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信用卡管家 V1.1 Ledger</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>智能簽賬軍師 V56.0</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="簽賬軍師">
+
+    <style>
+        :root {
+            --boc: #b31d28; --hsbc: #db0011; --hangseng: #008154;
+            --sc: #006b4d; --ccb: #003b8e; --aeon: #800080;
+            --citic: #ed1c24; --mox: #05d5a1;
+            --miles: #004a99; --cash: #d32f2f; --bg: #f2f5f8;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); margin: 0; padding: env(safe-area-inset-top) 10px 30px 10px; color: #1a1a1a; }
+        .container { max-width: 650px; margin: 10px auto; background: #fff; padding: 20px; border-radius: 24px; box-shadow: 0 10px 40px rgba(0,0,0,0.06); }
+
+        /* Header */
+        header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #f0f2f5; padding-bottom: 15px; }
+        header h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+        header p { margin: 5px 0 0; font-size: 12px; color: #888; }
+
+        /* 同步狀態 */
+        #syncStatus { font-size: 11px; color: #aaa; text-align: center; margin-bottom: 10px; min-height: 1em; }
+
+        /* 卡片管理 */
+        .manager-toggle-btn { width: 100%; padding: 12px; background: #f0f2f5; border: 1px solid #ddd; border-radius: 12px; font-size: 13px; font-weight: 700; color: #555; cursor: pointer; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .card-manager-content { display: none; background: #fafafa; border: 1px solid #eee; border-radius: 20px; padding: 15px; margin-bottom: 20px; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .bank-name-label { font-size: 11px; font-weight: 700; color: #aaa; text-transform: uppercase; margin: 10px 0 5px; }
+        .toggle-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+        .toggle-card-btn { padding: 8px 12px; border-radius: 10px; border: 1.5px solid #eee; font-size: 11px; font-weight: 700; cursor: pointer; background: #fff; color: #ccc; transition: 0.2s; }
+        .toggle-card-btn.active.hsbc { border-color: var(--hsbc); color: var(--hsbc); background: #fff5f5; }
+        .toggle-card-btn.active.boc { border-color: var(--boc); color: var(--boc); background: #fff5f5; }
+        .toggle-card-btn.active.hangseng { border-color: var(--hangseng); color: var(--hangseng); background: #f5fff5; }
+        .toggle-card-btn.active.ccb { border-color: var(--ccb); color: var(--ccb); background: #f5f8ff; }
+        .toggle-card-btn.active.sc { border-color: var(--sc); color: var(--sc); background: #f5fff5; }
+        .toggle-card-btn.active.citic { border-color: var(--citic); color: var(--citic); background: #fff5f5; }
+        .toggle-card-btn.active.mox { border-color: var(--mox); color: #111; background: #f5fff5; }
+        .toggle-card-btn.active.aeon { border-color: var(--aeon); color: var(--aeon); background: #fff5ff; }
+
+        /* 搜尋 */
+        .search-section { background: linear-gradient(135deg, #1a1a1a, #333); color: #fff; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .search-section label { font-size: 13px; color: #bbb; display: block; margin-bottom: 8px; }
+        #merchantSearch { width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: 700; outline: none; color: #000; }
+        .match-hint { font-size: 13px; color: #4caf50; margin-top: 10px; font-weight: bold; min-height: 1.2em; }
+
+        /* 輸入 */
+        .input-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
+        .input-group { flex: 1; min-width: 280px; }
+        label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 13px; color: #555; }
+        select, input[type="number"], input[type="date"] { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 15px; background: #fafafa; outline: none; }
+
+        /* 日期狀態 */
+        .date-status-tag { font-size: 11px; font-weight: 800; margin-top: 4px; display: inline-block; padding: 2px 6px; border-radius: 4px; }
+        .is-red { background: #ffebee; color: #d32f2f; }
+        .is-normal { background: #f0f0f0; color: #666; }
+
+        /* 支付切換 */
+        .toggle-container { display: flex; gap: 5px; background: #f0f0f0; padding: 4px; border-radius: 12px; }
+        .toggle-btn { flex: 1; padding: 11px 5px; border: none; border-radius: 9px; cursor: pointer; font-size: 12px; font-weight: 700; color: #666; background: none; transition: 0.2s; }
+        .toggle-btn.active { background: #fff; color: #000; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        .analyze-btn { width: 100%; padding: 18px; background: #db0011; color: #fff; border: none; border-radius: 15px; font-size: 18px; font-weight: 800; cursor: pointer; margin-top: 10px; }
+
+        /* 結果 */
+        .section-header { margin-top: 30px; padding-bottom: 10px; border-bottom: 2px solid #eee; font-size: 17px; font-weight: 800; }
+        .section-header.miles { color: var(--miles); }
+        .section-header.cash { color: var(--cash); }
+        .card-box { border: 1px solid #f0f0f0; border-radius: 18px; padding: 16px; margin-top: 12px; border-left: 6px solid #ccc; background: #fff; }
+        .boc-card { border-left-color: var(--boc); }
+        .hsbc-card { border-left-color: var(--hsbc); }
+        .hangseng-card { border-left-color: var(--hangseng); }
+        .sc-card { border-left-color: var(--sc); }
+        .ccb-card { border-left-color: var(--ccb); }
+        .citic-card { border-left-color: var(--citic); }
+        .mox-card { border-left-color: var(--mox); }
+        .aeon-card { border-left-color: var(--aeon); }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .earn-val { font-size: 22px; font-weight: 900; text-align: right; letter-spacing: -0.5px; }
+        .promo-tag { background: #fff3e0; color: #e65100; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; display: inline-block; margin-top: 4px; border: 1px solid #ffe0b2; }
+        .card-desc { font-size: 12px; color: #777; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px; line-height: 1.5; }
+        .remark-tip { font-size: 11px; color: #e65100; font-weight: 600; margin-top: 5px; padding: 4px 0; display: block; border-top: 1px solid #fff3e0; }
+
+        @media (max-width: 450px) { .input-group { min-width: 100%; } }
+    </style>
 </head>
+<body>
+<div class="container">
+    <header>
+        <h1>💳 智能簽賬軍師 V56.0</h1>
+        <p>模組化重構版 | JSON 驅動 | Firebase 雲端同步</p>
+    </header>
 
-<body class="max-w-md mx-auto min-h-screen relative">
+    <div id="syncStatus">🔄 初始化中...</div>
 
-    <div class="bg-white p-4 shadow-sm sticky top-0 z-20 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-gray-800"><i class="fas fa-wallet text-blue-600 mr-2"></i>信用卡管家</h1>
-        <span class="text-xs text-white bg-indigo-600 px-2 py-1 rounded-full">V1.1 Ledger</span>
+    <button id="managerToggleBtn" class="manager-toggle-btn">⚙️ 編輯我的卡片清單</button>
+    <div id="cardManagerPanel" class="card-manager-content">
+        <div id="bankGroupsContainer"></div>
     </div>
 
-    <div id="view-dashboard" class="p-4 space-y-4 tab-content">
-        <div id="dashboard-container"></div>
-        <h3 class="text-xs font-bold text-gray-500 uppercase ml-1">額度監控 (Cap)</h3>
-        <div id="cap-monitors" class="space-y-3"></div>
+    <div class="search-section">
+        <label>🔍 搜尋商戶 (fresh, 百佳, mtr, Apple, 萬寧...)</label>
+        <input type="text" id="merchantSearch" placeholder="搜尋商戶名稱...">
+        <div id="matchHint" class="match-hint"></div>
     </div>
 
-    <div id="view-calculator" class="p-4 space-y-4 tab-content hidden">
-        <div class="flex justify-center mb-4">
-            <div class="bg-gray-200 p-1 rounded-lg flex text-xs font-bold">
-                <button id="btn-mode-miles" onclick="toggleMode('miles')"
-                    class="px-4 py-1.5 rounded-md transition-all bg-white text-blue-600 shadow-sm">顯示里數 (Miles)</button>
-                <button id="btn-mode-cash" onclick="toggleMode('cash')"
-                    class="px-4 py-1.5 rounded-md transition-all text-gray-500">顯示現金 ($)</button>
-            </div>
+    <div class="input-row">
+        <div class="input-group">
+            <label>當月累積簽賬 (HKD)</label>
+            <input type="number" id="currentSpent" value="0">
         </div>
-        <div id="fee-deduct-wrap" class="flex items-center justify-center text-[10px] text-gray-600">
-            <label class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-full">
-                <input id="toggle-fee-deduct" type="checkbox" class="accent-blue-600" onchange="toggleFeeDeduct(this.checked)">
-                扣除外幣手續費（只影響排序）
-            </label>
+        <div class="input-group">
+            <label>本次金額 (HKD)</label>
+            <input type="number" id="amount" placeholder="金額" inputmode="numeric">
         </div>
-        <div class="bg-white p-5 rounded-2xl shadow-sm space-y-4">
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">簽賬金額 (HKD)</label>
-                <div class="relative">
-                    <span class="absolute left-3 top-3 text-gray-400">$</span>
-                    <input type="number" id="amount" value="3000"
-                        class="w-full pl-8 p-3 bg-gray-50 rounded-xl text-lg font-semibold" oninput="runCalc()">
-                </div>
-            </div>
-            <div>
-                <label class="block text-gray-700 font-bold mb-2">簽賬類別</label>
-                <div class="flex gap-2 mb-4">
-                    <select id="category" class="w-full p-3 border border-gray-300 rounded-lg bg-white appearance-none"
-                        onchange="toggleCategoryHelp(); runCalc()">
-                        <!-- Javascript will populate this -->
-                    </select>
-                    <button id="cat-help-btn"
-                        class="hidden px-3 text-gray-400 hover:text-blue-500 border border-gray-200 rounded-lg"><i
-                            class="fas fa-question-circle"></i></button>
-                </div>
-                <div class="flex items-center justify-between mb-4 text-xs text-gray-600">
-                    <span class="font-bold">交易類型</span>
-                    <label class="flex items-center gap-2 bg-gray-100 px-3 py-1.5 rounded-full">
-                        <input id="tx-online" type="checkbox" class="accent-blue-600" onchange="runCalc()">
-                        網上交易
-                    </label>
-                </div>
+    </div>
 
-                <div class="flex gap-4 mb-4">
-                    <div class="w-2/3">
-                        <label class="block text-gray-700 font-bold mb-2 text-xs">📅 簽賬日期</label>
-                        <input type="date" id="tx-date" class="w-full p-2 border border-gray-300 rounded-lg text-sm"
-                            onchange="runCalc()">
-                    </div>
-                    <div class="w-1/3 flex items-center justify-center pt-6">
-                        <span id="holiday-badge"
-                            class="hidden bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold border border-red-200">
-                            🔴 公眾假期
-                        </span>
-                    </div>
-                </div>
-            </div>
+    <div class="input-row">
+        <div class="input-group">
+            <label>簽賬日期 (識別紅日獎賞)</label>
+            <input type="date" id="txnDate">
+            <div id="dateStatus" class="date-status-tag"></div>
         </div>
-        <div id="calc-results" class="space-y-3 pb-10"></div>
-    </div>
-
-    <div id="view-settings" class="p-4 space-y-4 tab-content hidden">
-        <div id="settings-container"></div>
-    </div>
-
-    <div id="view-ledger" class="p-4 space-y-4 tab-content hidden">
-        <div id="ledger-container"></div>
-    </div>
-
-    <!-- Disclaimer Footer -->
-    <div class="p-4 pb-20 bg-gray-50 border-t border-gray-200">
-        <div class="max-w-md mx-auto space-y-3">
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-[10px] text-gray-600 leading-relaxed">
-                <p class="font-bold text-yellow-700 mb-2">⚠️ 免責聲明 Disclaimer</p>
-                <p class="mb-2">本工具僅供參考，所有回贈計算結果僅為估算。銀行條款及推廣優惠會不時更改，實際回贈以銀行最新公佈為準。</p>
-                <p class="mb-2">使用者應自行核實銀行條款，並對自己的財務決策負責。本工具不構成任何財務建議。</p>
-                <p class="text-gray-500">This tool is for reference only. All cashback calculations are estimates. Bank
-                    terms and promotions are subject to change. Users should verify terms with their banks and are
-                    responsible for their own financial decisions.</p>
-            </div>
-            <div class="text-center space-y-2">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSc924Ytr60wr15_QFdrITFGoR3tjDmtg2djbPPxswkUvJZY4A/viewform"
-                    target="_blank" class="text-xs text-blue-500 hover:text-blue-700 underline block mb-2">🐛 回報問題 /
-                    提供意見
-                </a>
-                <p class="text-xs text-gray-400">Made with ❤️ in Hong Kong</p>
-                <p class="text-xs text-gray-400">© 2026 信用卡管家 | All Rights Reserved</p>
+        <div class="input-group">
+            <label>支付方式</label>
+            <div class="toggle-container">
+                <button id="meth-ap" class="toggle-btn active">手機支付</button>
+                <button id="meth-on" class="toggle-btn">網上/App</button>
             </div>
         </div>
     </div>
 
-    <div
-        class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around p-3 pb-5 z-20 max-w-md mx-auto">
-        <button onclick="switchTab('dashboard')" class="flex flex-col items-center text-blue-600 tab-btn w-1/4"
-            id="btn-dashboard"><i class="fas fa-chart-pie text-xl mb-1"></i><span class="text-[10px]">進度</span></button>
-        <button onclick="switchTab('calculator')" class="flex flex-col items-center text-gray-400 tab-btn w-1/4"
-            id="btn-calculator"><i class="fas fa-calculator text-xl mb-1"></i><span
-                class="text-[10px]">計算</span></button>
-        <button onclick="switchTab('ledger')" class="flex flex-col items-center text-gray-400 tab-btn w-1/4"
-            id="btn-ledger"><i class="fas fa-book text-xl mb-1"></i><span class="text-[10px]">記帳</span></button>
-        <button onclick="switchTab('settings')" class="flex flex-col items-center text-gray-400 tab-btn w-1/4"
-            id="btn-settings"><i class="fas fa-cog text-xl mb-1"></i><span class="text-[10px]">設定</span></button>
+    <div class="input-group" style="margin-bottom:15px;">
+        <label>類別判定 (偵測後可修正)</label>
+        <select id="category">
+            <option value="General">-- 一般本地消費 --</option>
+            <option value="Dining">🍽️ 餐飲食肆</option>
+            <option value="Online">🛍️ 一般網購</option>
+            <option value="Electronics">🔌 電子產品/電訊</option>
+            <option value="Super">🛒 超級市場</option>
+            <option value="Transport">🚌 交通/叫車/油站</option>
+            <option value="Home">🏠 家居用品</option>
+            <option value="Pet">🐾 寵物護理</option>
+            <option value="Leisure">🎡 休閒娛樂</option>
+            <option value="Medical">🏥 醫療服務</option>
+            <option value="Travel">✈️ 旅遊機票/酒店</option>
+            <option value="Jewelry">💍 珠寶服飾</option>
+            <option value="Coffee">☕ 咖啡輕食</option>
+            <option value="Overseas">🌍 海外外幣</option>
+        </select>
     </div>
 
-    <!-- Scripts: Loaded in dependency order -->
-    <script src="js/data_cards.js"></script>
-    <script src="js/data_categories.js"></script>
-    <script src="js/data_modules.js"></script>
-    <script src="js/data_conversions.js"></script>
-    <script src="js/data_rules.js"></script>
-    <script src="js/data_promotions.js"></script>
-    <script src="js/core.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/app.js"></script>
+    <button id="analyzeBtn" class="analyze-btn">精確運算最佳分組排序</button>
+
+    <div id="results" style="display:none;">
+        <div class="section-header miles">✈️ 里數優先建議 (高至低)</div>
+        <div id="miles-results"></div>
+        <div class="section-header cash">💰 現金回贈建議 (高至低)</div>
+        <div id="cash-results"></div>
+    </div>
+</div>
+
+<!-- Firebase SDK (ESM) -->
+<script type="module" src="./js/app.js"></script>
 </body>
-
 </html>
