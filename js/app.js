@@ -14,8 +14,19 @@ const HOLIDAYS_2026 = [
     "2026-09-26","2026-10-01","2026-10-19","2026-12-25","2026-12-26"
 ];
 
+// 狂賞派專用紅日（2026年1月1日至6月30日推廣期，每個星期日+指定假期）
+// 來源：中銀狂賞派條款及細則
+const BOC_CRAZY_RED_DAYS = new Set([
+    "2026-01-01","2026-01-04","2026-01-11","2026-01-18","2026-01-25",
+    "2026-02-01","2026-02-08","2026-02-15","2026-02-17","2026-02-18","2026-02-19","2026-02-22",
+    "2026-03-01","2026-03-08","2026-03-15","2026-03-22","2026-03-29",
+    "2026-04-03","2026-04-04","2026-04-05","2026-04-06","2026-04-07","2026-04-12","2026-04-19","2026-04-26",
+    "2026-05-01","2026-05-03","2026-05-10","2026-05-17","2026-05-24","2026-05-25","2026-05-31",
+    "2026-06-07","2026-06-14","2026-06-19","2026-06-21","2026-06-28"
+]);
+
 let allCards = [], allPromos = [], cardStatus = {};
-let globalMethod = 'ApplePay', isRedDay = false;
+let globalMethod = 'ApplePay', isRedDay = false, isCrazyRedDay = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
 
@@ -128,8 +139,10 @@ function handleMerchantSearch() {
 
 function checkDateStatus() {
     const s = document.getElementById('txnDate').value;
-    isRedDay = [0,5,6].includes(new Date(s).getDay()) || HOLIDAYS_2026.includes(s);
-    renderDateStatus(isRedDay);
+    const d = new Date(s);
+    isRedDay = [0,5,6].includes(d.getDay()) || HOLIDAYS_2026.includes(s);
+    isCrazyRedDay = BOC_CRAZY_RED_DAYS.has(s);
+    renderDateStatus(isRedDay, isCrazyRedDay);
 }
 
 function updateMethod(m) {
@@ -187,7 +200,7 @@ async function handleAnalyze() {
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
     const today = new Date();
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay };
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay };
 
     const processed = allCards.filter(c => cardStatus[c.id]).map(c => {
         const baseRes = calcBaseReward(c, params);

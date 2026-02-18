@@ -86,10 +86,18 @@ export function renderMatchHint(match) {
  * 更新日期狀態 Tag
  * @param {boolean} isRed
  */
-export function renderDateStatus(isRed) {
+export function renderDateStatus(isRed, isCrazyRed = false) {
     const el = document.getElementById('dateStatus');
-    el.textContent = isRed ? '🔥 紅日獎賞激活' : '📅 平日獎賞';
-    el.className = `date-status-tag ${isRed ? 'is-red' : 'is-normal'}`;
+    if (isCrazyRed && isRed) {
+        el.textContent = '🔥 紅日（狂賞派+其他卡紅日）';
+    } else if (isCrazyRed) {
+        el.textContent = '🔥 狂賞派紅日（5%回贈）';
+    } else if (isRed) {
+        el.textContent = '🔥 紅日獎賞激活';
+    } else {
+        el.textContent = '📅 平日獎賞';
+    }
+    el.className = `date-status-tag ${(isRed || isCrazyRed) ? 'is-red' : 'is-normal'}`;
 }
 
 // ── 內部輔助 ──────────────────────────────────────────
