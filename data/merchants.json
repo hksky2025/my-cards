@@ -680,5 +680,72 @@
     "cat": "General",
     "sub": "MANNINGS",
     "meth": "ApplePay"
+  },
+  {
+    "name": "譚仔三哥米線",
+    "aliases": [
+      "譚仔三哥",
+      "taamjai samgor"
+    ],
+    "cat": "Dining",
+    "sub": "Red8_BOC",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "譚仔雲南米線",
+    "aliases": [
+      "譚仔雲南",
+      "taamjai yunnan"
+    ],
+    "cat": "Dining",
+    "sub": "Red8_BOC",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "The Coffee Academics",
+    "aliases": [
+      "coffee academics",
+      "tca"
+    ],
+    "cat": "Coffee",
+    "sub": "Red8_HSBC",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "GU",
+    "aliases": [
+      "gu fashion"
+    ],
+    "cat": "Jewelry",
+    "sub": "Red8_HSBC",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Decathlon",
+    "aliases": [
+      "迪卡儂",
+      "decathlon hong kong"
+    ],
+    "cat": "Leisure",
+    "sub": "Red8_HSBC",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "lululemon",
+    "aliases": [
+      "lulu lemon"
+    ],
+    "cat": "Jewelry",
+    "sub": "Red8_HSBC",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "TAITO STATION",
+    "aliases": [
+      "taito"
+    ],
+    "cat": "Leisure",
+    "sub": "Red8_HSBC",
+    "meth": "ApplePay"
   }
 ]

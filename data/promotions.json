@@ -5,7 +5,10 @@
     "name": "HSBC 萬寧冬日優惠",
     "startDate": "2025-12-01",
     "endDate": "2026-02-28",
-    "keywords": ["萬寧", "mannings"],
+    "keywords": [
+      "萬寧",
+      "mannings"
+    ],
     "minAmt": 500,
     "remarks": "⚠️ 需登記！簽滿$1000計。紅日最高+5% RC。",
     "bonus": {
@@ -14,6 +17,38 @@
       "baseCap": 300,
       "redDayRate": 0.05,
       "redDayCap": 150
+    }
+  },
+  {
+    "id": "hsbc_red_designated_2026q1",
+    "bank": "hsbc",
+    "cardId": "red",
+    "name": "HSBC Red 指定商戶8%回贈",
+    "startDate": "2026-01-01",
+    "endDate": "2026-03-31",
+    "keywords": [
+      "壽司郎",
+      "sushiro",
+      "譚仔三哥",
+      "譚仔雲南",
+      "the coffee academics",
+      "coffee academics",
+      "gu",
+      "decathlon",
+      "迪卡儂",
+      "lululemon",
+      "namco",
+      "taito station",
+      "taito"
+    ],
+    "minAmt": 1,
+    "remarks": "⚠️ 每月首HK$1,250簽賬適用，推廣至2026年3月31日",
+    "bonus": {
+      "type": "red_designated",
+      "cashRate": 0.08,
+      "cashCap": 1250,
+      "milesRate": 1.25,
+      "overCapRate": 0.01
     }
   }
 ]
