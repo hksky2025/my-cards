@@ -1,10 +1,10 @@
-// app.js — 主程式入口 (v2: 加入進度面板 + 交易記錄)
+// app.js — 主程式入口 (v2.1: 修復卡片選擇器)
 
 import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js';
 import { loadMerchants, findMerchant } from './matcher.js';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
-import { initTransactions, addTransaction, deleteTransaction, getTransactions, getCurrentMonthTotal, getCardMonthTotal, renderTransactions } from './transactions.js';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, renderTransactions } from './transactions.js';
 import { renderProgress } from './progress.js';
 
 const HOLIDAYS_2026 = [
@@ -31,21 +31,23 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     await initAuth(async () => {
         const saved = await loadCardStatus();
-        cardStatus = saved || {};
-        if (!saved) allCards.forEach(c => cardStatus[c.id] = true);
-        if (!saved) await saveCardStatus(cardStatus);
+
+        // 預設全部啟用，再用 saved 覆蓋
+        allCards.forEach(c => cardStatus[c.id] = true);
+        if (saved) Object.assign(cardStatus, saved);
+        else await saveCardStatus(cardStatus);
+
         renderCardManager(allCards, cardStatus, handleCardToggle);
 
-        // 填充卡片選擇器
-        const sel = document.getElementById('txnCardSelect');
-        allCards.filter(c => cardStatus[c.id]).forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c.id; opt.textContent = c.name;
-            sel.appendChild(opt);
-        });
+        // 填充卡片選擇器 — 顯示全部13張，啟用狀態另外標示
+        populateCardSelect();
 
         const txnData = await loadTransactions();
-        initTransactions(txnData, () => { syncMonthTotal(); refreshProgress(); renderTransactions(allCards); });
+        initTransactions(txnData, () => {
+            syncMonthTotal();
+            refreshProgress();
+            renderTransactions(allCards);
+        });
         syncMonthTotal();
         refreshProgress();
         renderTransactions(allCards);
@@ -61,6 +63,19 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 });
 
+// ── 填充卡片選擇器（全部13張） ────────────────────────
+function populateCardSelect() {
+    const sel = document.getElementById('txnCardSelect');
+    sel.innerHTML = '<option value="">-- 選擇信用卡 --</option>';
+    allCards.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = cardStatus[c.id] ? c.name : `${c.name}（未啟用）`;
+        sel.appendChild(opt);
+    });
+}
+
+// ── Tab 切換 ──────────────────────────────────────────
 function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     document.querySelectorAll('.tab-panel').forEach(p => p.style.display = p.id === `tab-${tab}` ? 'block' : 'none');
@@ -68,6 +83,7 @@ function switchTab(tab) {
     if (tab === 'txn') renderTransactions(allCards);
 }
 
+// ── 事件處理 ──────────────────────────────────────────
 function handleMerchantSearch() {
     const match = findMerchant(document.getElementById('merchantSearch').value);
     renderMatchHint(match);
@@ -89,6 +105,7 @@ function updateMethod(m) {
 async function handleCardToggle(cardId, newStatus) {
     cardStatus[cardId] = newStatus;
     await saveCardStatus(cardStatus);
+    populateCardSelect(); // 同步更新選擇器標示
     refreshProgress();
 }
 
@@ -97,33 +114,40 @@ function toggleManager() {
     p.style.display = p.style.display === 'block' ? 'none' : 'block';
 }
 
+// ── 新增交易 ──────────────────────────────────────────
 async function handleAddTransaction() {
     const merchant = document.getElementById('merchantSearch').value.trim() || document.getElementById('category').value;
     const amt = parseFloat(document.getElementById('amount').value);
     const date = document.getElementById('txnDate').value;
     const cardId = document.getElementById('txnCardSelect').value;
     const cat = document.getElementById('category').value;
+
     if (!amt || amt <= 0) return alert('請輸入有效金額');
     if (!cardId) return alert('請選擇信用卡');
+
     const txn = { merchant, amt, date, cardId, cat, method: globalMethod };
     const saved = await saveTransaction(txn);
     addTransaction(saved);
     document.getElementById('amount').value = '';
+    alert(`✅ 已記錄：${merchant} $${amt}`);
 }
 
-// 全局刪除（供 renderer 呼叫）
+// 全局刪除（供 transactions.js renderer 呼叫）
 window.handleDeleteTxn = async (id) => {
     if (!confirm('確定刪除此記錄？')) return;
     await removeTransaction(id);
     deleteTransaction(id);
 };
 
+// ── 核心運算 ──────────────────────────────────────────
 async function handleAnalyze() {
     const spent = parseFloat(document.getElementById('currentSpent').value) || 0;
     const amt = parseFloat(document.getElementById('amount').value);
     const cat = document.getElementById('category').value;
     const rawInput = document.getElementById('merchantSearch').value.trim();
+
     if (!amt || amt <= 0) return alert('請輸入有效金額');
+
     const isMet = (spent + amt) >= 5000;
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
@@ -146,9 +170,11 @@ async function handleAnalyze() {
         });
         return { card: c, baseRes, crazyBonus, extraCash, activePromos };
     });
+
     renderResults(processed);
 }
 
+// ── 進度刷新 ──────────────────────────────────────────
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal);
@@ -161,7 +187,8 @@ function syncMonthTotal() {
 }
 
 function isCrazyCat(cat, sub) {
-    return ['Dining','Electronics','Pet','Leisure','Medical','Travel','Jewelry'].includes(cat) || (sub && sub.includes('CRAZY'));
+    return ['Dining','Electronics','Pet','Leisure','Medical','Travel','Jewelry'].includes(cat)
+        || (sub && sub.includes('CRAZY'));
 }
 
 async function fetchJSON(url) {
