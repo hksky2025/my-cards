@@ -49,6 +49,9 @@
       "cashCap": 1250,
       "milesRate": 1.25,
       "overCapRate": 0.004
-    }
+    },
+    "excludeSubs": [
+      "Red8_BOC"
+    ]
   }
 ]
