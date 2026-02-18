@@ -573,14 +573,14 @@
       "sushiro"
     ],
     "cat": "Dining",
-    "sub": "Red8_BOC",
+    "sub": "Red8_HSBC",
     "meth": "ApplePay"
   },
   {
     "name": "譚仔",
     "aliases": [],
     "cat": "Dining",
-    "sub": "Red8_BOC",
+    "sub": "Red8_HSBC",
     "meth": "ApplePay"
   },
   {
@@ -688,7 +688,7 @@
       "taamjai samgor"
     ],
     "cat": "Dining",
-    "sub": "Red8_BOC",
+    "sub": "Red8_HSBC",
     "meth": "ApplePay"
   },
   {
@@ -698,7 +698,7 @@
       "taamjai yunnan"
     ],
     "cat": "Dining",
-    "sub": "Red8_BOC",
+    "sub": "Red8_HSBC",
     "meth": "ApplePay"
   },
   {
