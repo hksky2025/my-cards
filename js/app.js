@@ -182,9 +182,12 @@ async function handleAnalyze() {
         if (crazyBonus > 0) activePromos.push('狂賞派');
         allPromos.forEach(p => {
             const kw = rawInput.toLowerCase();
-            if (p.keywords.some(k => kw.includes(k.toLowerCase())) &&
-                today >= new Date(p.startDate) && today <= new Date(p.endDate) &&
-                p.bank === c.bank && amt >= p.minAmt) {
+            const keywordMatch = p.keywords.some(k => kw.includes(k.toLowerCase()));
+            const dateOk = today >= new Date(p.startDate) && today <= new Date(p.endDate);
+            const bankMatch = p.bank === c.bank;
+            const cardMatch = !p.cardId || p.cardId === c.id; // 指定卡片才觸發
+            const amtOk = amt >= p.minAmt;
+            if (keywordMatch && dateOk && bankMatch && cardMatch && amtOk) {
                 extraCash += calcPromoBonus(p, params);
                 activePromos.push(p.name);
             }
