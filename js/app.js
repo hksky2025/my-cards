@@ -84,15 +84,30 @@ window.addEventListener('DOMContentLoaded', async () => {
 function populateCardSelect() {
     const sel = document.getElementById('txnCardSelect');
     if (!sel) return;
-    const current = sel.value; // 保留已選的值
+    const current = sel.value;
     sel.innerHTML = '<option value="">-- 選擇信用卡 --</option>';
-    allCards.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.id;
-        opt.textContent = cardStatus[c.id] ? c.name : `${c.name}（未啟用）`;
-        sel.appendChild(opt);
+
+    // 按銀行次序排列，同卡片管理面板一致
+    const BANK_ORDER = ['hsbc', 'boc', 'hangseng', 'sc', 'citic', 'ccb', 'mox', 'aeon'];
+    const BANK_LABELS = { hsbc: '匯豐', boc: '中銀', hangseng: '恒生', sc: '渣打', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON' };
+
+    BANK_ORDER.forEach(bankId => {
+        const bankCards = allCards.filter(c => c.bank === bankId);
+        if (!bankCards.length) return;
+
+        // 加銀行分隔標題
+        const group = document.createElement('optgroup');
+        group.label = BANK_LABELS[bankId];
+        bankCards.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = cardStatus[c.id] ? c.name : `${c.name}（未啟用）`;
+            group.appendChild(opt);
+        });
+        sel.appendChild(group);
     });
-    if (current) sel.value = current; // 還原選擇
+
+    if (current) sel.value = current;
     console.log('✅ 卡片選擇器已填充，共', allCards.length, '張');
 }
 
