@@ -564,7 +564,7 @@
       "cx"
     ],
     "cat": "Travel",
-    "sub": "CX",
+    "sub": "BOC_CRAZY,CX",
     "meth": "Online"
   },
   {
@@ -747,5 +747,144 @@
     "cat": "Leisure",
     "sub": "Red8_HSBC",
     "meth": "ApplePay"
+  },
+  {
+    "name": "香港迪士尼樂園",
+    "aliases": [
+      "迪士尼",
+      "hong kong disneyland",
+      "disneyland"
+    ],
+    "cat": "Leisure",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "香港海洋公園",
+    "aliases": [
+      "海洋公園",
+      "ocean park"
+    ],
+    "cat": "Leisure",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "iTunes",
+    "aliases": [
+      "apple itunes",
+      "itunes store"
+    ],
+    "cat": "Leisure",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
+  },
+  {
+    "name": "Cityline",
+    "aliases": [
+      "城市售票網"
+    ],
+    "cat": "Leisure",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
+  },
+  {
+    "name": "中國旅行社",
+    "aliases": [
+      "ctshk",
+      "china travel"
+    ],
+    "cat": "Travel",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Klook",
+    "aliases": [
+      "客路"
+    ],
+    "cat": "Travel",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
+  },
+  {
+    "name": "麥當勞",
+    "aliases": [
+      "mcdonald",
+      "mcdonalds"
+    ],
+    "cat": "Dining",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "周生生",
+    "aliases": [
+      "chow sang sang"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "英皇鐘錶珠寶",
+    "aliases": [
+      "emperor watch",
+      "emperor jewellery"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Nike",
+    "aliases": [
+      "nike hk"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Adidas",
+    "aliases": [
+      "adidas hk"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "時間廊",
+    "aliases": [
+      "city chain"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
+  },
+  {
+    "name": "Farfetch",
+    "aliases": [],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
+  },
+  {
+    "name": "Net-A-Porter",
+    "aliases": [
+      "net a porter",
+      "nap"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
+  },
+  {
+    "name": "Mytheresa",
+    "aliases": [],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "Online"
   }
 ]
