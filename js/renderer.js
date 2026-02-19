@@ -115,11 +115,15 @@ function createCardEl(c, isMile) {
         ? `<div style="font-size:11px;color:orange">+$${(c.extraCash + c.crazyBonus).toFixed(0)}</div>`
         : '';
 
+    const milesDisplay = isMile
+        ? `<div style="font-size:18px;font-weight:700;color:${valueColor}">${c.baseRes.miles} 里</div>`
+        : `<div style="font-size:18px;font-weight:700;color:${valueColor}">$${total}</div>`;
+
     div.innerHTML = `
         <div class="card-top">
             <div class="card-name">${c.card.name}${promoTags ? '<br>' + promoTags : ''}</div>
             <div class="earn-val" style="color:${valueColor}">
-                ${isMile ? c.baseRes.miles + ' 里' : '$' + total}
+                ${milesDisplay}
                 ${milesExtra}
             </div>
         </div>

@@ -109,6 +109,16 @@ export function calcBaseReward(card, params) {
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
 
+        case 'dbs_black': {
+            // 八達通增值 $12=1里；iBanking繳費不計；其他 $6=1里
+            let ratePerMile = 6; // 預設
+            if (meth === 'Octopus') ratePerMile = 12;
+            if (cat === 'Bill') return { val: 0, miles: 0, rate: '不計里數(繳費)' };
+            const miles = Math.floor(amt / ratePerMile);
+            const milesVal = miles * 0.1; // Asia Miles 估值 $0.1/里
+            return { val: milesVal, miles, rate: `$${ratePerMile}/里 (Asia Miles)` };
+        }
+
         case 'dbs_eminent': {
             // 指定4類(餐飲/醫療/運動服飾/健身)：單筆>=$300，每月首$8,000@5%，超額@0.4%
             // 其他零售：每月首$20,000@1%，超額@0.4%
