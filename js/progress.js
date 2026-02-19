@@ -8,41 +8,53 @@
  * @param {Function} getCardTotal - (cardId) => number
  */
 export function renderProgress(cards, promos, monthTotal, getCardTotal) {
-    renderThresholdProgress(cards, monthTotal);
+    renderThresholdProgress(cards, monthTotal, getCardTotal);
     renderPromoCountdown(promos, cards);
     renderCapProgress(cards, getCardTotal);
 }
 
 // ── 門檻進度 ($5000) ─────────────────────────────────
-function renderThresholdProgress(cards, monthTotal) {
+function renderThresholdProgress(cards, monthTotal, getCardTotal) {
     const el = document.getElementById('progress-threshold');
     if (!el) return;
 
     const THRESHOLD = 5000;
-    const pct = Math.min((monthTotal / THRESHOLD) * 100, 100);
-    const reached = monthTotal >= THRESHOLD;
-    const remaining = Math.max(THRESHOLD - monthTotal, 0);
 
-    // 找出受門檻影響的啟用卡
-    const affectedCards = cards.filter(c => c.logic?.requiresMet || c.crazyEligible);
+    // 中銀受門檻影響的卡
+    const bocCards = cards.filter(c => c.bank === 'boc' && c.logic?.requiresMet);
+    // 恒生受門檻影響的卡
+    const hangsengCards = cards.filter(c => c.bank === 'hangseng' && c.logic?.requiresMet);
 
-    el.innerHTML = `
-        <div class="progress-card">
-            <div class="progress-title">
-                <span>📊 月度門檻進度</span>
-                <span class="progress-amt ${reached ? 'reached' : ''}">
-                    $${monthTotal.toLocaleString()} / $${THRESHOLD.toLocaleString()}
-                </span>
-            </div>
-            <div class="progress-bar-wrap">
-                <div class="progress-bar" style="width:${pct}%; background:${reached ? '#4caf50' : '#db0011'}"></div>
-            </div>
-            <div class="progress-sub">
-                ${reached
-                    ? '✅ 已達門檻！以下優惠已激活'
-                    : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`}
-            </div>
-            ${affectedCards.length > 0 ? `
+    if (bocCards.length === 0 && hangsengCards.length === 0) {
+        el.innerHTML = '';
+        return;
+    }
+
+    // 各銀行當月累積簽賬（所有已啟用卡合計）
+    const bocTotal = bocCards.reduce((sum, c) => sum + (getCardTotal ? getCardTotal(c.id) : 0), 0);
+    const hangsengTotal = hangsengCards.reduce((sum, c) => sum + (getCardTotal ? getCardTotal(c.id) : 0), 0);
+
+    function barHTML(label, bankClass, total, affectedCards) {
+        const pct = Math.min((total / THRESHOLD) * 100, 100);
+        const reached = total >= THRESHOLD;
+        const remaining = Math.max(THRESHOLD - total, 0);
+        const barColor = reached ? '#4caf50' : (bankClass === 'boc' ? '#c8960c' : '#008154');
+        return `
+            <div class="threshold-block">
+                <div class="progress-title" style="margin-top:8px;">
+                    <span>${label}</span>
+                    <span class="progress-amt ${reached ? 'reached' : ''}">
+                        $${total.toLocaleString()} / $${THRESHOLD.toLocaleString()}
+                    </span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar" style="width:${pct}%; background:${barColor}"></div>
+                </div>
+                <div class="progress-sub">
+                    ${reached
+                        ? '✅ 已達門檻！優惠已激活'
+                        : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`}
+                </div>
                 <div class="progress-affected">
                     ${affectedCards.map(c => `
                         <span class="affected-tag ${c.bank}-tag ${reached ? 'active' : ''}">
@@ -50,9 +62,24 @@ function renderThresholdProgress(cards, monthTotal) {
                         </span>
                     `).join('')}
                 </div>
-            ` : ''}
-        </div>
-    `;
+            </div>
+        `;
+    }
+
+    let html = '<div class="progress-card"><div class="progress-title"><span>📊 月度門檻進度（$5,000）</span></div>';
+
+    if (bocCards.length > 0) {
+        html += barHTML('🏦 中銀', 'boc', bocTotal, bocCards);
+    }
+    if (bocCards.length > 0 && hangsengCards.length > 0) {
+        html += '<hr style="border:none;border-top:1px solid #eee;margin:12px 0;">';
+    }
+    if (hangsengCards.length > 0) {
+        html += barHTML('🏦 恒生', 'hangseng', hangsengTotal, hangsengCards);
+    }
+
+    html += '</div>';
+    el.innerHTML = html;
 }
 
 // ── 推廣倒數 ─────────────────────────────────────────
