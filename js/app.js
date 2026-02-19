@@ -46,7 +46,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     allCards.forEach(c => cardStatus[c.id] = true);
     populateCardSelect(); // ← 提前呼叫，唔等 Firebase
 
-    document.getElementById('txnDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('txnDate').value = (() => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    })();
     checkDateStatus();
 
     // 步驟三：綁定所有事件
@@ -87,7 +90,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
 
-        const today = new Date().toISOString().split('T')[0];
+        const _d = new Date();
+        const today = `${_d.getFullYear()}-${String(_d.getMonth()+1).padStart(2,'0')}-${String(_d.getDate()).padStart(2,'0')}`;
         XLSX.writeFile(wb, `智能簽賬軍師_交易記錄_${today}.xlsx`);
     });
 
