@@ -726,7 +726,7 @@
       "迪卡儂",
       "decathlon hong kong"
     ],
-    "cat": "Leisure",
+    "cat": "Sport",
     "sub": "Red8_HSBC",
     "meth": "ApplePay"
   },
@@ -735,7 +735,7 @@
     "aliases": [
       "lulu lemon"
     ],
-    "cat": "Jewelry",
+    "cat": "Sport",
     "sub": "Red8_HSBC",
     "meth": "ApplePay"
   },
@@ -841,7 +841,7 @@
     "aliases": [
       "nike hk"
     ],
-    "cat": "Jewelry",
+    "cat": "Sport",
     "sub": "BOC_CRAZY",
     "meth": "ApplePay"
   },
@@ -850,7 +850,7 @@
     "aliases": [
       "adidas hk"
     ],
-    "cat": "Jewelry",
+    "cat": "Sport",
     "sub": "BOC_CRAZY",
     "meth": "ApplePay"
   },
@@ -886,5 +886,60 @@
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
     "meth": "Online"
+  },
+  {
+    "name": "Under Armour",
+    "aliases": [
+      "ua"
+    ],
+    "cat": "Sport",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "New Balance",
+    "aliases": [
+      "nb"
+    ],
+    "cat": "Sport",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Pure Fitness",
+    "aliases": [
+      "pure gym",
+      "pure yoga"
+    ],
+    "cat": "Fitness",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Anytime Fitness",
+    "aliases": [
+      "anytime"
+    ],
+    "cat": "Fitness",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "California Fitness",
+    "aliases": [
+      "california gym"
+    ],
+    "cat": "Fitness",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Physical",
+    "aliases": [
+      "physical fitness"
+    ],
+    "cat": "Fitness",
+    "sub": "",
+    "meth": "ApplePay"
   }
 ]
