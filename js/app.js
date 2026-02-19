@@ -263,6 +263,12 @@ async function handleAnalyze() {
             baseRes.rate = `6% (已達上限 $${c.logic.bonusCap})`;
         }
 
+        // Citi The Club：每月回贈上限 $300
+        if (c.id === 'citi_club' && baseRes.val > 300) {
+            baseRes.val = 300;
+            baseRes.rate = `4% (已達上限 $300)`;
+        }
+
         const crazyBonus = isCrazyCat(cat, sub) ? calcCrazyBonus(c, params) : 0;
         let extraCash = 0;
         const activePromos = [];

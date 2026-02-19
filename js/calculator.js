@@ -110,13 +110,12 @@ export function calcBaseReward(card, params) {
         }
 
         case 'citi_club': {
-            // 指定商戶(CITI_CLUB sub) 4% Club積分；其他 1%；海外港幣/繳費無回贈
-            if (sub && sub.includes('OVERSEAS_HKD')) return { val: 0, miles: 0, rate: '不適用(海外港幣)' };
-            if (cat === 'Bill') return { val: 0, miles: 0, rate: '不適用(繳費)' };
+            // 指定商戶(CITI_CLUB sub) 4% 現金；其他 1%；海外港幣/繳費無回贈；每月上限$300
+            if (sub && sub.includes('OVERSEAS_HKD')) return { val: 0, rate: '不適用(海外港幣CBF)' };
+            if (cat === 'Bill') return { val: 0, rate: '不適用(繳費)' };
             const isClub = sub && sub.includes('CITI_CLUB');
             const rate = isClub ? logic.bonusRate : logic.baseRate;
-            const miles = Math.floor(amt * rate);
-            return { val: miles * (logic.mileValue || 0.1), miles, rate: `${rate * 100}% Club積分${isClub ? ' (指定商戶)' : ''}` };
+            return { val: amt * rate, rate: `${rate * 100}% Club積分${isClub ? ' (指定商戶)' : ''}` };
         }
 
         case 'citic_motion': {
