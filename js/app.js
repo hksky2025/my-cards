@@ -99,8 +99,8 @@ function populateCardSelect() {
     sel.innerHTML = '<option value="">-- 選擇信用卡 --</option>';
 
     // 按銀行次序排列，同卡片管理面板一致
-    const BANK_ORDER = ['hsbc', 'boc', 'hangseng', 'sc', 'citic', 'ccb', 'mox', 'aeon'];
-    const BANK_LABELS = { hsbc: '匯豐', boc: '中銀', hangseng: '恒生', sc: '渣打', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON' };
+    const BANK_ORDER = ['hsbc', 'boc', 'hangseng', 'sc', 'dbs', 'citic', 'ccb', 'mox', 'aeon'];
+    const BANK_LABELS = { hsbc: '匯豐', boc: '中銀', hangseng: '恒生', sc: '渣打', dbs: 'DBS', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON' };
 
     BANK_ORDER.forEach(bankId => {
         const bankCards = allCards.filter(c => c.bank === bankId);
@@ -203,7 +203,28 @@ async function handleAnalyze() {
     const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay };
 
     const processed = allCards.filter(c => cardStatus[c.id]).map(c => {
-        const baseRes = calcBaseReward(c, params);
+        // DBS Eminent：每月首$8,000指定類別@5%，超額@0.4%
+        let adjustedParams = { ...params };
+        if (c.id === 'dbs_eminent' && c.logic.bonusCats.includes(cat) && amt >= c.logic.minAmt) {
+            const capSpent = getCardMonthTotal('dbs_eminent'); // 當月已累積指定類別簽賬
+            const remaining = Math.max(0, c.logic.bonusCap - capSpent);
+            if (remaining <= 0) {
+                // 已爆上限，改用 0.4%
+                adjustedParams = { ...params, cat: 'General' }; // 用 General 觸發 baseRate
+            } else if (amt > remaining) {
+                // 部分@5%，部分@0.4%
+                const bonusPart = remaining * c.logic.bonusRate;
+                const overPart = (amt - remaining) * c.logic.overCapRate;
+                const val = bonusPart + overPart;
+                const baseRes = { val, rate: `5%(首$${remaining}) + 0.4%(超額)` };
+                const crazyBonus = 0;
+                const extraCash = 0;
+                const activePromos = [`DBS指定類別首$${remaining}@5%`];
+                results.push({ card: c, baseRes, crazyBonus, extraCash, activePromos });
+                return; // 跳過下面的正常計算
+            }
+        }
+        const baseRes = calcBaseReward(c, adjustedParams);
         const crazyBonus = isCrazyCat(cat, sub) ? calcCrazyBonus(c, params) : 0;
         let extraCash = 0;
         const activePromos = [];
