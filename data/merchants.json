@@ -994,16 +994,6 @@
     "meth": "ApplePay"
   },
   {
-    "name": "Starbucks",
-    "aliases": [
-      "星巴克",
-      "starbucks hk"
-    ],
-    "cat": "Dining",
-    "sub": "COFFEE",
-    "meth": "ApplePay"
-  },
-  {
     "name": "太興",
     "aliases": [
       "tai hing"
@@ -1428,15 +1418,6 @@
     "meth": "ApplePay"
   },
   {
-    "name": "星巴克",
-    "aliases": [
-      "starbucks"
-    ],
-    "cat": "Dining",
-    "sub": "CITI_CLUB",
-    "meth": "ApplePay"
-  },
-  {
     "name": "利苑",
     "aliases": [
       "lei garden"
@@ -1628,6 +1609,16 @@
     ],
     "cat": "Transport",
     "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Starbucks",
+    "aliases": [
+      "星巴克",
+      "starbucks hk"
+    ],
+    "cat": "Dining",
+    "sub": "COFFEE,CITI_CLUB",
     "meth": "ApplePay"
   }
 ]
