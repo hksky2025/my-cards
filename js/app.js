@@ -108,8 +108,8 @@ function populateCardSelect() {
     sel.innerHTML = '<option value="">-- 選擇信用卡 --</option>';
 
     // 按銀行次序排列，同卡片管理面板一致
-    const BANK_ORDER = ['hsbc', 'boc', 'hangseng', 'sc', 'dbs', 'citic', 'ccb', 'mox', 'aeon'];
-    const BANK_LABELS = { hsbc: '匯豐', boc: '中銀', hangseng: '恒生', sc: '渣打', dbs: 'DBS', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON' };
+    const BANK_ORDER = ['hsbc', 'boc', 'hangseng', 'sc', 'dbs', 'citi', 'citic', 'ccb', 'mox', 'aeon'];
+    const BANK_LABELS = { hsbc: '匯豐', boc: '中銀', hangseng: '恒生', sc: '渣打', dbs: 'DBS', citi: 'Citi', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON' };
 
     BANK_ORDER.forEach(bankId => {
         const bankCards = allCards.filter(c => c.bank === bankId);
@@ -209,7 +209,11 @@ async function handleAnalyze() {
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
     const today = new Date();
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay };
+    // 中信 Motion：當月累積零售簽賬是否已達 $3,800
+    const motionMonthSpent = getCardMonthTotal('citic_motion');
+    const motionMet = (motionMonthSpent + amt) >= 3800;
+
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay, motionMet };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {
@@ -252,6 +256,13 @@ async function handleAnalyze() {
             }
         }
         const baseRes = calcBaseReward(c, adjustedParams);
+
+        // 中信 Motion：每月回贈上限 $200
+        if (c.id === 'citic_motion' && baseRes.val > c.logic.bonusCap) {
+            baseRes.val = c.logic.bonusCap;
+            baseRes.rate = `6% (已達上限 $${c.logic.bonusCap})`;
+        }
+
         const crazyBonus = isCrazyCat(cat, sub) ? calcCrazyBonus(c, params) : 0;
         let extraCash = 0;
         const activePromos = [];

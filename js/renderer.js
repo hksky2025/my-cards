@@ -3,7 +3,7 @@
 const BANK_COLORS = {
     boc: '#c8960c', hsbc: '#db0011', hangseng: '#008154',
     sc: '#1a56a0', ccb: '#003b8e', aeon: '#800080',
-    citic: '#7b5ea7', mox: '#05d5a1', dbs: '#e85d04'
+    citic: '#7b5ea7', mox: '#05d5a1', dbs: '#e85d04', citi: '#003087'
 };
 
 const MILES_COLOR = '#004a99';
@@ -44,7 +44,7 @@ export function renderResults(processed) {
 export function renderCardManager(cards, cardStatus, onToggle) {
     const BANK_LABELS = {
         hsbc: '匯豐', boc: '中銀', hangseng: '恒生',
-        sc: '渣打', dbs: '星展', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON'
+        sc: '渣打', dbs: '星展', citi: 'Citi', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON'
     };
 
     const container = document.getElementById('bankGroupsContainer');

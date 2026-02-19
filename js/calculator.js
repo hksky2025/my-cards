@@ -109,6 +109,26 @@ export function calcBaseReward(card, params) {
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
 
+        case 'citi_club': {
+            // 指定商戶(CITI_CLUB sub) 4% Club積分；其他 1%；海外港幣/繳費無回贈
+            if (sub && sub.includes('OVERSEAS_HKD')) return { val: 0, miles: 0, rate: '不適用(海外港幣)' };
+            if (cat === 'Bill') return { val: 0, miles: 0, rate: '不適用(繳費)' };
+            const isClub = sub && sub.includes('CITI_CLUB');
+            const rate = isClub ? logic.bonusRate : logic.baseRate;
+            const miles = Math.floor(amt * rate);
+            return { val: miles * (logic.mileValue || 0.1), miles, rate: `${rate * 100}% Club積分${isClub ? ' (指定商戶)' : ''}` };
+        }
+
+        case 'citic_motion': {
+            // 當月累積零售 >= $3,800 後，食肆/網上享 6%（上限 $200/月）
+            // isMet 由 app.js 根據當月累積額判斷後傳入
+            const isBonus = logic.bonusCats.includes(cat) && params.motionMet;
+            if (isBonus) {
+                return { val: amt * logic.bonusRate, rate: `${logic.bonusRate * 100}% (食肆/網上，已達$${logic.minMonthlySpend})` };
+            }
+            return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}% (基本)` };
+        }
+
         case 'dbs_black': {
             // 八達通增值 $12=1里；iBanking繳費不計；其他 $6=1里
             let ratePerMile = 6; // 預設
