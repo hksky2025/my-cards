@@ -55,5 +55,14 @@
     "excludeSubs": [
       "Red8_BOC"
     ]
+  },
+  {
+    "id": "boc_cheers_crazy_2026",
+    "bank": "boc",
+    "cardId": "cheers",
+    "name": "中銀 Cheers VI 狂賞派",
+    "startDate": "2026-01-01",
+    "endDate": "2026-06-30",
+    "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻"
   }
 ]
