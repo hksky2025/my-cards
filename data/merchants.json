@@ -941,5 +941,46 @@
     "cat": "Fitness",
     "sub": "",
     "meth": "ApplePay"
+  },
+  {
+    "name": "美心皇宮(酒席)",
+    "aliases": [
+      "maxim palace banquet"
+    ],
+    "cat": "Banquet",
+    "sub": "DBS_EXCL",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Netflix",
+    "aliases": [
+      "netflix hk"
+    ],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "Spotify",
+    "aliases": [],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "Airbnb",
+    "aliases": [],
+    "cat": "Travel",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "App Store",
+    "aliases": [
+      "apple app store"
+    ],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
   }
 ]

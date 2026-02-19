@@ -247,7 +247,7 @@
     "bank": "dbs",
     "type": "both",
     "color": "#d40000",
-    "notes": "指定4類(餐飲/醫療/運動服飾/健身)首$8,000@5%(單筆>=$300)；其他零售首$20,000@1%；超額0.4%",
+    "notes": "指定4類(餐飲/醫療/運動服飾/健身)首$8,000@5%(單筆>=$300)；其他零售首$20,000@1%；電子錢包零售首$5,000；超額0.4%；排除酒席/海外港幣/獸醫",
     "logic": {
       "type": "dbs_eminent",
       "bonusCats": [
@@ -263,7 +263,12 @@
       "baseRate": 0.004,
       "overCapRate": 0.004,
       "promoEnd": "2026-12-31",
-      "retailCap": 20000
+      "retailCap": 20000,
+      "eWalletCap": 5000,
+      "excludeCats": [
+        "Banquet",
+        "HotelDining"
+      ]
     }
   }
 ]
