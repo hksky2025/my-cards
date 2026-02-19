@@ -68,6 +68,15 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         if (saved) {
             Object.assign(cardStatus, saved);
+            // 新加入的卡片若不在 saved 內，預設開啟
+            let hasNew = false;
+            allCards.forEach(c => {
+                if (!(c.id in saved)) {
+                    cardStatus[c.id] = true;
+                    hasNew = true;
+                }
+            });
+            if (hasNew) await saveCardStatus(cardStatus);
         } else {
             await saveCardStatus(cardStatus);
         }
