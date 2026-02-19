@@ -54,18 +54,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
-    document.getElementById('enableAllBtn').addEventListener('click', async () => {
-        allCards.forEach(c => cardStatus[c.id] = true);
-        await saveCardStatus(cardStatus);
-        renderCardManager(allCards, cardStatus, handleCardToggle);
-        populateCardSelect();
-    });
-    document.getElementById('disableAllBtn').addEventListener('click', async () => {
-        allCards.forEach(c => cardStatus[c.id] = false);
-        await saveCardStatus(cardStatus);
-        renderCardManager(allCards, cardStatus, handleCardToggle);
-        populateCardSelect();
-    });
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
