@@ -69,14 +69,20 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (saved) {
             Object.assign(cardStatus, saved);
             // 新加入的卡片若不在 saved 內，預設開啟
-            let hasNew = false;
+            let needSave = false;
             allCards.forEach(c => {
                 if (!(c.id in saved)) {
                     cardStatus[c.id] = true;
-                    hasNew = true;
+                    needSave = true;
                 }
             });
-            if (hasNew) await saveCardStatus(cardStatus);
+            // v2.4 一次性修正：若從未儲存過 dbs 卡狀態，強制開啟
+            if (!saved.__v24_dbs_fixed) {
+                ['dbs_eminent', 'dbs_black'].forEach(id => { cardStatus[id] = true; });
+                cardStatus.__v24_dbs_fixed = true;
+                needSave = true;
+            }
+            if (needSave) await saveCardStatus(cardStatus);
         } else {
             await saveCardStatus(cardStatus);
         }
