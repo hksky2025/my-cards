@@ -4,7 +4,7 @@ import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js'
 import { loadMerchants, findMerchant } from './matcher.js';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
-import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, renderTransactions } from './transactions.js';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, renderTransactions, getTransactions } from './transactions.js';
 import { renderProgress } from './progress.js';
 
 const HOLIDAYS_2026 = [
@@ -54,6 +54,92 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
+
+    // 匯出 Excel
+    document.getElementById('exportExcelBtn').addEventListener('click', () => {
+        const txns = getTransactions();
+        if (!txns.length) return alert('未有任何交易記錄');
+
+        const CAT_LABELS = {
+            Dining:'餐飲食肆', Online:'一般網購', Electronics:'電子產品/電訊',
+            Super:'超級市場', Transport:'交通/叫車/油站', Home:'家居用品',
+            Pet:'寵物護理', Leisure:'休閒娛樂', Medical:'醫療服務',
+            Sport:'運動服飾', Fitness:'健身中心', Travel:'旅遊機票/酒店',
+            Jewelry:'珠寶服飾', Coffee:'咖啡輕食', Overseas:'海外外幣',
+            General:'一般本地消費'
+        };
+        const METH_LABELS = { ApplePay:'Apple Pay / 實體', Online:'網上簽賬', Octopus:'八達通' };
+
+        const rows = txns.map(t => {
+            const card = allCards.find(c => c.id === t.cardId);
+            return {
+                '日期': t.date,
+                '商戶': t.merchant || '',
+                '類別': CAT_LABELS[t.cat] || t.cat,
+                '金額 (HK$)': t.amt,
+                '信用卡': card ? card.name : t.cardId,
+                '付款方式': METH_LABELS[t.method] || t.method || '',
+            };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [12, 20, 16, 12, 18, 16].map(w => ({ wch: w }));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '交易記錄');
+
+        const today = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `智能簽賬軍師_交易記錄_${today}.xlsx`);
+    });
+
+    // 匯入 Excel
+    document.getElementById('importExcelInput').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async (ev) => {
+            try {
+                const wb = XLSX.read(ev.target.result, { type: 'array' });
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(ws);
+
+                const CAT_MAP = {
+                    '餐飲食肆':'Dining', '一般網購':'Online', '電子產品/電訊':'Electronics',
+                    '超級市場':'Super', '交通/叫車/油站':'Transport', '家居用品':'Home',
+                    '寵物護理':'Pet', '休閒娛樂':'Leisure', '醫療服務':'Medical',
+                    '運動服飾':'Sport', '健身中心':'Fitness', '旅遊機票/酒店':'Travel',
+                    '珠寶服飾':'Jewelry', '咖啡輕食':'Coffee', '海外外幣':'Overseas',
+                    '一般本地消費':'General'
+                };
+                const METH_MAP = { 'Apple Pay / 實體':'ApplePay', '網上簽賬':'Online', '八達通':'Octopus' };
+
+                let imported = 0;
+                for (const row of rows) {
+                    const cardName = row['信用卡'] || '';
+                    const card = allCards.find(c => c.name === cardName);
+                    if (!row['日期'] || !row['金額 (HK$)']) continue;
+
+                    const txn = {
+                        date: String(row['日期']).substring(0, 10),
+                        merchant: row['商戶'] || '',
+                        cat: CAT_MAP[row['類別']] || 'General',
+                        amt: Number(row['金額 (HK$)']),
+                        cardId: card ? card.id : cardName,
+                        method: METH_MAP[row['付款方式']] || 'ApplePay',
+                    };
+                    const saved = await saveTransaction(txn);
+                    if (saved) imported++;
+                }
+                alert(`✅ 成功匯入 ${imported} 筆記錄`);
+                renderTransactions(allCards);
+            } catch (err) {
+                alert('❌ 匯入失敗，請確認檔案格式正確');
+                console.error(err);
+            }
+        };
+        reader.readAsArrayBuffer(file);
+        e.target.value = ''; // reset input
+    });
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
