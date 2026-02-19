@@ -305,14 +305,13 @@
     "id": "citi_club",
     "name": "Citi The Club",
     "bank": "citi",
-    "type": "miles",
+    "type": "cash",
     "color": "#003087",
-    "notes": "指定商戶4% Club積分；其他1%；海外港幣(CBF)無回贈；永久免年費",
+    "notes": "指定商戶4%現金回贈；其他1%；海外港幣(CBF)無回贈；每月上限$300",
     "logic": {
       "type": "citi_club",
       "bonusRate": 0.04,
       "baseRate": 0.01,
-      "mileValue": 0.1,
       "excludeSubs": [
         "OVERSEAS_HKD",
         "BILL"
