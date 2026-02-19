@@ -982,5 +982,25 @@
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
     "meth": "Online"
+  },
+  {
+    "name": "Pacific Coffee",
+    "aliases": [
+      "太平洋咖啡",
+      "pacific coffee hk"
+    ],
+    "cat": "Dining",
+    "sub": "COFFEE",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Starbucks",
+    "aliases": [
+      "星巴克",
+      "starbucks hk"
+    ],
+    "cat": "Dining",
+    "sub": "COFFEE",
+    "meth": "ApplePay"
   }
 ]
