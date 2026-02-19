@@ -614,7 +614,7 @@
     "name": "Foodpanda",
     "aliases": [],
     "cat": "Dining",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,CITI_CLUB",
     "meth": "Online"
   },
   {
@@ -804,7 +804,7 @@
       "客路"
     ],
     "cat": "Travel",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,CITI_CLUB",
     "meth": "Online"
   },
   {
@@ -814,7 +814,7 @@
       "mcdonalds"
     ],
     "cat": "Dining",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,CITI_CLUB",
     "meth": "ApplePay"
   },
   {
@@ -1387,6 +1387,247 @@
     ],
     "cat": "General",
     "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "星達院線",
+    "aliases": [
+      "star cinema"
+    ],
+    "cat": "Leisure",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "百老匯院線",
+    "aliases": [
+      "broadway circuit",
+      "百老匯"
+    ],
+    "cat": "Leisure",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Cinema City",
+    "aliases": [
+      "cinema city hk"
+    ],
+    "cat": "Leisure",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "MCL 戲院",
+    "aliases": [
+      "mcl cinema",
+      "mcl cinemas"
+    ],
+    "cat": "Leisure",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "星巴克",
+    "aliases": [
+      "starbucks"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "利苑",
+    "aliases": [
+      "lei garden"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "cafe ToGather by LOG-ON",
+    "aliases": [
+      "cafe togather"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "香港沙田凱悅酒店餐飲",
+    "aliases": [
+      "hyatt sha tin",
+      "sha tin hyatt"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "香港尖沙咀凱悅酒店餐飲",
+    "aliases": [
+      "hyatt tsim sha tsui",
+      "tsim sha tsui hyatt"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Venchi",
+    "aliases": [
+      "venchi hk"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "ROYCE'",
+    "aliases": [
+      "royce chocolate"
+    ],
+    "cat": "Dining",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Circle K",
+    "aliases": [
+      "circle k hk",
+      "ok便利店"
+    ],
+    "cat": "Super",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "city'super",
+    "aliases": [
+      "city super"
+    ],
+    "cat": "Super",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "city'super neighbourhood",
+    "aliases": [
+      "city super neighbourhood"
+    ],
+    "cat": "Super",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "LOG-ON",
+    "aliases": [
+      "log on hk",
+      "logon"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Pinkoi",
+    "aliases": [
+      "pinkoi hk"
+    ],
+    "cat": "Online",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Farfetch HK",
+    "aliases": [
+      "farfetch"
+    ],
+    "cat": "Jewelry",
+    "sub": "CITI_CLUB",
+    "meth": "Online"
+  },
+  {
+    "name": "卓健醫療中心",
+    "aliases": [
+      "quality healthcare",
+      "卓健"
+    ],
+    "cat": "Medical",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "維特健靈",
+    "aliases": [
+      "vita green"
+    ],
+    "cat": "Medical",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Hair Corner",
+    "aliases": [
+      "hair corner hk"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Lobby by Hair Corner",
+    "aliases": [
+      "lobby hair corner"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "LOBBY hair",
+    "aliases": [
+      "lobby hair"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "JPAW HAIR SALON",
+    "aliases": [
+      "jpaw"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Saloon",
+    "aliases": [
+      "saloon hk"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "So Sweet Kids Salon",
+    "aliases": [
+      "so sweet"
+    ],
+    "cat": "General",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Smart Charge",
+    "aliases": [
+      "smart charge hk"
+    ],
+    "cat": "Transport",
+    "sub": "CITI_CLUB",
     "meth": "ApplePay"
   }
 ]
