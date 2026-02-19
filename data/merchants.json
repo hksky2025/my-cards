@@ -775,7 +775,7 @@
       "apple itunes",
       "itunes store"
     ],
-    "cat": "Leisure",
+    "cat": "Online",
     "sub": "BOC_CRAZY",
     "meth": "Online"
   },
@@ -1001,6 +1001,392 @@
     ],
     "cat": "Dining",
     "sub": "COFFEE",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "太興",
+    "aliases": [
+      "tai hing"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "翠華",
+    "aliases": [
+      "tsui wah"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "一蘭拉麵",
+    "aliases": [
+      "ichiran"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "KFC",
+    "aliases": [
+      "肯德基",
+      "kentucky"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Burger King",
+    "aliases": [
+      "漢堡王"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Subway",
+    "aliases": [],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Pizza Hut",
+    "aliases": [
+      "必勝客"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Domino's",
+    "aliases": [
+      "dominos",
+      "達美樂"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "吉野家",
+    "aliases": [
+      "yoshinoya"
+    ],
+    "cat": "Dining",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "百佳",
+    "aliases": [
+      "parknshop",
+      "park n shop"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Market Place",
+    "aliases": [
+      "marketplace"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "7-Eleven",
+    "aliases": [
+      "7eleven",
+      "七仔"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "OK便利店",
+    "aliases": [
+      "ok store",
+      "circle k"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "百老匯",
+    "aliases": [
+      "broadway photo",
+      "broadway hk"
+    ],
+    "cat": "Electronics",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "中國移動CMHK",
+    "aliases": [
+      "cmhk",
+      "china mobile hk"
+    ],
+    "cat": "Electronics",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "城巴",
+    "aliases": [
+      "citybus"
+    ],
+    "cat": "Transport",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "九巴",
+    "aliases": [
+      "kmb",
+      "kowloon motor bus"
+    ],
+    "cat": "Transport",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "HKTaxi",
+    "aliases": [
+      "hk taxi"
+    ],
+    "cat": "Transport",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "蜆殼Shell",
+    "aliases": [
+      "shell"
+    ],
+    "cat": "Transport",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "港怡醫院",
+    "aliases": [
+      "gleneagles hk"
+    ],
+    "cat": "Medical",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "嘉諾撒醫院",
+    "aliases": [
+      "canossa hospital"
+    ],
+    "cat": "Medical",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "香港浸信會醫院",
+    "aliases": [
+      "hkbh",
+      "baptist hospital"
+    ],
+    "cat": "Medical",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "香港快運",
+    "aliases": [
+      "hk express",
+      "hkexpress"
+    ],
+    "cat": "Travel",
+    "sub": "",
+    "meth": "Online"
+  },
+  {
+    "name": "香港航空",
+    "aliases": [
+      "hong kong airlines"
+    ],
+    "cat": "Travel",
+    "sub": "",
+    "meth": "Online"
+  },
+  {
+    "name": "康泰旅行社",
+    "aliases": [
+      "kangtai",
+      "hkctg"
+    ],
+    "cat": "Travel",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "ZARA",
+    "aliases": [],
+    "cat": "Jewelry",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "H&M",
+    "aliases": [
+      "hm",
+      "h and m"
+    ],
+    "cat": "Jewelry",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Uniqlo",
+    "aliases": [
+      "優衣庫",
+      "uniqlo hk"
+    ],
+    "cat": "Jewelry",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Giordano",
+    "aliases": [
+      "佐丹奴"
+    ],
+    "cat": "Jewelry",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "周大福",
+    "aliases": [
+      "chow tai fook"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "六福珠寶",
+    "aliases": [
+      "luk fook"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "謝瑞麟",
+    "aliases": [
+      "tse sui luen"
+    ],
+    "cat": "Jewelry",
+    "sub": "BOC_CRAZY",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "UA院線",
+    "aliases": [
+      "ua cinema",
+      "united artists"
+    ],
+    "cat": "Leisure",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "MCL院線",
+    "aliases": [
+      "mcl cinema"
+    ],
+    "cat": "Leisure",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "嘉禾院線",
+    "aliases": [
+      "golden harvest",
+      "cinema city"
+    ],
+    "cat": "Leisure",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Pet Central",
+    "aliases": [],
+    "cat": "Pet",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Pets Corner",
+    "aliases": [],
+    "cat": "Pet",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Amazon",
+    "aliases": [
+      "amazon.com",
+      "amazon hk"
+    ],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "Steam",
+    "aliases": [],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "Google Play",
+    "aliases": [
+      "google play store"
+    ],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "PlayStation Store",
+    "aliases": [
+      "psn",
+      "ps store"
+    ],
+    "cat": "Online",
+    "sub": "OVERSEAS_HKD",
+    "meth": "Online"
+  },
+  {
+    "name": "屈臣氏",
+    "aliases": [
+      "watsons",
+      "watsons hk"
+    ],
+    "cat": "General",
+    "sub": "",
     "meth": "ApplePay"
   }
 ]
