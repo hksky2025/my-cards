@@ -1,9 +1,9 @@
 // renderer.js — 所有 DOM 操作集中在這裡
 
 const BANK_COLORS = {
-    boc: '#b31d28', hsbc: '#db0011', hangseng: '#008154',
-    sc: '#006b4d', ccb: '#003b8e', aeon: '#800080',
-    citic: '#ed1c24', mox: '#05d5a1'
+    boc: '#c8960c', hsbc: '#db0011', hangseng: '#008154',
+    sc: '#1a56a0', ccb: '#003b8e', aeon: '#800080',
+    citic: '#7b5ea7', mox: '#05d5a1', dbs: '#e85d04'
 };
 
 const MILES_COLOR = '#004a99';
