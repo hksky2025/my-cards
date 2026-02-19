@@ -206,6 +206,11 @@ async function handleAnalyze() {
         // DBS Eminent：每月首$8,000指定類別@5%；其他零售首$20,000@1%，超額均降@0.4%
         let adjustedParams = { ...params };
         if (c.id === 'dbs_eminent') {
+            // 排除海外港幣交易（Netflix/Spotify/App Store/Airbnb 等）：唔計任何回贈
+            if (sub && sub.includes('OVERSEAS_HKD')) {
+                results.push({ card: c, baseRes: { val: 0, rate: '不適用(海外港幣)' }, crazyBonus: 0, extraCash: 0, activePromos: ['⚠️ 海外港幣不計回贈'] });
+                continue;
+            }
             const isBonus = c.logic.bonusCats.includes(cat) && amt >= c.logic.minAmt;
             if (isBonus) {
                 const capSpent = getCardMonthTotal('dbs_eminent');
