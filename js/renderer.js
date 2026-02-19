@@ -44,7 +44,7 @@ export function renderResults(processed) {
 export function renderCardManager(cards, cardStatus, onToggle) {
     const BANK_LABELS = {
         hsbc: '匯豐', boc: '中銀', hangseng: '恒生',
-        sc: '渣打', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON'
+        sc: '渣打', dbs: '星展', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON'
     };
 
     const container = document.getElementById('bankGroupsContainer');
