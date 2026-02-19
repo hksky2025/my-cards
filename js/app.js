@@ -54,6 +54,18 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
+    document.getElementById('enableAllBtn').addEventListener('click', async () => {
+        allCards.forEach(c => cardStatus[c.id] = true);
+        await saveCardStatus(cardStatus);
+        renderCardManager(allCards, cardStatus, handleCardToggle);
+        populateCardSelect();
+    });
+    document.getElementById('disableAllBtn').addEventListener('click', async () => {
+        allCards.forEach(c => cardStatus[c.id] = false);
+        await saveCardStatus(cardStatus);
+        renderCardManager(allCards, cardStatus, handleCardToggle);
+        populateCardSelect();
+    });
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
@@ -68,20 +80,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
         if (saved) {
             Object.assign(cardStatus, saved);
-            // 新加入的卡片若不在 saved 內，預設開啟
             let needSave = false;
+            // 所有卡片：若從未出現在 Firebase 記錄，預設開啟
             allCards.forEach(c => {
                 if (!(c.id in saved)) {
                     cardStatus[c.id] = true;
                     needSave = true;
                 }
             });
-            // v2.4 一次性修正：若從未儲存過 dbs 卡狀態，強制開啟
-            if (!saved.__v24_dbs_fixed) {
-                ['dbs_eminent', 'dbs_black'].forEach(id => { cardStatus[id] = true; });
-                cardStatus.__v24_dbs_fixed = true;
-                needSave = true;
-            }
             if (needSave) await saveCardStatus(cardStatus);
         } else {
             await saveCardStatus(cardStatus);
