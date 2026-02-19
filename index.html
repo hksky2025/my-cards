@@ -136,6 +136,7 @@
 
         @media(max-width:450px){.input-group{min-width:100%;}}
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -233,6 +234,13 @@
 
     <!-- ── 交易記錄 Tab ── -->
     <div id="tab-txn" class="tab-panel">
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <button id="exportExcelBtn" style="flex:1;padding:9px;border-radius:12px;border:1.5px solid #1a56a0;background:#f0f5ff;color:#1a56a0;font-weight:700;font-size:13px;cursor:pointer;">📥 匯出 Excel</button>
+            <label style="flex:1;padding:9px;border-radius:12px;border:1.5px solid #008154;background:#f5fff5;color:#008154;font-weight:700;font-size:13px;cursor:pointer;text-align:center;">
+                📤 匯入 Excel
+                <input type="file" id="importExcelInput" accept=".xlsx,.xls" style="display:none;">
+            </label>
+        </div>
         <div id="txn-list"></div>
     </div>
 </div>
