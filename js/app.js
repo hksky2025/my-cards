@@ -202,13 +202,14 @@ async function handleAnalyze() {
     const today = new Date();
     const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay };
 
-    const processed = allCards.filter(c => cardStatus[c.id]).map(c => {
+    const processed = [];
+    for (const c of allCards.filter(c => cardStatus[c.id])) {
         // DBS Eminent：每月首$8,000指定類別@5%；其他零售首$20,000@1%，超額均降@0.4%
         let adjustedParams = { ...params };
         if (c.id === 'dbs_eminent') {
             // 排除海外港幣交易（Netflix/Spotify/App Store/Airbnb 等）：唔計任何回贈
             if (sub && sub.includes('OVERSEAS_HKD')) {
-                results.push({ card: c, baseRes: { val: 0, rate: '不適用(海外港幣)' }, crazyBonus: 0, extraCash: 0, activePromos: ['⚠️ 海外港幣不計回贈'] });
+                processed.push({ card: c, baseRes: { val: 0, rate: '不適用(海外港幣)' }, crazyBonus: 0, extraCash: 0, activePromos: ['⚠️ 海外港幣不計回贈'] });
                 continue;
             }
             const isBonus = c.logic.bonusCats.includes(cat) && amt >= c.logic.minAmt;
@@ -222,7 +223,7 @@ async function handleAnalyze() {
                     // 跨越封頂：部分@5%，部分@0.4%
                     const val = remaining * c.logic.bonusRate + (amt - remaining) * c.logic.overCapRate;
                     const baseRes = { val, rate: `5%(首$${remaining}) + 0.4%(超額)` };
-                    results.push({ card: c, baseRes, crazyBonus: 0, extraCash: 0, activePromos: [`DBS指定類別首$${remaining}@5%`] });
+                    processed.push({ card: c, baseRes, crazyBonus: 0, extraCash: 0, activePromos: [`DBS指定類別首$${remaining}@5%`] });
                     continue;
                 }
             } else if (!c.logic.bonusCats.includes(cat)) {
@@ -236,7 +237,7 @@ async function handleAnalyze() {
                     // 跨越封頂：部分@1%，部分@0.4%
                     const val = retailRemaining * c.logic.retailRate + (amt - retailRemaining) * c.logic.overCapRate;
                     const baseRes = { val, rate: `1%(首$${retailRemaining}) + 0.4%(超額)` };
-                    results.push({ card: c, baseRes, crazyBonus: 0, extraCash: 0, activePromos: [`DBS零售首$${retailRemaining}@1%`] });
+                    processed.push({ card: c, baseRes, crazyBonus: 0, extraCash: 0, activePromos: [`DBS零售首$${retailRemaining}@1%`] });
                     continue;
                 }
             }
@@ -251,16 +252,16 @@ async function handleAnalyze() {
             const keywordMatch = p.keywords.some(k => kw.includes(k.toLowerCase()));
             const dateOk = today >= new Date(p.startDate) && today <= new Date(p.endDate);
             const bankMatch = p.bank === c.bank;
-            const cardMatch = !p.cardId || p.cardId === c.id; // 指定卡片才觸發
-            const notExcluded = !p.excludeSubs || !sub || !p.excludeSubs.includes(sub); // 排除已有專屬優惠的商戶
+            const cardMatch = !p.cardId || p.cardId === c.id;
+            const notExcluded = !p.excludeSubs || !sub || !p.excludeSubs.includes(sub);
             const amtOk = amt >= p.minAmt;
             if (keywordMatch && dateOk && bankMatch && cardMatch && notExcluded && amtOk) {
                 extraCash += calcPromoBonus(p, params);
                 activePromos.push(p.name);
             }
         });
-        return { card: c, baseRes, crazyBonus, extraCash, activePromos };
-    });
+        processed.push({ card: c, baseRes, crazyBonus, extraCash, activePromos });
+    }
 
     renderResults(processed);
 }
