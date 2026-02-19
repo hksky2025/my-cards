@@ -182,26 +182,6 @@
     }
   },
   {
-    "id": "motion",
-    "name": "中信 Motion",
-    "bank": "citic",
-    "type": "cash",
-    "color": "#ed1c24",
-    "notes": "餐飲/網購首$3636共6%，超額0.5%；其他0.5%",
-    "logic": {
-      "type": "motion",
-      "bonusCats": [
-        "Dining",
-        "Online"
-      ],
-      "bonusRate": 0.06,
-      "bonusCap": 3636,
-      "overCapRate": 0.005,
-      "baseRate": 0.005,
-      "onlineBonus": true
-    }
-  },
-  {
     "id": "mox",
     "name": "Mox Credit",
     "bank": "mox",
