@@ -270,5 +270,32 @@
         "HotelDining"
       ]
     }
+  },
+  {
+    "id": "dbs_black",
+    "name": "DBS Black World",
+    "bank": "dbs",
+    "type": "miles",
+    "color": "#1a1a1a",
+    "notes": "餐飲/本地/網購$6=1里；八達通增值$12=1里；iBanking繳費不計里數",
+    "logic": {
+      "type": "dbs_black",
+      "mileProgram": "Asia Miles",
+      "mileValue": 0.1,
+      "tiers": [
+        {
+          "condition": "meth_in:Octopus",
+          "ratePerMile": 12
+        },
+        {
+          "condition": "cat_in:Bill",
+          "ratePerMile": 0
+        },
+        {
+          "condition": "default",
+          "ratePerMile": 6
+        }
+      ]
+    }
   }
 ]
