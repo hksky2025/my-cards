@@ -297,5 +297,28 @@
         }
       ]
     }
+  },
+  {
+    "id": "citic_motion",
+    "name": "中信 Motion",
+    "bank": "citic",
+    "type": "cash",
+    "color": "#7b5ea7",
+    "notes": "當月累積零售>=$3,800後：食肆/網上6%(上限$200/月)；其他0.4%",
+    "logic": {
+      "type": "citic_motion",
+      "bonusCats": [
+        "Dining",
+        "Online"
+      ],
+      "bonusRate": 0.06,
+      "bonusCap": 200,
+      "minMonthlySpend": 3800,
+      "baseRate": 0.004,
+      "excludeSubs": [
+        "EWALLET"
+      ],
+      "promoEnd": "2026-06-30"
+    }
   }
 ]
