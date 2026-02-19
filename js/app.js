@@ -239,7 +239,7 @@ function handleMerchantSearch() {
 function checkDateStatus() {
     const s = document.getElementById('txnDate').value;
     const d = new Date(s);
-    isRedDay = [0,5,6].includes(d.getDay()) || HOLIDAYS_2026.includes(s);
+    isRedDay = [0].includes(d.getDay()) || HOLIDAYS_2026.includes(s);
     isCrazyRedDay = BOC_CRAZY_RED_DAYS.has(s);
     renderDateStatus(isRedDay, isCrazyRedDay);
 }
