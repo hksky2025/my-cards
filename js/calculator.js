@@ -111,15 +111,14 @@ export function calcBaseReward(card, params) {
 
         case 'dbs_eminent': {
             // 指定4類(餐飲/醫療/運動服飾/健身)：單筆>=$300，每月首$8,000@5%，超額@0.4%
-            // 其他零售：1%；基本：0.4%
+            // 其他零售：每月首$20,000@1%，超額@0.4%
+            if (cat === 'Override0.4') return { val: amt * logic.overCapRate, rate: '0.4% (超封頂)' };
             const isBonus = logic.bonusCats.includes(cat) && amt >= logic.minAmt;
             if (isBonus) {
-                // 注意：封頂邏輯由 app.js 的 cardCapSpent 追蹤，此處計全額
-                // 首$8,000@5%，超額@0.4%（由 app.js 根據當月已用額計算）
                 return { val: amt * logic.bonusRate, rate: `${logic.bonusRate * 100}% (指定類別首$${logic.bonusCap})` };
             }
-            // 其他零售（已登記 Card+）：1%
-            return { val: amt * logic.retailRate, rate: `${logic.retailRate * 100}%` };
+            // 其他零售：首$20,000@1%，超額@0.4%
+            return { val: amt * logic.retailRate, rate: `${logic.retailRate * 100}% (零售首$${logic.retailCap})` };
         }
 
         case 'flat':

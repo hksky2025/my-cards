@@ -203,25 +203,37 @@ async function handleAnalyze() {
     const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay };
 
     const processed = allCards.filter(c => cardStatus[c.id]).map(c => {
-        // DBS Eminent：每月首$8,000指定類別@5%，超額@0.4%
+        // DBS Eminent：每月首$8,000指定類別@5%；其他零售首$20,000@1%，超額均降@0.4%
         let adjustedParams = { ...params };
-        if (c.id === 'dbs_eminent' && c.logic.bonusCats.includes(cat) && amt >= c.logic.minAmt) {
-            const capSpent = getCardMonthTotal('dbs_eminent'); // 當月已累積指定類別簽賬
-            const remaining = Math.max(0, c.logic.bonusCap - capSpent);
-            if (remaining <= 0) {
-                // 已爆上限，改用 0.4%
-                adjustedParams = { ...params, cat: 'General' }; // 用 General 觸發 baseRate
-            } else if (amt > remaining) {
-                // 部分@5%，部分@0.4%
-                const bonusPart = remaining * c.logic.bonusRate;
-                const overPart = (amt - remaining) * c.logic.overCapRate;
-                const val = bonusPart + overPart;
-                const baseRes = { val, rate: `5%(首$${remaining}) + 0.4%(超額)` };
-                const crazyBonus = 0;
-                const extraCash = 0;
-                const activePromos = [`DBS指定類別首$${remaining}@5%`];
-                results.push({ card: c, baseRes, crazyBonus, extraCash, activePromos });
-                return; // 跳過下面的正常計算
+        if (c.id === 'dbs_eminent') {
+            const isBonus = c.logic.bonusCats.includes(cat) && amt >= c.logic.minAmt;
+            if (isBonus) {
+                const capSpent = getCardMonthTotal('dbs_eminent');
+                const remaining = Math.max(0, c.logic.bonusCap - capSpent);
+                if (remaining <= 0) {
+                    // 指定類別已爆 $8,000，降至 0.4%
+                    adjustedParams = { ...params, cat: 'Override0.4' };
+                } else if (amt > remaining) {
+                    // 跨越封頂：部分@5%，部分@0.4%
+                    const val = remaining * c.logic.bonusRate + (amt - remaining) * c.logic.overCapRate;
+                    const baseRes = { val, rate: `5%(首$${remaining}) + 0.4%(超額)` };
+                    results.push({ card: c, baseRes, crazyBonus: 0, extraCash: 0, activePromos: [`DBS指定類別首$${remaining}@5%`] });
+                    continue;
+                }
+            } else if (!c.logic.bonusCats.includes(cat)) {
+                // 其他零售：追蹤 $20,000 封頂
+                const retailSpent = getCardMonthTotal('dbs_eminent_retail');
+                const retailRemaining = Math.max(0, c.logic.retailCap - retailSpent);
+                if (retailRemaining <= 0) {
+                    // 零售已爆 $20,000，降至 0.4%
+                    adjustedParams = { ...params, cat: 'Override0.4' };
+                } else if (amt > retailRemaining) {
+                    // 跨越封頂：部分@1%，部分@0.4%
+                    const val = retailRemaining * c.logic.retailRate + (amt - retailRemaining) * c.logic.overCapRate;
+                    const baseRes = { val, rate: `1%(首$${retailRemaining}) + 0.4%(超額)` };
+                    results.push({ card: c, baseRes, crazyBonus: 0, extraCash: 0, activePromos: [`DBS零售首$${retailRemaining}@1%`] });
+                    continue;
+                }
             }
         }
         const baseRes = calcBaseReward(c, adjustedParams);
