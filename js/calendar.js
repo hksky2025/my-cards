@@ -14,7 +14,7 @@ export function renderCalendar(transactions, cards) {
     _cards = cards || [];
     if (currentYear === undefined) initCalendar();
 
-    const el = document.getElementById('tab-calendar');
+    const el = document.getElementById('calendar-container');
     if (!el) return;
 
     const year = currentYear;
