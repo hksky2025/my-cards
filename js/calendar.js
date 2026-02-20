@@ -103,25 +103,38 @@ function showDayDetail(dateStr, txns) {
     const [y, m, d] = dateStr.split('-');
     const dayTotal = txns.reduce((s, t) => s + t.amt, 0);
 
-    const rows = txns.map(t => {
-        const card = _cards.find(c => c.id === t.cardId);
-        const cardName = card ? card.name : (t.cardId || '');
-        const bankClass = card ? card.bank + '-card' : '';
-        return `
-            <div class="cal-detail-row ${bankClass}">
-                <div class="cal-detail-info">
-                    <div class="cal-detail-merchant">${t.merchant || t.cat}</div>
-                    <div class="cal-detail-card">${cardName}</div>
-                </div>
-                <div class="cal-detail-amt">$${t.amt.toLocaleString()}</div>
-            </div>`;
-    }).join('');
+    const CAT_LABEL = {
+        Dining:'餐飲食肆', Super:'超級市場', Online:'一般網購', Electronics:'電子產品',
+        Transport:'交通/叫車', Pet:'寵物護理', Entertainment:'休閒娛樂', Medical:'醫療服務',
+        Sport:'運動服飾', Fitness:'健身中心', Travel:'旅遊機票', Fashion:'珠寶服飾',
+        Coffee:'咖啡輕食', Overseas:'海外外幣', General:'一般本地消費', Home:'家居用品'
+    };
+
+    const rows = txns.length === 0
+        ? `<div class="cal-no-txn">此日無簽賬記錄</div>`
+        : txns.map(t => {
+            const card = _cards.find(c => c.id === t.cardId);
+            const cardName = card ? card.name : (t.cardId || '—');
+            const bankClass = card ? card.bank + '-card' : '';
+            const catLabel = CAT_LABEL[t.cat] || t.cat || '';
+            return `
+                <div class="cal-txn-row ${bankClass}">
+                    <div class="cal-txn-info">
+                        <div class="cal-txn-merchant">${t.merchant || catLabel}</div>
+                        <div class="cal-txn-meta">${catLabel}　·　${cardName}</div>
+                    </div>
+                    <div class="cal-txn-amt">$${t.amt.toLocaleString()}</div>
+                </div>`;
+        }).join('');
 
     detail.innerHTML = `
         <div class="cal-detail-header">
             <span>${y}年${parseInt(m)}月${parseInt(d)}日（星期${weekdays[dateObj.getDay()]}）</span>
-            <span class="cal-detail-total">$${dayTotal.toLocaleString()}</span>
+            <span class="cal-detail-total">-$${dayTotal.toLocaleString()}</span>
         </div>
         ${rows}`;
     detail.style.display = 'block';
+
+    // 滑動到明細位置
+    detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
