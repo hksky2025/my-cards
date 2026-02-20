@@ -56,6 +56,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('merchantSearch').addEventListener('input', handleMerchantSearch);
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
+    document.getElementById('analyzeBtn').addEventListener('touchend', (e) => { e.preventDefault(); handleAnalyze(); });
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
 
     // 匯出 Excel
@@ -147,6 +148,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
+    document.getElementById('addTxnBtn').addEventListener('touchend', (e) => { e.preventDefault(); handleAddTransaction(); });
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
     // 步驟四：Firebase 異步初始化（完成後更新狀態）
@@ -288,6 +290,7 @@ window.handleDeleteTxn = async (id) => {
 
 // ── 核心運算 ──────────────────────────────────────────
 async function handleAnalyze() {
+    try {
     const spent = parseFloat(document.getElementById('currentSpent').value) || 0;
     const amt = parseFloat(document.getElementById('amount').value);
     const cat = document.getElementById('category').value;
@@ -380,6 +383,10 @@ async function handleAnalyze() {
     }
 
     renderResults(processed);
+    } catch(err) {
+        console.error('handleAnalyze error:', err);
+        alert('運算出錯：' + err.message);
+    }
 }
 
 // ── 進度 ──────────────────────────────────────────────
