@@ -65,6 +65,7 @@
     "endDate": "2026-06-30",
     "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻",
     "keywords": [],
-    "minAmt": 0
+    "minAmt": 999999,
+    "displayOnly": true
   }
 ]
