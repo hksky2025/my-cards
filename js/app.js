@@ -6,6 +6,7 @@ import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } f
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
 import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, renderTransactions, getTransactions } from './transactions.js';
 import { renderProgress } from './progress.js';
+import { initCalendar, renderCalendar } from './calendar.js';
 
 const HOLIDAYS_2026 = [
     "2026-01-01","2026-02-17","2026-02-18","2026-02-19",
@@ -177,6 +178,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         renderCardManager(allCards, cardStatus, handleCardToggle);
         populateCardSelect(); // 再次更新（反映 Firebase 的啟用狀態）
 
+        // 月曆 render 回調
+
         const txnData = await loadTransactions();
         console.log('✅ 載入交易記錄:', txnData.length, '筆');
 
@@ -186,6 +189,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             renderTransactions(allCards);
         });
 
+        initCalendar();
         syncMonthTotal();
         refreshProgress();
         renderTransactions(allCards);
@@ -229,6 +233,7 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-panel').forEach(p => p.style.display = p.id === `tab-${tab}` ? 'block' : 'none');
     if (tab === 'progress') refreshProgress();
     if (tab === 'txn') renderTransactions(allCards);
+    if (tab === 'calendar') renderCalendar(getTransactions(), allCards);
 }
 
 // ── 事件處理 ──────────────────────────────────────────
