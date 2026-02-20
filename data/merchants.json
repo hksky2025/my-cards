@@ -300,7 +300,7 @@
       "1o1o"
     ],
     "cat": "Electronics",
-    "sub": "VS",
+    "sub": "VS,CITI_CLUB",
     "meth": "ApplePay"
   },
   {
@@ -323,7 +323,7 @@
     "name": "Now TV",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "VS",
+    "sub": "VS,CITI_CLUB",
     "meth": "Online"
   },
   {
@@ -332,7 +332,7 @@
       "pccw"
     ],
     "cat": "Electronics",
-    "sub": "VS",
+    "sub": "VS,CITI_CLUB",
     "meth": "Online"
   },
   {
@@ -1620,5 +1620,25 @@
     "cat": "Dining",
     "sub": "COFFEE,CITI_CLUB",
     "meth": "ApplePay"
+  },
+  {
+    "name": "1010",
+    "aliases": [
+      "1010 hk",
+      "csl 1010"
+    ],
+    "cat": "Electronics",
+    "sub": "CITI_CLUB",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Club Shopping",
+    "aliases": [
+      "club shopping hk",
+      "clubshopping"
+    ],
+    "cat": "Online",
+    "sub": "CITI_CLUB",
+    "meth": "Online"
   }
 ]
