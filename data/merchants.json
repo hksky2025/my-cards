@@ -1081,7 +1081,7 @@
       "park n shop"
     ],
     "cat": "Super",
-    "sub": "",
+    "sub": "VS",
     "meth": "ApplePay"
   },
   {
@@ -1090,7 +1090,7 @@
       "marketplace"
     ],
     "cat": "Super",
-    "sub": "",
+    "sub": "VS",
     "meth": "ApplePay"
   },
   {
@@ -1489,7 +1489,7 @@
       "city super"
     ],
     "cat": "Super",
-    "sub": "CITI_CLUB",
+    "sub": "CITI_CLUB,VS",
     "meth": "ApplePay"
   },
   {
@@ -1498,7 +1498,7 @@
       "city super neighbourhood"
     ],
     "cat": "Super",
-    "sub": "CITI_CLUB",
+    "sub": "CITI_CLUB,VS",
     "meth": "ApplePay"
   },
   {

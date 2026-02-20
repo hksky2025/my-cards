@@ -144,8 +144,7 @@
       ],
       "bonusCats": [
         "Home",
-        "Electronics",
-        "Super"
+        "Electronics"
       ],
       "bonusRate": 0.036,
       "baseRate": 0.004
