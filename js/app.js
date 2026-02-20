@@ -368,7 +368,7 @@ async function handleAnalyze() {
         if (crazyBonus > 0) activePromos.push('狂賞派');
         allPromos.forEach(p => {
             const kw = rawInput.toLowerCase();
-            const keywordMatch = p.keywords.some(k => kw.includes(k.toLowerCase()));
+            const keywordMatch = !p.keywords?.length || p.keywords.some(k => kw.includes(k.toLowerCase()));
             const dateOk = today >= new Date(p.startDate) && today <= new Date(p.endDate);
             const bankMatch = p.bank === c.bank;
             const cardMatch = !p.cardId || p.cardId === c.id;
