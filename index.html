@@ -150,7 +150,7 @@
 
 
         /* ── 月曆 ── */
-        .cal-container{padding:4px 0;}
+        .cal-container{padding:4px 0;width:100%;box-sizing:border-box;}
         .cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
         .cal-nav{background:none;border:none;font-size:28px;color:#1a56a0;cursor:pointer;padding:4px 12px;border-radius:10px;touch-action:manipulation;}
         .cal-nav:active{background:#f0f5ff;}
@@ -160,7 +160,7 @@
         .cal-month-total strong{color:#db0011;}
         .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px;}
         .cal-weekday{text-align:center;font-size:12px;font-weight:700;color:#888;padding:4px 0;}
-        .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+        .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;width:100%;}
         .cal-day{min-height:52px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;cursor:default;position:relative;}
         .cal-day.empty{background:none;}
         .cal-day.has-txn{background:#fff5f5;cursor:pointer;border:1px solid #ffd0d0;}
@@ -309,7 +309,7 @@
 <nav class="tab-nav">
     <!-- ── 月曆 Tab ── -->
     <div id="tab-calendar" class="tab-panel">
-        <div id="calendar-container"></div>
+        <div id="calendar-container" style="padding:0 4px;width:100%;box-sizing:border-box;"></div>
     </div>
 
     <button class="tab-btn active" data-tab="calc">
