@@ -193,6 +193,7 @@ export function calcCrazyBonus(card, params) {
 export function calcPromoBonus(promo, params) {
     const { amt, isRedDay } = params;
     const b = promo.bonus;
+    if (!b) return 0; // 純顯示用推廣，無需計算
 
     if (b.type === 'percentage_cap') {
         const base = Math.min(amt * b.baseRate, b.baseCap);
