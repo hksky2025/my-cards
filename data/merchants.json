@@ -1640,5 +1640,110 @@
     "cat": "Online",
     "sub": "CITI_CLUB",
     "meth": "Online"
+  },
+  {
+    "name": "3hreeSixty",
+    "aliases": [
+      "three sixty",
+      "3sixty"
+    ],
+    "cat": "Super",
+    "sub": "VS",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "U購 Select",
+    "aliases": [
+      "u select",
+      "uselect",
+      "u購"
+    ],
+    "cat": "Super",
+    "sub": "VS",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "AEON 超級市場",
+    "aliases": [
+      "aeon supermarket",
+      "aeon super",
+      "aeon hk"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "一田超市",
+    "aliases": [
+      "yata",
+      "yata supermarket",
+      "一田"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "大昌食品專門店",
+    "aliases": [
+      "great food hall",
+      "tai cheong"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "價真棧",
+    "aliases": [
+      "kai jun"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "佳寶食品超級市場",
+    "aliases": [
+      "kabo",
+      "kabo supermarket",
+      "佳寶"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "Marks & Spencer Food",
+    "aliases": [
+      "m&s food",
+      "m&s",
+      "marks and spencer",
+      "marks spencer"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "鄰住買",
+    "aliases": [
+      "neighbuy",
+      "lanjummai"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "HKTVmall",
+    "aliases": [
+      "hktv mall",
+      "hktv"
+    ],
+    "cat": "Super",
+    "sub": "",
+    "meth": "Online"
   }
 ]
