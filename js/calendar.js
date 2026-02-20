@@ -27,9 +27,10 @@ export function renderCalendar(transactions, cards) {
     _transactions.forEach(t => {
         if (!t.date || !t.date.startsWith(ym)) return;
         const d = t.date;
-        dayTotals[d] = (dayTotals[d] || 0) + t.amt;
+        const amt = parseFloat(t.amt) || 0;
+        dayTotals[d] = (dayTotals[d] || 0) + amt;
         if (!dayTxns[d]) dayTxns[d] = [];
-        dayTxns[d].push(t);
+        dayTxns[d].push({ ...t, amt });
     });
 
     const monthTotal = Object.values(dayTotals).reduce((s, v) => s + v, 0);
@@ -84,8 +85,8 @@ export function renderCalendar(transactions, cards) {
         renderCalendar(_transactions, _cards);
     });
 
-    // 點擊日期顯示明細
-    el.querySelectorAll('.cal-day.has-txn').forEach(cell => {
+    // 點擊任何日期格顯示明細（有記錄或無記錄）
+    el.querySelectorAll('.cal-day:not(.empty)').forEach(cell => {
         cell.addEventListener('click', () => {
             el.querySelectorAll('.cal-day.active').forEach(c => c.classList.remove('active'));
             cell.classList.add('active');
