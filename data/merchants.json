@@ -1745,5 +1745,27 @@
     "cat": "Super",
     "sub": "",
     "meth": "Online"
+  },
+  {
+    "name": "崇光百貨",
+    "aliases": [
+      "sogo",
+      "sogo hk",
+      "崇光"
+    ],
+    "cat": "Fashion",
+    "sub": "SOGO",
+    "meth": "ApplePay"
+  },
+  {
+    "name": "崇光超市 Freshmart",
+    "aliases": [
+      "freshmart",
+      "sogo supermarket",
+      "崇光超市"
+    ],
+    "cat": "Super",
+    "sub": "SOGO",
+    "meth": "ApplePay"
   }
 ]
