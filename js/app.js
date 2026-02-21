@@ -254,7 +254,12 @@ function checkDateStatus() {
     const d = new Date(s);
     isRedDay = [0].includes(d.getDay()) || HOLIDAYS_2026.includes(s);
     // 萬寧優惠：星期五至日額外+5%
-    isMannRedDay = [0, 5, 6].includes(d.getDay());
+    // 萬寧優惠：星期五至日，且需在推廣期內（2025-12-01 至 2026-02-28）
+    const mannStart = new Date('2025-12-01');
+    const mannEnd = new Date('2026-02-28');
+    const dateObj = new Date(s);
+    const inMannPeriod = dateObj >= mannStart && dateObj <= mannEnd;
+    isMannRedDay = inMannPeriod && [0, 5, 6].includes(d.getDay());
     isCrazyRedDay = BOC_CRAZY_RED_DAYS.has(s);
     renderDateStatus(isRedDay, isCrazyRedDay, isMannRedDay);
 }
