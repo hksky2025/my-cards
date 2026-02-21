@@ -139,8 +139,7 @@ function renderCapProgress(cards, getCardTotal) {
     // 定義各卡封頂資訊
     const CAP_INFO = {
         red:    [{ label: '網購4%封頂', cap: 10000 }],
-        sogo:   [{ label: '崇光 ApplePay 5.4%', cap: 0 }],
-        sogo_sig: [{ label: '崇光 ApplePay 10.4%(手機5%上限$100/月)', cap: 0 }],
+        sogo:   [{ label: '崇光 ApplePay 10.4%(手機5%上限$100/月)', cap: 0 }],
         motion: [{ label: '餐飲/網購6%封頂', cap: 3636 }],
         waku:   [{ label: '網購6%封頂', cap: 3571 }],
         mmpower:[{ label: '海外6%封頂', cap: Math.round(500/0.06) }, { label: '網購5%封頂', cap: Math.round(500/0.05) }],
