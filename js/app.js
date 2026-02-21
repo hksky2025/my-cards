@@ -314,14 +314,16 @@ window.handleDeleteTxn = async (id) => {
 // ── 核心運算 ──────────────────────────────────────────
 async function handleAnalyze() {
     try {
-    const spent = parseFloat(document.getElementById('currentSpent').value) || 0;
+    // 狂賞派 $5,000 門檻：只計中銀 Visa 卡（cheers + sogo）當月簽賬
+    const bocVisaTotal = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
+    const spent = bocVisaTotal;
     const amt = parseFloat(document.getElementById('amount').value);
     const cat = document.getElementById('category').value;
     const rawInput = document.getElementById('merchantSearch').value.trim();
 
     if (!amt || amt <= 0) return alert('請輸入有效金額');
 
-    const isMet = (spent + amt) >= 5000;
+    const isMet = (spent + amt) >= 5000; // 實體店需達門檻，網購唔需要
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
     const today = new Date();
@@ -420,7 +422,8 @@ function refreshProgress() {
 
 function syncMonthTotal() {
     const el = document.getElementById('currentSpent');
-    if (el) el.value = getCurrentMonthTotal();
+    // 顯示中銀 Visa 卡（cheers + sogo）當月合計，供狂賞派門檻參考
+    if (el) el.value = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
 }
 
 function isCrazyCat(cat, sub) {
