@@ -172,8 +172,8 @@
     "bank": "boc",
     "type": "both",
     "color": "#b31d28",
-    "notes": "超市5%，其他0.4%",
-    "crazyEligible": true,
+    "notes": "超市5%，其他0.4%（銀聯卡，不適用狂賞派）",
+    "crazyEligible": false,
     "logic": {
       "type": "go",
       "superRate": 0.05,
