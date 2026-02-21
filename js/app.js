@@ -280,7 +280,9 @@ async function handleAddTransaction() {
     const merchant = document.getElementById('merchantSearch').value.trim() || document.getElementById('category').value;
     const amt = parseFloat(document.getElementById('amount').value);
     const date = document.getElementById('txnDate').value;
-    const cardId = document.getElementById('txnCardSelect').value;
+    // 優先用記帳按鈕傳入的卡片
+    const cardId = window._quickRecordCardId || document.getElementById('txnCardSelect').value;
+    window._quickRecordCardId = null;
     const cat = document.getElementById('category').value;
 
     if (!amt || amt <= 0) return alert('請輸入有效金額');

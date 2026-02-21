@@ -129,6 +129,18 @@ function createCardEl(c, isMile) {
         </div>
         <div class="card-desc">基礎回饋: ${c.baseRes.rate}</div>
         ${c.card.notes ? `<div class="remark-tip">${c.card.notes}</div>` : ''}
+        <div class="card-bottom">
+            <button class="record-btn" data-cardid="${c.card.id}">記帳</button>
+        </div>
     `;
+
+    // 點擊記帳按鈕
+    div.querySelector('.record-btn').addEventListener('click', () => {
+        const sel = document.getElementById('txnCardSelect');
+        if (sel) sel.value = c.card.id;
+        window._quickRecordCardId = c.card.id;
+        document.getElementById('addTxnBtn').click();
+    });
+
     return div;
 }
