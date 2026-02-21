@@ -90,7 +90,7 @@ export function renderDateStatus(isRed, isCrazyRed = false, isMannRed = false) {
     const el = document.getElementById('dateStatus');
     const parts = [];
     if (isCrazyRed) parts.push('中銀 Cheers VI / Sogo Visa 狂賞派' + (isRed ? '+5%' : '+5%'));
-    if (isMannRed) parts.push('HSBC Red 萬寧額外+5%（星期五至日）');
+    if (isMannRed) parts.push('HSBC 萬寧額外+5%（星期五至日）');
 
     if (isCrazyRed || isMannRed) {
         el.innerHTML = `🔥 今日紅日優惠激活<br><span style="font-size:11px;font-weight:500;opacity:0.9;">${parts.join(' ｜ ')}</span>`;
