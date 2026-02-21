@@ -93,10 +93,14 @@ export function renderTransactions(cards) {
         ` : ''}
     `;
 
-    // 綁定刪除按鈕
+    // 綁定刪除按鈕（呼叫 app.js 的 handleDeleteTxn 確保同步刪除 Firebase）
     el.querySelectorAll('.txn-delete-btn').forEach(btn => {
         btn.onclick = () => {
-            if (confirm('確定刪除此記錄？')) deleteTransaction(btn.dataset.id);
+            if (window.handleDeleteTxn) {
+                window.handleDeleteTxn(btn.dataset.id);
+            } else {
+                if (confirm('確定刪除此記錄？')) deleteTransaction(btn.dataset.id);
+            }
         };
     });
 }

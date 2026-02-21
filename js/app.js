@@ -299,6 +299,9 @@ window.handleDeleteTxn = async (id) => {
     if (!confirm('確定刪除此記錄？')) return;
     await removeTransaction(id);
     deleteTransaction(id);
+    renderTransactions(allCards);
+    syncMonthTotal();
+    refreshProgress();
 };
 
 // ── 核心運算 ──────────────────────────────────────────
