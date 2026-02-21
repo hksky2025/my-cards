@@ -89,13 +89,13 @@ export function renderMatchHint(match) {
 export function renderDateStatus(isRed, isCrazyRed = false) {
     const el = document.getElementById('dateStatus');
     if (isCrazyRed && isRed) {
-        el.textContent = '🔥 紅日（狂賞派+其他卡紅日）';
+        el.innerHTML = '🔥 今日紅日優惠激活<br><span style="font-size:11px;font-weight:500;opacity:0.9;">中銀 Cheers VI / Sogo Visa 狂賞派+5% &nbsp;｜&nbsp; HSBC Red 萬寧+5%</span>';
     } else if (isCrazyRed) {
-        el.textContent = '🔥 狂賞派紅日（5%回贈）';
+        el.innerHTML = '🔥 狂賞派紅日<br><span style="font-size:11px;font-weight:500;opacity:0.9;">中銀 Cheers VI / Sogo Visa 額外+5%回贈</span>';
     } else if (isRed) {
-        el.textContent = '🔥 紅日獎賞激活';
+        el.innerHTML = '🔥 紅日獎賞激活<br><span style="font-size:11px;font-weight:500;opacity:0.9;">HSBC Red 萬寧優惠+5%</span>';
     } else {
-        el.textContent = '📅 平日獎賞';
+        el.textContent = '📅 平日（中銀 Cheers VI / Sogo Visa 額外+2%）';
     }
     el.className = `date-status-tag ${(isRed || isCrazyRed) ? 'is-red' : 'is-normal'}`;
 }
