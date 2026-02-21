@@ -240,7 +240,13 @@ function switchTab(tab) {
 function handleMerchantSearch() {
     const match = findMerchant(document.getElementById('merchantSearch').value);
     renderMatchHint(match);
-    if (match) { document.getElementById('category').value = match.cat; updateMethod(match.meth); }
+    if (match) {
+        document.getElementById('category').value = match.cat;
+        updateMethod(match.meth);
+    } else {
+        // 識別唔到商戶，預設「一般本地消費」
+        document.getElementById('category').value = 'General';
+    }
 }
 
 function checkDateStatus() {
