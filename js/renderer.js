@@ -86,18 +86,19 @@ export function renderMatchHint(match) {
  * 更新日期狀態 Tag
  * @param {boolean} isRed
  */
-export function renderDateStatus(isRed, isCrazyRed = false) {
+export function renderDateStatus(isRed, isCrazyRed = false, isMannRed = false) {
     const el = document.getElementById('dateStatus');
-    if (isCrazyRed && isRed) {
-        el.innerHTML = '🔥 今日紅日優惠激活<br><span style="font-size:11px;font-weight:500;opacity:0.9;">中銀 Cheers VI / Sogo Visa 狂賞派+5% &nbsp;｜&nbsp; HSBC Red 萬寧+5%</span>';
-    } else if (isCrazyRed) {
-        el.innerHTML = '🔥 狂賞派紅日<br><span style="font-size:11px;font-weight:500;opacity:0.9;">中銀 Cheers VI / Sogo Visa 額外+5%回贈</span>';
-    } else if (isRed) {
-        el.innerHTML = '🔥 紅日獎賞激活<br><span style="font-size:11px;font-weight:500;opacity:0.9;">HSBC Red 萬寧優惠+5%</span>';
+    const parts = [];
+    if (isCrazyRed) parts.push('中銀 Cheers VI / Sogo Visa 狂賞派' + (isRed ? '+5%' : '+5%'));
+    if (isMannRed) parts.push('HSBC Red 萬寧額外+5%（星期五至日）');
+
+    if (isCrazyRed || isMannRed) {
+        el.innerHTML = `🔥 今日紅日優惠激活<br><span style="font-size:11px;font-weight:500;opacity:0.9;">${parts.join(' ｜ ')}</span>`;
+        el.className = 'date-status-tag is-red';
     } else {
         el.textContent = '📅 平日（中銀 Cheers VI / Sogo Visa 額外+2%）';
+        el.className = 'date-status-tag is-normal';
     }
-    el.className = `date-status-tag ${(isRed || isCrazyRed) ? 'is-red' : 'is-normal'}`;
 }
 
 // ── 內部輔助 ──────────────────────────────────────────

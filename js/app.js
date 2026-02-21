@@ -27,7 +27,7 @@ const BOC_CRAZY_RED_DAYS = new Set([
 ]);
 
 let allCards = [], allPromos = [], cardStatus = {};
-let globalMethod = 'ApplePay', isRedDay = false, isCrazyRedDay = false;
+let globalMethod = 'ApplePay', isRedDay = false, isCrazyRedDay = false, isMannRedDay = false;
 
 window.addEventListener('DOMContentLoaded', async () => {
 
@@ -253,8 +253,10 @@ function checkDateStatus() {
     const s = document.getElementById('txnDate').value;
     const d = new Date(s);
     isRedDay = [0].includes(d.getDay()) || HOLIDAYS_2026.includes(s);
+    // 萬寧優惠：星期五至日額外+5%
+    isMannRedDay = [0, 5, 6].includes(d.getDay());
     isCrazyRedDay = BOC_CRAZY_RED_DAYS.has(s);
-    renderDateStatus(isRedDay, isCrazyRedDay);
+    renderDateStatus(isRedDay, isCrazyRedDay, isMannRedDay);
 }
 
 function updateMethod(m) {
@@ -322,7 +324,7 @@ async function handleAnalyze() {
     const motionMonthSpent = getCardMonthTotal('citic_motion');
     const motionMet = (motionMonthSpent + amt) >= 3800;
 
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay, isCrazyRedDay, motionMet };
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {
