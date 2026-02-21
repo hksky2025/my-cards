@@ -151,7 +151,7 @@
     }
   },
   {
-    "id": "sogo_sig",
+    "id": "sogo",
     "name": "中銀 Sogo Visa Signature",
     "bank": "boc",
     "type": "cash",
@@ -165,24 +165,6 @@
       "mobileCap": 100,
       "baseRate": 0.004,
       "isSig": true,
-      "requiresMet": true
-    }
-  },
-  {
-    "id": "sogo",
-    "name": "中銀 Sogo Visa 白金",
-    "bank": "boc",
-    "type": "cash",
-    "color": "#b31d28",
-    "notes": "崇光 ApplePay/實體：0.4%+5%崇光；其他0.4%",
-    "crazyEligible": true,
-    "logic": {
-      "type": "sogo",
-      "sogoRate": 0.05,
-      "mobileRate": 0,
-      "mobileCap": 0,
-      "baseRate": 0.004,
-      "isSig": false,
       "requiresMet": true
     }
   },
