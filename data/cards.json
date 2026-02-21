@@ -163,7 +163,8 @@
       "applePayRate": 0.054,
       "applePayCap": 2000,
       "overCapRate": 0.004,
-      "baseRate": 0.004
+      "baseRate": 0.004,
+      "requiresMet": true
     }
   },
   {
