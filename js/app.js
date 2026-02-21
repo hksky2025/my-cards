@@ -315,7 +315,7 @@ window.handleDeleteTxn = async (id) => {
 async function handleAnalyze() {
     try {
     // 狂賞派 $5,000 門檻：只計中銀 Visa 卡（cheers + sogo）當月簽賬
-    const bocVisaTotal = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
+    const bocVisaTotal = getCardMonthTotal('cheers') + getCardMonthTotal('sogo') + getCardMonthTotal('sogo_sig');
     const spent = bocVisaTotal;
     const amt = parseFloat(document.getElementById('amount').value);
     const cat = document.getElementById('category').value;

@@ -69,11 +69,16 @@ export function calcBaseReward(card, params) {
         }
 
         case 'sogo': {
-            if (meth === 'ApplePay') {
-                const val = amt <= logic.applePayCap
-                    ? amt * logic.applePayRate
-                    : logic.applePayCap * logic.applePayRate + (amt - logic.applePayCap) * logic.overCapRate;
-                return { val, rate: `${logic.applePayRate * 100}% (ApplePay首$${logic.applePayCap})` };
+            const isSogoCat = (sub && sub.includes('SOGO')) || cat === 'Dining';
+            // 喺崇光百貨簽賬（有SOGO sub tag）
+            if (isSogoCat && (meth === 'ApplePay' || meth === '實體')) {
+                const sogoBase = amt * (logic.baseRate + logic.sogoRate); // 0.4% + 5%
+                if (logic.isSig && meth === 'ApplePay') {
+                    // Signature 卡手機支付額外5%，上限$100/月
+                    const mobileBonus = Math.min(amt * logic.mobileRate, logic.mobileCap);
+                    return { val: sogoBase + mobileBonus, rate: `${((logic.baseRate + logic.sogoRate) * 100).toFixed(1)}%+手機5%(上限$${logic.mobileCap}/月)` };
+                }
+                return { val: sogoBase, rate: `${((logic.baseRate + logic.sogoRate) * 100).toFixed(1)}% (崇光)` };
             }
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
