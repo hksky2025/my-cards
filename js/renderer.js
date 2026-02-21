@@ -89,7 +89,7 @@ export function renderMatchHint(match) {
 export function renderDateStatus(isRed, isCrazyRed = false, isMannRed = false) {
     const el = document.getElementById('dateStatus');
     const parts = [];
-    if (isCrazyRed) parts.push('中銀 Cheers VI / Sogo Visa / Go銀聯卡 狂賞派+5%');
+    if (isCrazyRed) parts.push('中銀 Cheers VI / Sogo Visa 狂賞派+5%（需登記）');
     if (isMannRed) parts.push('HSBC 萬寧額外+5%（星期五至日）');
 
     if (isCrazyRed || isMannRed) {
