@@ -85,14 +85,28 @@ export function renderCalendar(transactions, cards) {
         renderCalendar(_transactions, _cards);
     });
 
-    // 點擊任何日期格顯示明細（有記錄或無記錄）
+    // 點擊有記錄嘅日期格顯示明細
     el.querySelectorAll('.cal-day:not(.empty)').forEach(cell => {
         cell.addEventListener('click', () => {
             el.querySelectorAll('.cal-day.active').forEach(c => c.classList.remove('active'));
             cell.classList.add('active');
-            showDayDetail(cell.dataset.date, dayTxns[cell.dataset.date] || []);
+            const txns = dayTxns[cell.dataset.date] || [];
+            if (txns.length > 0) {
+                showDayDetail(cell.dataset.date, txns);
+            } else {
+                // 冇記錄就隱藏明細
+                const detail = document.getElementById('calDetail');
+                if (detail) detail.style.display = 'none';
+            }
         });
     });
+
+    // 自動顯示：今日有記錄就顯示，冇就唔顯示
+    if (dayTxns[todayStr] && dayTxns[todayStr].length > 0) {
+        const todayCell = el.querySelector(`[data-date="${todayStr}"]`);
+        if (todayCell) todayCell.classList.add('active');
+        showDayDetail(todayStr, dayTxns[todayStr]);
+    }
 }
 
 function showDayDetail(dateStr, txns) {
