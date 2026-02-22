@@ -92,6 +92,22 @@
 
         /* ── 進度面板 ── */
         .progress-card{background:#fafafa;border:1px solid #eee;border-radius:18px;padding:16px;margin-bottom:16px;}
+        .annual-total{font-size:14px;color:#555;margin-bottom:12px;}
+        .annual-total strong{color:#1a56a0;font-size:18px;}
+        .annual-chart{display:flex;gap:4px;align-items:flex-end;height:100px;margin:12px 0 4px;}
+        .annual-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+        .annual-bar-amt{font-size:8px;color:#888;height:14px;text-align:center;}
+        .annual-bar-wrap{flex:1;width:100%;display:flex;align-items:flex-end;min-height:60px;}
+        .annual-bar{width:100%;background:#1a56a0;border-radius:3px 3px 0 0;min-height:0;transition:height .3s;}
+        .annual-bar.current-month{background:#e53935;}
+        .annual-bar.future-month{background:#e0e0e0;}
+        .annual-bar-label{font-size:9px;color:#888;text-align:center;}
+        .current-label{color:#e53935;font-weight:700;}
+        .annual-cards{margin-top:12px;border-top:1px solid #eee;padding-top:10px;}
+        .annual-card-row{display:flex;justify-content:space-between;padding:4px 0;font-size:13px;border-bottom:1px solid #f5f5f5;}
+        .annual-card-name{color:#444;}
+        .annual-card-amt{font-weight:700;color:#1a56a0;}
+        .annual-empty{color:#aaa;font-size:13px;text-align:center;padding:8px;}
         .progress-title{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:800;margin-bottom:12px;}
         .progress-amt{font-size:13px;font-weight:700;color:#555;}
         .progress-amt.reached{color:#4caf50;}
@@ -295,6 +311,7 @@
         <div id="progress-threshold"></div>
         <div id="progress-promos"></div>
         <div id="progress-caps"></div>
+        <div id="progress-annual"></div>
     </div>
 
     <!-- ── 交易記錄 Tab ── -->
