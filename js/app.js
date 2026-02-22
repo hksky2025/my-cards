@@ -279,6 +279,9 @@ function updateMethod(m) {
     globalMethod = m;
     document.getElementById('meth-ap').classList.toggle('active', m === 'ApplePay');
     document.getElementById('meth-on').classList.toggle('active', m === 'Online');
+    // 支付方式改變即時重新計算
+    const amt = parseFloat(document.getElementById('amount').value);
+    if (amt > 0) handleAnalyze();
 }
 
 async function handleCardToggle(cardId, newStatus) {
