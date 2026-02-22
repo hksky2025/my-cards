@@ -64,6 +64,41 @@ export function getCardMonthTotal(cardId) {
 }
 
 /**
+ * 計算當年全部簽賬總計
+ */
+export function getCurrentYearTotal() {
+    const year = new Date().getFullYear();
+    return transactions
+        .filter(t => t.date.startsWith(`${year}-`))
+        .reduce((sum, t) => sum + t.amt, 0);
+}
+
+/**
+ * 計算指定卡當年累積
+ */
+export function getCardYearTotal(cardId) {
+    const year = new Date().getFullYear();
+    return transactions
+        .filter(t => t.date.startsWith(`${year}-`) && t.cardId === cardId)
+        .reduce((sum, t) => sum + t.amt, 0);
+}
+
+/**
+ * 按月份分組當年簽賬
+ */
+export function getYearMonthlyBreakdown() {
+    const year = new Date().getFullYear();
+    const monthly = {};
+    for (let m = 1; m <= 12; m++) {
+        const ym = `${year}-${String(m).padStart(2, '0')}`;
+        monthly[m] = transactions
+            .filter(t => t.date.startsWith(ym))
+            .reduce((sum, t) => sum + t.amt, 0);
+    }
+    return monthly;
+}
+
+/**
  * 渲染交易記錄列表
  * @param {Array} cards - cards.json 資料
  */

@@ -7,7 +7,7 @@
  * @param {number} monthTotal - 當月累積簽賬
  * @param {Function} getCardTotal - (cardId) => number
  */
-export function renderProgress(cards, promos, monthTotal, getCardTotal) {
+export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly) {
     renderThresholdProgress(cards, monthTotal, getCardTotal);
     renderPromoCountdown(promos, cards);
     renderCapProgress(cards, getCardTotal);
@@ -180,4 +180,54 @@ function renderCapProgress(cards, getCardTotal) {
             }).join('')}
         </div>
     `;
+}
+
+
+// ── 年度進度 ──────────────────────────────────────────
+export function renderAnnualProgress(cards, getCardYearTotal, getYearMonthly) {
+    const el = document.getElementById('progress-annual');
+    if (!el) return;
+
+    const year = new Date().getFullYear();
+    const monthly = getYearMonthly ? getYearMonthly() : {};
+    const yearTotal = Object.values(monthly).reduce((s, v) => s + v, 0);
+    const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+    const maxVal = Math.max(...Object.values(monthly), 1);
+    const curMonth = new Date().getMonth() + 1;
+
+    // 各卡年度合計
+    const cardRows = cards.map(c => {
+        const total = getCardYearTotal ? getCardYearTotal(c.id) : 0;
+        return total > 0 ? `
+            <div class="annual-card-row">
+                <span class="annual-card-name">${c.name}</span>
+                <span class="annual-card-amt">$${total.toLocaleString()}</span>
+            </div>` : '';
+    }).join('');
+
+    // 月份長條圖
+    const bars = monthNames.map((label, i) => {
+        const m = i + 1;
+        const val = monthly[m] || 0;
+        const pct = Math.round((val / maxVal) * 100);
+        const isCur = m === curMonth;
+        const isFuture = m > curMonth;
+        return `
+            <div class="annual-bar-col">
+                <div class="annual-bar-amt">${val > 0 ? '$' + (val >= 10000 ? (val/1000).toFixed(0)+'k' : val.toLocaleString()) : ''}</div>
+                <div class="annual-bar-wrap">
+                    <div class="annual-bar ${isCur ? 'current-month' : ''} ${isFuture ? 'future-month' : ''}"
+                         style="height:${isFuture ? 0 : Math.max(pct, val > 0 ? 4 : 0)}%"></div>
+                </div>
+                <div class="annual-bar-label ${isCur ? 'current-label' : ''}">${label}</div>
+            </div>`;
+    }).join('');
+
+    el.innerHTML = `
+        <div class="progress-card">
+            <div class="progress-title">📆 ${year}年度簽賬總覽</div>
+            <div class="annual-total">全年合計 <strong>$${yearTotal.toLocaleString()}</strong></div>
+            <div class="annual-chart">${bars}</div>
+            <div class="annual-cards">${cardRows || '<div class="annual-empty">今年暫無記錄</div>'}</div>
+        </div>`;
 }

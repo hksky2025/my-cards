@@ -4,8 +4,8 @@ import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js'
 import { loadMerchants, findMerchant } from './matcher.js';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
-import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, renderTransactions, getTransactions } from './transactions.js';
-import { renderProgress } from './progress.js';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardYearTotal, getYearMonthlyBreakdown, renderTransactions, getTransactions } from './transactions.js';
+import { renderProgress, renderAnnualProgress } from './progress.js';
 import { initCalendar, renderCalendar } from './calendar.js';
 
 const HOLIDAYS_2026 = [
@@ -388,6 +388,8 @@ async function handleAnalyze() {
             }
         }
         const baseRes = calcBaseReward(c, adjustedParams);
+        // 保險類別：null 表示唔顯示此銀行
+        if (baseRes === null) continue;
 
         // 中信 Motion：每月回贈上限 $200
         if (c.id === 'citic_motion' && baseRes.val > c.logic.bonusCap) {
@@ -432,6 +434,7 @@ async function handleAnalyze() {
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal);
+    renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
 }
 
 function syncMonthTotal() {
