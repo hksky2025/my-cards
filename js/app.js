@@ -125,7 +125,8 @@ window.addEventListener('DOMContentLoaded', async () => {
                     '寵物護理':'Pet', '休閒娛樂':'Leisure', '醫療服務':'Medical',
                     '運動服飾':'Sport', '健身中心':'Fitness', '旅遊機票/酒店':'Travel',
                     '珠寶服飾':'Jewelry', '咖啡輕食':'Coffee', '海外外幣':'Overseas',
-                    '一般本地消費':'General'
+                    '一般本地消費':'General',
+            '保險保費':'Insurance'
                 };
                 const METH_MAP = { 'Apple Pay / 實體':'ApplePay', '網上簽賬':'Online', '八達通':'Octopus' };
 
