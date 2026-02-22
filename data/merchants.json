@@ -1767,5 +1767,19 @@
     "cat": "Super",
     "sub": "SOGO",
     "meth": "ApplePay"
+  },
+  {
+    "name": "AIA保險",
+    "aliases": [
+      "aia",
+      "aia insurance",
+      "aia hk",
+      "友邦保險",
+      "友邦"
+    ],
+    "cat": "Insurance",
+    "sub": "",
+    "meth": "Online",
+    "notes": "⚠️ 需用網上銀行繳費，直刷唔保證有回贈"
   }
 ]
