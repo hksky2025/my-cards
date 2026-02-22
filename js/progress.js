@@ -183,6 +183,58 @@ function renderCapProgress(cards, getCardTotal) {
 }
 
 
+// ── 年度簽賬進度（各卡） ──────────────────────────────────
+export function renderAnnualCardProgress(cards, getCardYearTotal) {
+    const el = document.getElementById('progress-annual-cards');
+    if (!el) return;
+
+    const year = new Date().getFullYear();
+    const cardsWithData = cards.filter(c => (getCardYearTotal ? getCardYearTotal(c.id) : 0) > 0);
+
+    if (cardsWithData.length === 0) {
+        el.innerHTML = '';
+        return;
+    }
+
+    const BANK_COLOR = {
+        hsbc: '#db0011', boc: '#c8960c', dbs: '#e2001a',
+        hangseng: '#008154', citic: '#003087', ccb: '#da291c',
+        sc: '#00a09b', mox: '#ff585d', aeon: '#0057a8', citi: '#003b8e'
+    };
+
+    const rows = cardsWithData.map(c => {
+        const total = getCardYearTotal(c.id);
+        const color = BANK_COLOR[c.bank] || '#888';
+        return `
+            <div class="annual-progress-row">
+                <div class="annual-progress-info">
+                    <span class="annual-progress-name">${c.name}</span>
+                    <span class="annual-progress-amt">$${total.toLocaleString()}</span>
+                </div>
+                <div class="annual-progress-bar-wrap">
+                    <div class="annual-progress-bar" style="background:${color};"></div>
+                </div>
+            </div>`;
+    }).join('');
+
+    const yearTotal = cardsWithData.reduce((s, c) => s + getCardYearTotal(c.id), 0);
+
+    el.innerHTML = `
+        <div class="progress-card">
+            <div class="progress-title">📊 ${year}年度各卡簽賬進度</div>
+            <div class="annual-progress-total">全年合計 <strong>$${yearTotal.toLocaleString()}</strong></div>
+            ${rows}
+        </div>`;
+
+    // 計算最大值後設定長度
+    const max = Math.max(...cardsWithData.map(c => getCardYearTotal(c.id)), 1);
+    el.querySelectorAll('.annual-progress-row').forEach((row, i) => {
+        const total = getCardYearTotal(cardsWithData[i].id);
+        const pct = Math.max((total / max) * 100, 2);
+        row.querySelector('.annual-progress-bar').style.width = `${pct}%`;
+    });
+}
+
 // ── 年度進度 ──────────────────────────────────────────
 export function renderAnnualProgress(cards, getCardYearTotal, getYearMonthly) {
     const el = document.getElementById('progress-annual');

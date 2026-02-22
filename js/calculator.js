@@ -72,8 +72,15 @@ export function calcBaseReward(card, params) {
         case 'red': {
             // Red8_HSBC 指定商戶：calcPromoBonus 負責計8%差額，此處只計基本0.4%
             if (meth === 'Online') {
-                // 網購4%，無上限
-                return { val: amt * logic.onlineRate, rate: `${logic.onlineRate * 100}% (網購)` };
+                // 網購：首$10,000享4%，超出部分0.4%
+                const onlineCap = 10000;
+                const val = amt <= onlineCap
+                    ? amt * logic.onlineRate
+                    : onlineCap * logic.onlineRate + (amt - onlineCap) * logic.baseRate;
+                const rate = amt <= onlineCap
+                    ? `${logic.onlineRate * 100}% (網購)`
+                    : `4%(首$10,000) + 0.4%(超額$${(amt - onlineCap).toLocaleString()})`;
+                return { val, rate };
             }
             if (cat === 'Super') {
                 // 超市2%

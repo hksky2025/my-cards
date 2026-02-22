@@ -5,7 +5,7 @@ import { loadMerchants, findMerchant } from './matcher.js';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
 import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardYearTotal, getYearMonthlyBreakdown, renderTransactions, getTransactions } from './transactions.js';
-import { renderProgress, renderAnnualProgress } from './progress.js';
+import { renderProgress, renderAnnualProgress, renderAnnualCardProgress } from './progress.js';
 import { initCalendar, renderCalendar } from './calendar.js';
 
 const HOLIDAYS_2026 = [
@@ -434,6 +434,7 @@ async function handleAnalyze() {
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal);
+    renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
 }
 
