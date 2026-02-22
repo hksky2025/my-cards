@@ -58,6 +58,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
     document.getElementById('analyzeBtn').addEventListener('touchend', (e) => { e.preventDefault(); handleAnalyze(); });
+
+    // 金額改變即時重新計算
+    let analyzeTimer = null;
+    document.getElementById('amount').addEventListener('input', () => {
+        clearTimeout(analyzeTimer);
+        analyzeTimer = setTimeout(() => {
+            const amt = parseFloat(document.getElementById('amount').value);
+            if (amt > 0) handleAnalyze();
+        }, 400); // 停止輸入 400ms 後自動計算
+    });
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
 
     // 匯出 Excel
