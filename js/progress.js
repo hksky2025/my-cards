@@ -7,7 +7,7 @@
  * @param {number} monthTotal - 當月累積簽賬
  * @param {Function} getCardTotal - (cardId) => number
  */
-export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly) {
+export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly, getCCBInsuranceYear) {
     renderThresholdProgress(cards, monthTotal, getCardTotal);
     renderPromoCountdown(promos, cards);
     renderCapProgress(cards, getCardTotal);
@@ -71,6 +71,27 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal) {
     if (bocCards.length > 0) {
         html += barHTML('🏦 中銀', 'boc', bocTotal, bocCards);
     }
+    // 建銀保費年度上限追蹤（信用額 $42,000）
+    const ccbCards = cards.filter(c => c.bank === 'ccb');
+    if (ccbCards.length > 0 && getCCBInsuranceYear) {
+        const ccbInsYear = getCCBInsuranceYear();
+        const CCB_CAP = 42000;
+        const ccbPct = Math.min((ccbInsYear / CCB_CAP) * 100, 100);
+        const reached = ccbInsYear >= CCB_CAP;
+        html += `
+        <div class="progress-card" style="margin-top:8px;">
+            <div class="progress-title">🏦 建銀 年度保費上限進度（信用額 $${CCB_CAP.toLocaleString()}）</div>
+            <div class="progress-row">
+                <span class="progress-label">保費簽賬</span>
+                <span class="progress-amt ${reached ? 'reached' : ''}">$${ccbInsYear.toLocaleString()} / $${CCB_CAP.toLocaleString()}</span>
+            </div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:${ccbPct}%;background:${reached ? '#4caf50' : '#da291c'};"></div>
+            </div>
+            ${reached ? '' : `<div class="progress-remaining">⏳ 再簽 $${(CCB_CAP - ccbInsYear).toLocaleString()} 達年度上限</div>`}
+        </div>`;
+    }
+
     if (bocCards.length > 0 && hangsengCards.length > 0) {
         html += '<hr style="border:none;border-top:1px solid #eee;margin:12px 0;">';
     }

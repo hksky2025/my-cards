@@ -83,6 +83,14 @@ export function getCardYearTotal(cardId) {
         .reduce((sum, t) => sum + t.amt, 0);
 }
 
+// 建銀保費年度合計（用於追蹤 $42,000 信用額上限）
+export function getCCBInsuranceYearTotal() {
+    const year = new Date().getFullYear();
+    return transactions
+        .filter(t => t.date.startsWith(`${year}-`) && ['ccb_eye','aia'].includes(t.cardId) && t.cat === 'Insurance')
+        .reduce((sum, t) => sum + t.amt, 0);
+}
+
 /**
  * 按月份分組當年簽賬
  */

@@ -4,7 +4,7 @@ import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js'
 import { loadMerchants, findMerchant } from './matcher.js';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
-import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardYearTotal, getYearMonthlyBreakdown, renderTransactions, getTransactions } from './transactions.js';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js';
 import { renderProgress, renderAnnualProgress, renderAnnualCardProgress } from './progress.js';
 import { initCalendar, renderCalendar } from './calendar.js';
 
@@ -433,7 +433,7 @@ async function handleAnalyze() {
 // ── 進度 ──────────────────────────────────────────────
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
-    renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal);
+    renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal);
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
 }

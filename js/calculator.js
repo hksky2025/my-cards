@@ -13,34 +13,39 @@ export function calcBaseReward(card, params) {
 
     // ── 保險保費特別處理 ──────────────────────────────
     if (cat === 'Insurance') {
-        // 只計 HSBC、中銀、建銀；其他銀行唔顯示（return null 由 app.js 過濾）
+        // 只計 HSBC、中銀、建銀；其他銀行唔顯示
         if (!['hsbc', 'boc', 'ccb'].includes(card.bank)) {
             return null;
         }
-        // HSBC：首$10,000 有0.4%，超出冇回贈
+        // HSBC：每月首$10,000 有0.4%，超出冇回贈
         if (card.bank === 'hsbc') {
             const effectiveAmt = Math.min(amt, 10000);
             const overAmt = amt - effectiveAmt;
-            const miles = card.type === 'miles' || card.type === 'both'
+            const miles = (card.type === 'miles' || card.type === 'both')
                 ? Math.floor(effectiveAmt / (logic.spendPerMile || 12.5)) : 0;
             const rateLabel = overAmt > 0
-                ? `0.4%（首$10,000，超出$${overAmt.toLocaleString()}冇回贈，⚠️需網上理財繳費）`
-                : `0.4%（首$10,000，⚠️需網上理財繳費）`;
+                ? `0.4%（首$10,000，超出$${overAmt.toLocaleString()}冇回贈）⚠️需網上理財繳費`
+                : `0.4%（每月上限$10,000）⚠️需網上理財繳費`;
             return { val: effectiveAmt * 0.004, miles, rate: rateLabel };
         }
-        // 中銀：首$10,000 有0.4%，超出冇回贈
+        // 中銀：每月首$10,000 有0.4%，超出冇回贈
         if (card.bank === 'boc') {
             const effectiveAmt = Math.min(amt, 10000);
             const overAmt = amt - effectiveAmt;
             const rateLabel = overAmt > 0
-                ? `0.4%（首$10,000，超出$${overAmt.toLocaleString()}冇回贈，⚠️需網上理財繳費）`
-                : `0.4%（首$10,000，⚠️需網上理財繳費）`;
+                ? `0.4%（首$10,000，超出$${overAmt.toLocaleString()}冇回贈）⚠️需網上理財繳費`
+                : `0.4%（每月上限$10,000）⚠️需網上理財繳費`;
             return { val: effectiveAmt * 0.004, miles: 0, rate: rateLabel };
         }
-        // 建銀：0.4%，全年上限 $42,000 信用額（即最多賺 $168/年）
+        // 建銀：0.4%，全年上限 = 信用額 $42,000（即全年最多賺 $168）
         if (card.bank === 'ccb') {
-            const CCB_INSURANCE_ANNUAL_CAP = 42000;
-            return { val: amt * 0.004, miles: 0, rate: `0.4%（⚠️需網上繳費，備註：信用額只有$${CCB_INSURANCE_ANNUAL_CAP.toLocaleString()}，全年保費上限$${CCB_INSURANCE_ANNUAL_CAP.toLocaleString()}）` };
+            const CCB_CREDIT_LIMIT = 42000;
+            const effectiveAmt = Math.min(amt, CCB_CREDIT_LIMIT);
+            return {
+                val: effectiveAmt * 0.004,
+                miles: 0,
+                rate: `0.4%（⚠️需網上繳費｜信用額$${CCB_CREDIT_LIMIT.toLocaleString()}，全年保費簽賬上限$${CCB_CREDIT_LIMIT.toLocaleString()}）`
+            };
         }
     }
 
