@@ -28,12 +28,10 @@ export function calcBaseReward(card, params) {
         if (card.bank === 'hsbc') {
             const cashVal = effectiveAmt * 0.004; // 最多 $40
             if (card.id === 'everymile') {
-                // 里數：$10,000 ÷ $5/里 = 最多 2,000 里，但 val 固定用 cashVal（$40）作排序用
-                const miles = Math.floor(effectiveAmt / 5);
                 return {
                     val: cashVal,
-                    miles,
-                    rate: `$5/里（保費上限 $${HSBC_BOC_CAP.toLocaleString()}，最多 ${Math.floor(HSBC_BOC_CAP/5).toLocaleString()} 里${overNote}）⚠️需網上理財繳費`
+                    miles: 0,
+                    rate: `0.4%（保費上限 $${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
                 };
             }
             return {
