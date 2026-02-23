@@ -24,15 +24,23 @@ export function calcBaseReward(card, params) {
         const overAmt = amt - effectiveAmt;
         const overNote = overAmt > 0 ? `，超出$${overAmt.toLocaleString()}冇回贈` : '';
 
-        // HSBC 所有卡：現金回贈 + 里數 均以 $10,000 × 0.4% 計算
+        // HSBC 所有卡：現金 + 里數 均以 $10,000 × 0.4% = $40 為上限
         if (card.bank === 'hsbc') {
-            const cashVal = effectiveAmt * 0.004; // $10,000 × 0.4% = $40
-            // EveryMile 額外顯示里數（$10,000 × 0.4% = $40 等值里數，$5/里 = 800里）
-            const miles = card.id === 'everymile' ? Math.floor(effectiveAmt / 5) : 0;
-            const cardNote = card.id === 'everymile'
-                ? `$5/里（保費最高 $${HSBC_BOC_CAP.toLocaleString()}，最多 ${Math.floor(HSBC_BOC_CAP/5)} 里${overNote}）⚠️需網上理財繳費`
-                : `0.4%（保費最高 $${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`;
-            return { val: cashVal, miles, rate: cardNote };
+            const cashVal = effectiveAmt * 0.004; // 最多 $40
+            if (card.id === 'everymile') {
+                // 里數：$10,000 ÷ $5/里 = 最多 2,000 里，但 val 固定用 cashVal（$40）作排序用
+                const miles = Math.floor(effectiveAmt / 5);
+                return {
+                    val: cashVal,
+                    miles,
+                    rate: `$5/里（保費上限 $${HSBC_BOC_CAP.toLocaleString()}，最多 ${Math.floor(HSBC_BOC_CAP/5).toLocaleString()} 里${overNote}）⚠️需網上理財繳費`
+                };
+            }
+            return {
+                val: cashVal,
+                miles: 0,
+                rate: `0.4%（保費上限 $${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
+            };
         }
 
         // 中銀：0.4%，上限$10,000

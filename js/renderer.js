@@ -29,16 +29,14 @@ export function renderResults(processed, cat = '') {
         .sort((a, b) => b.baseRes.miles - a.baseRes.miles)
         .forEach(c => milesEl.appendChild(createCardEl(c, true)));
 
-    // 現金排序：保險類別按銀行名稱，其他按現金高至低
+    // 現金排序：先高回贈，同回贈時按銀行名稱
     processed
         .filter(c => c.card.type === 'cash' || c.card.type === 'both')
         .sort((a, b) => {
-            if (cat === 'Insurance') {
-                // 保險：按銀行排序（HSBC → 中銀 → 建銀）
-                return (BANK_ORDER[a.card.bank] || 99) - (BANK_ORDER[b.card.bank] || 99);
-            }
-            // 其他：現金回贈高至低
-            return (b.baseRes.val + b.extraCash + b.crazyBonus) - (a.baseRes.val + a.extraCash + a.crazyBonus);
+            const valA = a.baseRes.val + a.extraCash + a.crazyBonus;
+            const valB = b.baseRes.val + b.extraCash + b.crazyBonus;
+            if (valB !== valA) return valB - valA; // 先按回贈高至低
+            return (BANK_ORDER[a.card.bank] || 99) - (BANK_ORDER[b.card.bank] || 99); // 同額時按銀行排序
         })
         .forEach(c => cashEl.appendChild(createCardEl(c, false)));
 }
