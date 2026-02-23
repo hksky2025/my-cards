@@ -351,6 +351,9 @@ async function handleAnalyze() {
     for (const c of allCards.filter(c => cardStatus[c.id])) {
         // DBS Eminent：每月首$8,000指定類別@5%；其他零售首$20,000@1%，超額均降@0.4%
         let adjustedParams = { ...params };
+        // 保險類別：DBS 唔計回贈，直接跳過
+        if (cat === 'Insurance' && c.bank === 'dbs') continue;
+
         if (c.id === 'dbs_eminent') {
             // 排除海外港幣交易（Netflix/Spotify/App Store/Airbnb 等）：唔計任何回贈
             if (sub && sub.includes('OVERSEAS_HKD')) {
