@@ -13,7 +13,8 @@ const CASH_COLOR = '#d32f2f';
  * 渲染完整結果
  * @param {Array} processed - 已計算好的卡片結果陣列
  */
-export function renderResults(processed) {
+export function renderResults(processed, cat = '') {
+    const BANK_ORDER = { hsbc: 1, boc: 2, ccb: 3, hangseng: 4, sc: 5, dbs: 6, citi: 7, citic: 8, mox: 9, aeon: 10 };
     const resultsEl = document.getElementById('results');
     const milesEl = document.getElementById('miles-results');
     const cashEl = document.getElementById('cash-results');
@@ -28,10 +29,17 @@ export function renderResults(processed) {
         .sort((a, b) => b.baseRes.miles - a.baseRes.miles)
         .forEach(c => milesEl.appendChild(createCardEl(c, true)));
 
-    // 現金排序
+    // 現金排序：保險類別按銀行名稱，其他按現金高至低
     processed
         .filter(c => c.card.type === 'cash' || c.card.type === 'both')
-        .sort((a, b) => (b.baseRes.val + b.extraCash + b.crazyBonus) - (a.baseRes.val + a.extraCash + a.crazyBonus))
+        .sort((a, b) => {
+            if (cat === 'Insurance') {
+                // 保險：按銀行排序（HSBC → 中銀 → 建銀）
+                return (BANK_ORDER[a.card.bank] || 99) - (BANK_ORDER[b.card.bank] || 99);
+            }
+            // 其他：現金回贈高至低
+            return (b.baseRes.val + b.extraCash + b.crazyBonus) - (a.baseRes.val + a.extraCash + a.crazyBonus);
+        })
         .forEach(c => cashEl.appendChild(createCardEl(c, false)));
 }
 

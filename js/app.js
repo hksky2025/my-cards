@@ -426,7 +426,7 @@ async function handleAnalyze() {
         processed.push({ card: c, baseRes, crazyBonus, extraCash, activePromos });
     }
 
-    renderResults(processed);
+    renderResults(processed, cat);
     } catch(err) {
         console.error('handleAnalyze error:', err);
         alert('運算出錯：' + err.message);

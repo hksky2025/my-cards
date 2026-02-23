@@ -24,41 +24,15 @@ export function calcBaseReward(card, params) {
         const overAmt = amt - effectiveAmt;
         const overNote = overAmt > 0 ? `，超出$${overAmt.toLocaleString()}冇回贈` : '';
 
-        // HSBC EveryMile：繳費 $5/里（一般繳費tier），上限$10,000
-        if (card.id === 'everymile') {
-            const miles = Math.floor(effectiveAmt / 5);
-            return {
-                val: miles * 0.1,
-                miles,
-                rate: `$5/里（保費繳費，上限$${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
-            };
-        }
-
-        // HSBC Red：繳費 0.4%（唔適用網購4%/超市2%），上限$10,000
-        if (card.id === 'red') {
-            return {
-                val: effectiveAmt * 0.004,
-                miles: 0,
-                rate: `0.4%（保費繳費，上限$${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
-            };
-        }
-
-        // HSBC VS：繳費 0.4%（唔適用家居/電子優惠），上限$10,000
-        if (card.id === 'vs') {
-            return {
-                val: effectiveAmt * 0.004,
-                miles: 0,
-                rate: `0.4%（保費繳費，上限$${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
-            };
-        }
-
-        // 其他 HSBC 卡：0.4%，上限$10,000
+        // HSBC 所有卡：現金回贈 + 里數 均以 $10,000 × 0.4% 計算
         if (card.bank === 'hsbc') {
-            return {
-                val: effectiveAmt * 0.004,
-                miles: 0,
-                rate: `0.4%（保費繳費，上限$${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
-            };
+            const cashVal = effectiveAmt * 0.004; // $10,000 × 0.4% = $40
+            // EveryMile 額外顯示里數（$10,000 × 0.4% = $40 等值里數，$5/里 = 800里）
+            const miles = card.id === 'everymile' ? Math.floor(effectiveAmt / 5) : 0;
+            const cardNote = card.id === 'everymile'
+                ? `$5/里（保費最高 $${HSBC_BOC_CAP.toLocaleString()}，最多 ${Math.floor(HSBC_BOC_CAP/5)} 里${overNote}）⚠️需網上理財繳費`
+                : `0.4%（保費最高 $${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`;
+            return { val: cashVal, miles, rate: cardNote };
         }
 
         // 中銀：0.4%，上限$10,000
