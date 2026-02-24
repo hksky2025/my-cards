@@ -65,7 +65,10 @@
         .is-red{background:#ffebee;color:#d32f2f;}
         .is-normal{background:#f0f0f0;color:#666;}
         .toggle-container{display:flex;gap:5px;background:#f0f0f0;padding:4px;border-radius:12px;}
-        .toggle-btn{flex:1;padding:11px 5px;border:none;border-radius:9px;cursor:pointer;font-size:12px;font-weight:700;color:#666;background:none;transition:0.2s;}
+        .toggle-btn{flex:1;padding:11px 5px;border:1.5px solid transparent;border-radius:9px;cursor:pointer;font-size:12px;font-weight:700;color:#666;background:none;transition:0.2s;}
+        .toggle-btn:not(:last-child){border-right:1.5px solid #d0d0d0;border-radius:0;}
+        .toggle-btn:first-child{border-radius:9px 0 0 9px;}
+        .toggle-btn:last-child{border-radius:0 9px 9px 0;}
         .toggle-btn.active{background:#fff;color:#000;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 
         /* 卡片選擇器（記帳用） */
