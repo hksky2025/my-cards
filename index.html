@@ -266,11 +266,15 @@
             </div>
             <div class="input-group">
                 <label>支付方式</label>
-                <div class="toggle-container">
-                    <button id="meth-ap" class="toggle-btn active">手機支付</button>
-                    <button id="meth-on" class="toggle-btn">網上/App</button>
-                    <button id="meth-bank" class="toggle-btn">銀行繳費</button>
-                    <button id="meth-nonbank" class="toggle-btn">非銀行繳費</button>
+                <div style="display:flex;flex-direction:column;gap:5px;">
+                    <div class="toggle-container">
+                        <button id="meth-ap" class="toggle-btn active">手機支付</button>
+                        <button id="meth-bank" class="toggle-btn">銀行繳費</button>
+                    </div>
+                    <div class="toggle-container">
+                        <button id="meth-on" class="toggle-btn">網上/App</button>
+                        <button id="meth-nonbank" class="toggle-btn">非銀行繳費</button>
+                    </div>
                 </div>
             </div>
         </div>
