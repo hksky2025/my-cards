@@ -369,12 +369,13 @@ async function handleAnalyze() {
     for (const c of allCards.filter(c => cardStatus[c.id])) {
         // DBS Eminent：每月首$8,000指定類別@5%；其他零售首$20,000@1%，超額均降@0.4%
         let adjustedParams = { ...params };
+        // 保險類別：只適用於 HSBC/中銀，其他銀行（包括 DBS）直接跳過
+        if (cat === 'Insurance' && !['hsbc','boc'].includes(c.bank)) continue;
         // 繳費方式：只適用於 HSBC/中銀，其他銀行直接跳過
         if (['BankBill','NonBankBill'].includes(globalMethod) && !['hsbc','boc'].includes(c.bank)) continue;
 
         if (c.id === 'dbs_eminent') {
-            // 網上/App 簽賬：DBS Eminent 唔計回贈，跳過
-            if (globalMethod === 'Online') continue;
+
             // 排除海外港幣交易（Netflix/Spotify/App Store/Airbnb 等）：唔計任何回贈
             if (sub && sub.includes('OVERSEAS_HKD')) {
                 processed.push({ card: c, baseRes: { val: 0, rate: '不適用(海外港幣)' }, crazyBonus: 0, extraCash: 0, activePromos: ['⚠️ 海外港幣不計回贈'] });
