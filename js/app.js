@@ -368,6 +368,8 @@ async function handleAnalyze() {
         if (['BankBill','NonBankBill'].includes(globalMethod) && !['hsbc','boc'].includes(c.bank)) continue;
 
         if (c.id === 'dbs_eminent') {
+            // 網上/App 簽賬：DBS Eminent 唔計回贈，跳過
+            if (globalMethod === 'Online') continue;
             // 排除海外港幣交易（Netflix/Spotify/App Store/Airbnb 等）：唔計任何回贈
             if (sub && sub.includes('OVERSEAS_HKD')) {
                 processed.push({ card: c, baseRes: { val: 0, rate: '不適用(海外港幣)' }, crazyBonus: 0, extraCash: 0, activePromos: ['⚠️ 海外港幣不計回贈'] });
