@@ -56,6 +56,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // 步驟三：綁定所有事件
     document.getElementById('merchantSearch').addEventListener('input', handleMerchantSearch);
     document.getElementById('txnDate').addEventListener('change', checkDateStatus);
+    document.getElementById('category').addEventListener('change', () => { updateBillBtnState(); const amt = parseFloat(document.getElementById('amount').value); if (amt > 0) handleAnalyze(); });
     document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
     document.getElementById('analyzeBtn').addEventListener('touchend', (e) => { e.preventDefault(); handleAnalyze(); });
 
@@ -160,15 +161,20 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('meth-bank').addEventListener('click', () => {
+        const cat = document.getElementById('category').value;
+        if (cat !== 'Insurance') {
+            alert('⚠️ 銀行繳費只適用於「保險保費」類別，請先選擇正確類別。');
+            return;
+        }
         updateMethod('BankBill');
-        // 自動切換類別至保險保費
-        const catEl = document.getElementById('category');
-        if (catEl.value !== 'Insurance') catEl.value = 'Insurance';
     });
     document.getElementById('meth-nonbank').addEventListener('click', () => {
+        const cat = document.getElementById('category').value;
+        if (cat !== 'Insurance') {
+            alert('⚠️ 非銀行繳費只適用於「保險保費」類別，請先選擇正確類別。');
+            return;
+        }
         updateMethod('NonBankBill');
-        const catEl = document.getElementById('category');
-        if (catEl.value !== 'Insurance') catEl.value = 'Insurance';
     });
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
     document.getElementById('addTxnBtn').addEventListener('touchend', (e) => { e.preventDefault(); handleAddTransaction(); });
@@ -289,6 +295,24 @@ function checkDateStatus() {
     isMannRedDay = inMannPeriod && [0, 5, 6].includes(d.getDay());
     isCrazyRedDay = BOC_CRAZY_RED_DAYS.has(s);
     renderDateStatus(isRedDay, isCrazyRedDay, isMannRedDay);
+}
+
+// 根據類別更新銀行繳費/非銀行繳費按鈕狀態
+function updateBillBtnState() {
+    const isInsurance = document.getElementById('category').value === 'Insurance';
+    ['meth-bank', 'meth-nonbank'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (isInsurance) {
+            btn.classList.remove('disabled');
+        } else {
+            btn.classList.add('disabled');
+            btn.classList.remove('active');
+            // 如果目前係繳費方式，自動切回手機支付
+            if (['BankBill','NonBankBill'].includes(globalMethod)) {
+                updateMethod('ApplePay');
+            }
+        }
+    });
 }
 
 function updateMethod(m) {
@@ -458,6 +482,7 @@ async function handleAnalyze() {
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal);
+    updateBillBtnState();
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
 }
