@@ -307,9 +307,11 @@ function updateBillBtnState() {
         } else {
             btn.classList.add('disabled');
             btn.classList.remove('active');
-            // 如果目前係繳費方式，自動切回手機支付
+            // 如果目前係繳費方式，靜默切回手機支付（唔觸發重新計算）
             if (['BankBill','NonBankBill'].includes(globalMethod)) {
-                updateMethod('ApplePay');
+                globalMethod = 'ApplePay';
+                document.getElementById('meth-ap').classList.add('active');
+                document.getElementById('meth-on').classList.remove('active');
             }
         }
     });
@@ -482,7 +484,6 @@ async function handleAnalyze() {
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal);
-    updateBillBtnState();
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
 }

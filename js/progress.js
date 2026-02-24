@@ -8,13 +8,13 @@
  * @param {Function} getCardTotal - (cardId) => number
  */
 export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly, getCCBInsuranceYear) {
-    renderThresholdProgress(cards, monthTotal, getCardTotal);
+    renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranceYear);
     renderPromoCountdown(promos, cards);
     renderCapProgress(cards, getCardTotal);
 }
 
 // ── 門檻進度 ($5000) ─────────────────────────────────
-function renderThresholdProgress(cards, monthTotal, getCardTotal) {
+function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranceYear) {
     const el = document.getElementById('progress-threshold');
     if (!el) return;
 
