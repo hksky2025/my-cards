@@ -159,6 +159,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
+    document.getElementById('meth-bank').addEventListener('click', () => {
+        updateMethod('BankBill');
+        // 自動切換類別至保險保費
+        const catEl = document.getElementById('category');
+        if (catEl.value !== 'Insurance') catEl.value = 'Insurance';
+    });
+    document.getElementById('meth-nonbank').addEventListener('click', () => {
+        updateMethod('NonBankBill');
+        const catEl = document.getElementById('category');
+        if (catEl.value !== 'Insurance') catEl.value = 'Insurance';
+    });
     document.getElementById('addTxnBtn').addEventListener('click', handleAddTransaction);
     document.getElementById('addTxnBtn').addEventListener('touchend', (e) => { e.preventDefault(); handleAddTransaction(); });
     document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
@@ -279,6 +290,8 @@ function updateMethod(m) {
     globalMethod = m;
     document.getElementById('meth-ap').classList.toggle('active', m === 'ApplePay');
     document.getElementById('meth-on').classList.toggle('active', m === 'Online');
+    document.getElementById('meth-bank').classList.toggle('active', m === 'BankBill');
+    document.getElementById('meth-nonbank').classList.toggle('active', m === 'NonBankBill');
     // 支付方式改變即時重新計算
     const amt = parseFloat(document.getElementById('amount').value);
     if (amt > 0) handleAnalyze();
@@ -351,8 +364,8 @@ async function handleAnalyze() {
     for (const c of allCards.filter(c => cardStatus[c.id])) {
         // DBS Eminent：每月首$8,000指定類別@5%；其他零售首$20,000@1%，超額均降@0.4%
         let adjustedParams = { ...params };
-        // 保險類別：DBS 唔計回贈，直接跳過
-        if (cat === 'Insurance' && c.bank === 'dbs') continue;
+        // 繳費方式：只適用於 HSBC/中銀，其他銀行直接跳過
+        if (['BankBill','NonBankBill'].includes(globalMethod) && !['hsbc','boc'].includes(c.bank)) continue;
 
         if (c.id === 'dbs_eminent') {
             // 排除海外港幣交易（Netflix/Spotify/App Store/Airbnb 等）：唔計任何回贈

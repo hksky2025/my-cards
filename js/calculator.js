@@ -13,51 +13,35 @@ export function calcBaseReward(card, params) {
 
     // ── 保險保費特別處理（繳費性質，獨立計算，唔影響其他類別邏輯）────────
     if (cat === 'Insurance') {
-        // 只計 HSBC、中銀、建銀；其他銀行唔顯示
-        if (!['hsbc', 'boc', 'ccb'].includes(card.bank)) {
-            return null;
-        }
+        const isBankBill = meth === 'BankBill';
+        const isNonBankBill = meth === 'NonBankBill';
 
-        // 保險繳費上限：HSBC/中銀 $10,000
-        const HSBC_BOC_CAP = 10000;
-        const effectiveAmt = Math.min(amt, HSBC_BOC_CAP);
-        const overAmt = amt - effectiveAmt;
-        const overNote = overAmt > 0 ? `，超出$${overAmt.toLocaleString()}冇回贈` : '';
+        // 只適用於銀行繳費或非銀行繳費方式
+        if (!isBankBill && !isNonBankBill) return null;
 
-        // HSBC 所有卡：現金 + 里數 均以 $10,000 × 0.4% = $40 為上限
-        if (card.bank === 'hsbc') {
-            const cashVal = effectiveAmt * 0.004; // 最多 $40
-            if (card.id === 'everymile') {
-                return {
-                    val: cashVal,
-                    miles: 0,
-                    rate: `0.4%（保費上限 $${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
-                };
-            }
-            return {
-                val: cashVal,
-                miles: 0,
-                rate: `0.4%（保費上限 $${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
-            };
-        }
+        // 只計 HSBC、中銀；其他銀行唔顯示
+        if (!['hsbc', 'boc'].includes(card.bank)) return null;
 
-        // 中銀：0.4%，上限$10,000
-        if (card.bank === 'boc') {
+        const CAP = 10000; // 銀行繳費每月上限
+
+        if (isBankBill) {
+            // 銀行繳費：每月首 $10,000 × 0.4%，超出冇回贈
+            const effectiveAmt = Math.min(amt, CAP);
+            const overAmt = amt - effectiveAmt;
+            const overNote = overAmt > 0 ? `，超出 $${overAmt.toLocaleString()} 冇回贈` : '';
             return {
                 val: effectiveAmt * 0.004,
                 miles: 0,
-                rate: `0.4%（保費繳費，上限$${HSBC_BOC_CAP.toLocaleString()}${overNote}）⚠️需網上理財繳費`
+                rate: `0.4%（銀行繳費，首 $${CAP.toLocaleString()}${overNote}）`
             };
         }
 
-        // 建銀：0.4%，全年上限 = 信用額 $42,000
-        if (card.bank === 'ccb') {
-            const CCB_CREDIT_LIMIT = 42000;
-            const ccbEffective = Math.min(amt, CCB_CREDIT_LIMIT);
+        if (isNonBankBill) {
+            // 非銀行繳費：全額 × 0.4%，冇上限
             return {
-                val: ccbEffective * 0.004,
+                val: amt * 0.004,
                 miles: 0,
-                rate: `0.4%（⚠️需網上繳費｜信用額$${CCB_CREDIT_LIMIT.toLocaleString()}，全年保費上限$${CCB_CREDIT_LIMIT.toLocaleString()}）`
+                rate: `0.4%（非銀行繳費，全額計算）`
             };
         }
     }

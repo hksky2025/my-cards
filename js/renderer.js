@@ -25,13 +25,13 @@ export function renderResults(processed, cat = '') {
 
     // 里數排序：保險類別唔顯示里數區（改在現金區顯示附帶里數備註）
     processed
-        .filter(c => (c.card.type === 'miles' || c.card.type === 'both') && c.baseRes.miles > 0 && cat !== 'Insurance')
+        .filter(c => (c.card.type === 'miles' || c.card.type === 'both') && c.baseRes.miles > 0 && cat !== 'Insurance' && !['BankBill','NonBankBill'].includes(cat))
         .sort((a, b) => b.baseRes.miles - a.baseRes.miles)
         .forEach(c => milesEl.appendChild(createCardEl(c, true)));
 
     // 現金排序：保險類別包括 miles type 卡（EveryMile）；先高回贈，同回贈時按銀行名稱
     processed
-        .filter(c => cat === 'Insurance' ? (c.baseRes !== null && c.baseRes.val > 0) : (c.card.type === 'cash' || c.card.type === 'both'))
+        .filter(c => (cat === 'Insurance') ? (c.baseRes !== null && c.baseRes.val > 0) : (c.card.type === 'cash' || c.card.type === 'both'))
         .sort((a, b) => {
             const valA = a.baseRes.val + a.extraCash + a.crazyBonus;
             const valB = b.baseRes.val + b.extraCash + b.crazyBonus;
