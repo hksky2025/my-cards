@@ -107,25 +107,34 @@ export function calcBaseReward(card, params) {
             if (cat === 'Overseas') {
                 const extra = Math.min(amt * logic.overseasExtraRate, remainExtra);
                 if (extra <= 0) return null;
+                const afterUsed = (usedExtra + extra).toFixed(0);
+                const afterRemain = Math.max(0, logic.sharedExtraCap - usedExtra - extra).toFixed(0);
+                const capNoteAfter = `（額外上限$${logic.sharedExtraCap}，已用$${afterUsed}，剩$${afterRemain}）`;
                 const rateNote = extra < amt * logic.overseasExtraRate
-                    ? `額外5.6%現金${capNote}`
-                    : `額外5.6%現金（海外外幣，上限簽賬$${Math.round(logic.sharedExtraCap/logic.overseasExtraRate).toLocaleString()}）`;
+                    ? `額外5.6%現金${capNoteAfter}`
+                    : `額外5.6%現金（海外外幣，上限簽賬$${Math.round(logic.sharedExtraCap/logic.overseasExtraRate).toLocaleString()}）${capNoteAfter}`;
                 return { val: extra, rate: rateNote };
             }
             if (meth === 'Online') {
                 const extra = Math.min(amt * logic.onlineExtraRate, remainExtra);
                 if (extra <= 0) return null;
+                const afterUsed = (usedExtra + extra).toFixed(0);
+                const afterRemain = Math.max(0, logic.sharedExtraCap - usedExtra - extra).toFixed(0);
+                const capNoteAfter = `（額外上限$${logic.sharedExtraCap}，已用$${afterUsed}，剩$${afterRemain}）`;
                 const rateNote = extra < amt * logic.onlineExtraRate
-                    ? `額外4.6%現金${capNote}`
-                    : `額外4.6%現金（網上零售，上限簽賬$${Math.round(logic.sharedExtraCap/logic.onlineExtraRate).toLocaleString()}）`;
+                    ? `額外4.6%現金${capNoteAfter}`
+                    : `額外4.6%現金（網上零售，上限簽賬$${Math.round(logic.sharedExtraCap/logic.onlineExtraRate).toLocaleString()}）${capNoteAfter}`;
                 return { val: extra, rate: rateNote };
             }
             if (logic.selfPickCats.includes(cat) && meth !== 'Online') {
                 const extra = Math.min(amt * logic.selfPickExtraRate, remainExtra);
                 if (extra <= 0) return null;
+                const afterUsed = (usedExtra + extra).toFixed(0);
+                const afterRemain = Math.max(0, logic.sharedExtraCap - usedExtra - extra).toFixed(0);
+                const capNoteAfter = `（額外上限$${logic.sharedExtraCap}，已用$${afterUsed}，剩$${afterRemain}）`;
                 const rateNote = extra < amt * logic.selfPickExtraRate
-                    ? `額外0.6%現金${capNote}`
-                    : `額外0.6%現金（自選類別）`;
+                    ? `額外0.6%現金${capNoteAfter}`
+                    : `額外0.6%現金（自選類別）${capNoteAfter}`;
                 return { val: extra, rate: rateNote };
             }
             return null; // 非優惠類別，唔顯示
