@@ -377,7 +377,6 @@ async function handleAnalyze() {
     const bocVisaTotal = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
     const spent = bocVisaTotal;
     const amt = parseFloat(document.getElementById('amount').value);
-    const cat = document.getElementById('category').value;
     const rawInput = document.getElementById('merchantSearch').value.trim();
 
     if (!amt || amt <= 0) return alert('請輸入有效金額');
@@ -385,6 +384,10 @@ async function handleAnalyze() {
     const isMet = (spent + amt) >= 5000; // 實體店需達門檻，網購唔需要
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
+    // 有輸入商戶但識別唔到 → 強制用 General，避免殘留舊類別影響計算
+    const cat = (rawInput && !merchant)
+        ? 'General'
+        : document.getElementById('category').value;
     const today = new Date();
     // 中信 Motion：當月累積零售簽賬是否已達 $3,800
     const motionMonthSpent = getCardMonthTotal('citic_motion');
