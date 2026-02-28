@@ -96,7 +96,7 @@ export function calcBaseReward(card, params) {
             // 基本 0.4% 係 +FUN Dollars 積分，唔係現金回贈，獨立計算
             // 額外回贈先係現金（$500上限）
             const mmMet = params.mmIsMet !== undefined ? params.mmIsMet : isMet;
-            if (!mmMet) return { val: 0, miles: Math.floor(amt / 250), rate: '0.4% +FUN Dollars（未達$5,000門檻）' };
+            if (!mmMet) return null; // 未達門檻，唔顯示
 
             // 三類共享額外現金回贈上限 $500
             const usedExtra = params.mmExtraUsed || 0;
@@ -106,27 +106,29 @@ export function calcBaseReward(card, params) {
             // 優先順序：海外 > 網上 > 自選
             if (cat === 'Overseas') {
                 const extra = Math.min(amt * logic.overseasExtraRate, remainExtra);
+                if (extra <= 0) return null;
                 const rateNote = extra < amt * logic.overseasExtraRate
-                    ? `5.6%額外現金+0.4% +FUN Dollars${capNote}`
-                    : `5.6%額外現金+0.4% +FUN Dollars（海外外幣，上限簽賬$${Math.round(logic.sharedExtraCap/logic.overseasExtraRate).toLocaleString()}）`;
-                return { val: extra, miles: Math.floor(amt / 250), rate: rateNote };
+                    ? `額外5.6%現金${capNote}`
+                    : `額外5.6%現金（海外外幣，上限簽賬$${Math.round(logic.sharedExtraCap/logic.overseasExtraRate).toLocaleString()}）`;
+                return { val: extra, rate: rateNote };
             }
             if (meth === 'Online') {
                 const extra = Math.min(amt * logic.onlineExtraRate, remainExtra);
+                if (extra <= 0) return null;
                 const rateNote = extra < amt * logic.onlineExtraRate
-                    ? `4.6%額外現金+0.4% +FUN Dollars${capNote}`
-                    : `4.6%額外現金+0.4% +FUN Dollars（網上零售，上限簽賬$${Math.round(logic.sharedExtraCap/logic.onlineExtraRate).toLocaleString()}）`;
-                return { val: extra, miles: Math.floor(amt / 250), rate: rateNote };
+                    ? `額外4.6%現金${capNote}`
+                    : `額外4.6%現金（網上零售，上限簽賬$${Math.round(logic.sharedExtraCap/logic.onlineExtraRate).toLocaleString()}）`;
+                return { val: extra, rate: rateNote };
             }
             if (logic.selfPickCats.includes(cat) && meth !== 'Online') {
                 const extra = Math.min(amt * logic.selfPickExtraRate, remainExtra);
+                if (extra <= 0) return null;
                 const rateNote = extra < amt * logic.selfPickExtraRate
-                    ? `0.6%額外現金+0.4% +FUN Dollars${capNote}`
-                    : `0.6%額外現金+0.4% +FUN Dollars（自選類別）`;
-                return { val: extra, miles: Math.floor(amt / 250), rate: rateNote };
+                    ? `額外0.6%現金${capNote}`
+                    : `額外0.6%現金（自選類別）`;
+                return { val: extra, rate: rateNote };
             }
-            // 非優惠類別：只有基本 +FUN Dollars
-            return { val: 0, miles: Math.floor(amt / 250), rate: '0.4% +FUN Dollars（非優惠類別）' };
+            return null; // 非優惠類別，唔顯示
         }
 
         case 'vs': {
