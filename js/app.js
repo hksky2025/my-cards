@@ -4,7 +4,7 @@ import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js'
 import { loadMerchants, findMerchant } from './matcher.js';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
-import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js';
 import { renderProgress, renderAnnualProgress, renderAnnualCardProgress } from './progress.js';
 import { initCalendar, renderCalendar } from './calendar.js';
 
@@ -407,7 +407,15 @@ async function handleAnalyze() {
     const motionMonthSpent = getCardMonthTotal('citic_motion');
     const motionMet = (motionMonthSpent + amt) >= 3800;
 
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet };
+    // MMPower 三類共享額外回贈：計算當月已用額外回贈金額
+    const mmOverseasSpent = getCardMonthCatTotal('mmpower', ['Overseas']);
+    const mmOnlineSpent   = getCardMonthCatTotal('mmpower', ['Online']);
+    const mmSelfSpent     = getCardMonthCatTotal('mmpower', ['Dining','Electronics','Leisure']);
+    const mmExtraUsed = Math.min(
+        mmOverseasSpent * 0.056 + mmOnlineSpent * 0.046 + mmSelfSpent * 0.006,
+        500
+    );
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {

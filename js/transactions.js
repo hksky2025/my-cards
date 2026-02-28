@@ -83,6 +83,15 @@ export function getCardYearTotal(cardId) {
         .reduce((sum, t) => sum + t.amt, 0);
 }
 
+// 指定卡按類別篩選當月簽賬（用於 MMPower 共享上限追蹤）
+export function getCardMonthCatTotal(cardId, cats) {
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    return transactions
+        .filter(t => t.date.startsWith(ym) && t.cardId === cardId && cats.includes(t.cat))
+        .reduce((sum, t) => sum + t.amt, 0);
+}
+
 // 建銀保費年度合計（用於追蹤 $42,000 信用額上限）
 export function getCCBInsuranceYearTotal() {
     const year = new Date().getFullYear();

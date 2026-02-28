@@ -93,16 +93,27 @@ export function calcBaseReward(card, params) {
         }
 
         case 'mmpower': {
-            if (!isMet) return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
+            // 基本 0.4%（無上限）
+            const baseVal = amt * logic.baseRate;
+            if (!isMet) return { val: baseVal, rate: '0.4%（未達門檻）' };
+
+            // 三類共享額外回贈上限 $500，由 params 傳入已用額外回贈
+            const usedExtra = params.mmExtraUsed || 0;
+            const remainExtra = Math.max(0, logic.sharedExtraCap - usedExtra);
+
             if (cat === 'Overseas') {
-                const val = Math.min(amt * logic.overseasRate, logic.overseaCapBonus + amt * logic.baseRate);
-                return { val, rate: `${logic.overseasRate * 100}%` };
+                const extra = Math.min(amt * logic.overseasExtraRate, remainExtra);
+                return { val: baseVal + extra, rate: extra < amt * logic.overseasExtraRate ? `6%（額外回贈已達上限$${logic.sharedExtraCap}）` : '6%（海外外幣）' };
             }
             if (meth === 'Online') {
-                const val = Math.min(amt * logic.onlineRate, logic.onlineCapBonus + amt * logic.baseRate);
-                return { val, rate: `${logic.onlineRate * 100}%` };
+                const extra = Math.min(amt * logic.onlineExtraRate, remainExtra);
+                return { val: baseVal + extra, rate: extra < amt * logic.onlineExtraRate ? `5%（額外回贈已達上限$${logic.sharedExtraCap}）` : '5%（網上零售）' };
             }
-            return { val: amt * logic.localRate, rate: `${logic.localRate * 100}%` };
+            if (logic.selfPickCats.includes(cat)) {
+                const extra = Math.min(amt * logic.selfPickExtraRate, remainExtra);
+                return { val: baseVal + extra, rate: extra < amt * logic.selfPickExtraRate ? `1%（額外回贈已達上限$${logic.sharedExtraCap}）` : '1%（自選類別）' };
+            }
+            return { val: baseVal, rate: '0.4%（非優惠類別）' };
         }
 
         case 'vs': {

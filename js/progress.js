@@ -163,7 +163,7 @@ function renderCapProgress(cards, getCardTotal) {
         sogo:   [{ label: '崇光：5% / ApplePay 額外+5%手機(上限$100/月)', cap: 0 }],
         motion: [{ label: '餐飲/網購6%封頂', cap: 3636 }],
         waku:   [{ label: '網購6%封頂', cap: 3571 }],
-        mmpower:[{ label: '海外6%封頂', cap: Math.round(500/0.06) }, { label: '網購5%封頂', cap: Math.round(500/0.05) }],
+        mmpower:[{ label: '三類共享額外回贈上限$500（海外>網上>自選）', cap: Math.round(500/0.056) }],
     };
 
     const cardsWithCap = cards.filter(c => CAP_INFO[c.id]);
