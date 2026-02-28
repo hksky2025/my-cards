@@ -95,7 +95,9 @@ export function calcBaseReward(card, params) {
         case 'mmpower': {
             // 基本 0.4%（無上限）
             const baseVal = amt * logic.baseRate;
-            if (!isMet) return { val: baseVal, rate: '0.4%（未達$5,000門檻）' };
+            // MMPOWER 有獨立 $5,000 門檻，唔用中銀 Visa isMet
+            const mmMet = params.mmIsMet !== undefined ? params.mmIsMet : isMet;
+            if (!mmMet) return { val: baseVal, rate: '0.4%（未達$5,000門檻）' };
 
             // 三類共享額外回贈上限 $500
             const usedExtra = params.mmExtraUsed || 0;

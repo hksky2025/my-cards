@@ -384,7 +384,10 @@ async function handleAnalyze() {
 
     if (!amt || amt <= 0) return alert('請輸入有效金額');
 
-    const isMet = (spent + amt) >= 5000; // 實體店需達門檻，網購唔需要
+    const isMet = (spent + amt) >= 5000; // 中銀 Visa 門檻（狂賞派用）
+    // 恒生 MMPOWER 獨立門檻：每月累積 $5,000
+    const mmMonthSpent = getCardMonthTotal('mmpower');
+    const mmIsMet = (mmMonthSpent + amt) >= 5000;
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
 
@@ -418,7 +421,7 @@ async function handleAnalyze() {
         mmOverseasSpent * 0.056 + mmOnlineSpent * 0.046 + mmSelfSpent * 0.006,
         500
     );
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed };
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {
