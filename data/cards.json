@@ -156,7 +156,7 @@
     "bank": "boc",
     "type": "cash",
     "color": "#b31d28",
-    "notes": "崇光 ApplePay：0.4%+5%崇光+5%手機(上限$100/月)；其他0.4%",
+    "notes": "崇光：5%現金回贈；崇光 ApplePay 額外+5%手機(上限$100/月)；其他0.4%",
     "crazyEligible": true,
     "logic": {
       "type": "sogo",
