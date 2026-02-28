@@ -128,17 +128,18 @@ function createCardEl(c, isMile) {
 
     div.innerHTML = `
         <div class="card-top">
-            <div class="card-name">${c.card.name}${promoTags ? '<br>' + promoTags : ''}</div>
-            <div class="earn-val" style="color:${valueColor}">
-                ${milesDisplay}
+            <div class="card-name">
+                ${c.card.name}
+                ${promoTags ? '<div style="margin-top:4px">' + promoTags + '</div>' : ''}
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                <div class="earn-val" style="color:${valueColor}">${isMile ? c.baseRes.miles + ' 里' : '$' + total}</div>
                 ${milesExtra}
+                <button class="record-btn" data-cardid="${c.card.id}">記帳</button>
             </div>
         </div>
-        <div class="card-desc">基礎回饋: ${c.baseRes.rate}</div>
-        ${c.card.notes ? `<div class="remark-tip">${c.card.notes}</div>` : ''}
-        <div class="card-bottom">
-            <button class="record-btn" data-cardid="${c.card.id}">記帳</button>
-        </div>
+        <div class="card-desc"><span class="card-desc-label">回饋</span>${c.baseRes.rate}</div>
+        ${c.card.notes ? `<div class="remark-tip">💡 ${c.card.notes}</div>` : ''}
     `;
 
     // 點擊記帳按鈕
