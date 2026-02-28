@@ -281,6 +281,9 @@ function handleMerchantSearch() {
         // 識別唔到商戶，預設「一般本地消費」
         document.getElementById('category').value = 'General';
     }
+    // 商戶改變後，若已有金額則立即重新計算
+    const amt = parseFloat(document.getElementById('amount').value);
+    if (amt > 0) handleAnalyze();
 }
 
 function checkDateStatus() {
