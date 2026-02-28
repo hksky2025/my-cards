@@ -111,16 +111,24 @@ export function calcBaseReward(card, params) {
         }
 
         case 'sogo': {
-            const isSogoCat = (sub && sub.includes('SOGO')) || cat === 'Dining';
-            // 喺崇光百貨簽賬（有SOGO sub tag）
-            if (isSogoCat && (meth === 'ApplePay' || meth === '實體')) {
-                const sogoBase = amt * (logic.baseRate + logic.sogoRate); // 0.4% + 5%
+            const isSogoCat = (sub && sub.includes('SOGO')) || cat === 'SOGO';
+
+            if (isSogoCat) {
+                // 崇光百貨：實體卡或手機支付 均有 5%崇光回贈
+                const sogoBase = amt * (logic.baseRate + logic.sogoRate); // 0.4% + 5% = 5.4%
                 if (logic.isSig && meth === 'ApplePay') {
                     // Signature 卡手機支付額外5%，上限$100/月
                     const mobileBonus = Math.min(amt * logic.mobileRate, logic.mobileCap);
-                    return { val: sogoBase + mobileBonus, rate: `${((logic.baseRate + logic.sogoRate) * 100).toFixed(1)}%+手機5%(上限$${logic.mobileCap}/月)` };
+                    return { val: sogoBase + mobileBonus, rate: `5.4%(崇光)+手機5%(上限$${logic.mobileCap}/月)` };
                 }
-                return { val: sogoBase, rate: `${((logic.baseRate + logic.sogoRate) * 100).toFixed(1)}% (崇光)` };
+                // 實體卡或其他支付方式：0.4% + 5%崇光
+                return { val: sogoBase, rate: `5.4% (崇光 0.4%+5%)` };
+            }
+
+            // 非崇光商戶：Signature 手機支付有額外5%，上限$100/月
+            if (logic.isSig && meth === 'ApplePay') {
+                const mobileBonus = Math.min(amt * logic.mobileRate, logic.mobileCap);
+                return { val: amt * logic.baseRate + mobileBonus, rate: `0.4%+手機5%(上限$${logic.mobileCap}/月)` };
             }
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
