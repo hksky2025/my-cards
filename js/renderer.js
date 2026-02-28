@@ -115,16 +115,14 @@ function createCardEl(c, isMile) {
 
     const div = document.createElement('div');
     div.className = `card-box ${c.card.bank}-card`;
-    div.style.borderLeftColor = color;
 
     const promoTags = c.activePromos.map(p => `<span class="promo-tag">🔥 ${p}</span>`).join('');
     const milesExtra = isMile && (c.extraCash + c.crazyBonus) > 0
         ? `<div style="font-size:11px;color:orange">+$${(c.extraCash + c.crazyBonus).toFixed(0)}</div>`
         : '';
 
-    const milesDisplay = isMile
-        ? `<div style="font-size:18px;font-weight:700;color:${valueColor}">${c.baseRes.miles} 里</div>`
-        : `<div style="font-size:18px;font-weight:700;color:${valueColor}">$${total}</div>`;
+    // 方向3：回饋數字用卡片銀行顏色
+    const earnColor = c.card.color || valueColor;
 
     div.innerHTML = `
         <div class="card-top">
@@ -133,7 +131,7 @@ function createCardEl(c, isMile) {
                 ${promoTags ? '<div style="margin-top:4px">' + promoTags + '</div>' : ''}
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-                <div class="earn-val" style="color:${valueColor}">${isMile ? c.baseRes.miles + ' 里' : '$' + total}</div>
+                <div class="earn-val" style="color:${earnColor}">${isMile ? c.baseRes.miles + ' 里' : '$' + total}</div>
                 ${milesExtra}
                 <button class="record-btn" data-cardid="${c.card.id}">記帳</button>
             </div>
