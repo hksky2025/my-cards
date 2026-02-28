@@ -408,9 +408,12 @@ async function handleAnalyze() {
     const motionMet = (motionMonthSpent + amt) >= 3800;
 
     // MMPower 三類共享額外回贈：計算當月已用額外回贈金額
-    const mmOverseasSpent = getCardMonthCatTotal('mmpower', ['Overseas']);
-    const mmOnlineSpent   = getCardMonthCatTotal('mmpower', ['Online']);
-    const mmSelfSpent     = getCardMonthCatTotal('mmpower', ['Dining','Electronics','Leisure']);
+    // 海外外幣：cat=Overseas
+    const mmOverseasSpent = getCardMonthCatTotal('mmpower', ['Overseas'], null);
+    // 網上零售：method=Online（任何類別）
+    const mmOnlineSpent   = getCardMonthCatTotal('mmpower', null, ['Online']);
+    // 自選類別：cat=Dining/Electronics/Leisure，非網上
+    const mmSelfSpent     = getCardMonthCatTotal('mmpower', ['Dining','Electronics','Leisure'], ['ApplePay','實體']);
     const mmExtraUsed = Math.min(
         mmOverseasSpent * 0.056 + mmOnlineSpent * 0.046 + mmSelfSpent * 0.006,
         500

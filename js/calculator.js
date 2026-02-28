@@ -95,23 +95,28 @@ export function calcBaseReward(card, params) {
         case 'mmpower': {
             // 基本 0.4%（無上限）
             const baseVal = amt * logic.baseRate;
-            if (!isMet) return { val: baseVal, rate: '0.4%（未達門檻）' };
+            if (!isMet) return { val: baseVal, rate: '0.4%（未達$5,000門檻）' };
 
-            // 三類共享額外回贈上限 $500，由 params 傳入已用額外回贈
+            // 三類共享額外回贈上限 $500
             const usedExtra = params.mmExtraUsed || 0;
             const remainExtra = Math.max(0, logic.sharedExtraCap - usedExtra);
+            const capNote = `（共享額外上限$${logic.sharedExtraCap}，已用$${usedExtra.toFixed(0)}，剩$${remainExtra.toFixed(0)}）`;
 
+            // 優先順序：海外 > 網上 > 自選
             if (cat === 'Overseas') {
                 const extra = Math.min(amt * logic.overseasExtraRate, remainExtra);
-                return { val: baseVal + extra, rate: extra < amt * logic.overseasExtraRate ? `6%（額外回贈已達上限$${logic.sharedExtraCap}）` : '6%（海外外幣）' };
+                const rateNote = extra < amt * logic.overseasExtraRate ? `6%${capNote}` : '6%（海外外幣，額外5.6%）';
+                return { val: baseVal + extra, rate: rateNote };
             }
             if (meth === 'Online') {
                 const extra = Math.min(amt * logic.onlineExtraRate, remainExtra);
-                return { val: baseVal + extra, rate: extra < amt * logic.onlineExtraRate ? `5%（額外回贈已達上限$${logic.sharedExtraCap}）` : '5%（網上零售）' };
+                const rateNote = extra < amt * logic.onlineExtraRate ? `5%${capNote}` : '5%（網上零售，額外4.6%）';
+                return { val: baseVal + extra, rate: rateNote };
             }
-            if (logic.selfPickCats.includes(cat)) {
+            if (logic.selfPickCats.includes(cat) && meth !== 'Online') {
                 const extra = Math.min(amt * logic.selfPickExtraRate, remainExtra);
-                return { val: baseVal + extra, rate: extra < amt * logic.selfPickExtraRate ? `1%（額外回贈已達上限$${logic.sharedExtraCap}）` : '1%（自選類別）' };
+                const rateNote = extra < amt * logic.selfPickExtraRate ? `1%${capNote}` : '1%（自選類別，額外0.6%）';
+                return { val: baseVal + extra, rate: rateNote };
             }
             return { val: baseVal, rate: '0.4%（非優惠類別）' };
         }

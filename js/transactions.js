@@ -83,12 +83,17 @@ export function getCardYearTotal(cardId) {
         .reduce((sum, t) => sum + t.amt, 0);
 }
 
-// 指定卡按類別篩選當月簽賬（用於 MMPower 共享上限追蹤）
-export function getCardMonthCatTotal(cardId, cats) {
+// 指定卡按類別/方式篩選當月簽賬（用於 MMPower 共享上限追蹤）
+export function getCardMonthCatTotal(cardId, cats, meths) {
     const now = new Date();
     const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     return transactions
-        .filter(t => t.date.startsWith(ym) && t.cardId === cardId && cats.includes(t.cat))
+        .filter(t => {
+            if (!t.date.startsWith(ym) || t.cardId !== cardId) return false;
+            if (cats && cats.length && !cats.includes(t.cat)) return false;
+            if (meths && meths.length && !meths.includes(t.method)) return false;
+            return true;
+        })
         .reduce((sum, t) => sum + t.amt, 0);
 }
 
