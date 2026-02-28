@@ -385,15 +385,20 @@ async function handleAnalyze() {
     const merchant = findMerchant(rawInput);
     const sub = merchant ? merchant.sub : null;
 
-    // 有輸入商戶但識別唔到 → 強制 General，同步更新 dropdown 顯示
-    if (rawInput && !merchant) {
-        document.getElementById('category').value = 'General';
-    }
-    // 識別到商戶 → 同步更新 dropdown 至商戶類別
+    // cat 優先順序：
+    // 1. 識別到商戶 → 用商戶類別
+    // 2. 有輸入但識別唔到 → 強制 General
+    // 3. 冇輸入商戶 → 跟用戶手動揀選
+    let cat;
     if (merchant) {
-        document.getElementById('category').value = merchant.cat;
+        cat = merchant.cat;
+        document.getElementById('category').value = cat;
+    } else if (rawInput) {
+        cat = 'General';
+        document.getElementById('category').value = 'General';
+    } else {
+        cat = document.getElementById('category').value;
     }
-    const cat = document.getElementById('category').value;
     const today = new Date();
     // 中信 Motion：當月累積零售簽賬是否已達 $3,800
     const motionMonthSpent = getCardMonthTotal('citic_motion');
