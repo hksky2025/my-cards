@@ -33,12 +33,15 @@ export function findMerchant(input) {
     );
     if (match) return match;
 
-    // 第三層：包含搜尋
-    match = merchantDB.find(m =>
-        m.name.toLowerCase().includes(q) ||
-        m.aliases.some(a => a.toLowerCase().includes(q))
-    );
-    return match || null;
+    // 第三層：包含搜尋（最少 2 個字符，避免誤匹配）
+    if (q.length >= 2) {
+        match = merchantDB.find(m =>
+            m.name.toLowerCase().includes(q) ||
+            m.aliases.some(a => a.toLowerCase().includes(q))
+        );
+        if (match) return match;
+    }
+    return null;
 }
 
 /**
