@@ -118,15 +118,23 @@
     "bank": "hangseng",
     "type": "both",
     "color": "#008154",
-    "notes": "達門檻：海外6%，網購5%；未達門檻0.4%，本地1%",
+    "notes": "達門檻：海外6%(額外5.6%)，網購5%(額外4.6%)，自選1%(額外0.6%)；三類共享額外回贈上限$500/月；未達門檻0.4%",
     "logic": {
       "type": "mmpower",
       "baseRate": 0.004,
       "localRate": 0.01,
       "overseasRate": 0.06,
-      "overseaCapBonus": 500,
+      "overseasExtraRate": 0.056,
       "onlineRate": 0.05,
-      "onlineCapBonus": 500,
+      "onlineExtraRate": 0.046,
+      "selfPickRate": 0.01,
+      "selfPickExtraRate": 0.006,
+      "selfPickCats": [
+        "Dining",
+        "Electronics",
+        "Leisure"
+      ],
+      "sharedExtraCap": 500,
       "requiresMet": true
     }
   },
