@@ -161,6 +161,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
+    document.getElementById('meth-card').addEventListener('click', () => updateMethod('Physical'));
     document.getElementById('meth-bank').addEventListener('click', () => {
         const cat = document.getElementById('category').value;
         if (cat !== 'Insurance') {
@@ -316,6 +317,8 @@ function updateBillBtnState() {
                 globalMethod = 'ApplePay';
                 document.getElementById('meth-ap').classList.add('active');
                 document.getElementById('meth-on').classList.remove('active');
+                document.getElementById('meth-card').classList.remove('active');
+                document.getElementById('meth-card').classList.remove('active');
             }
         }
     });
@@ -325,6 +328,7 @@ function updateMethod(m) {
     globalMethod = m;
     document.getElementById('meth-ap').classList.toggle('active', m === 'ApplePay');
     document.getElementById('meth-on').classList.toggle('active', m === 'Online');
+    document.getElementById('meth-card').classList.toggle('active', m === 'Physical');
     document.getElementById('meth-bank').classList.toggle('active', m === 'BankBill');
     document.getElementById('meth-nonbank').classList.toggle('active', m === 'NonBankBill');
     // 支付方式改變即時重新計算
