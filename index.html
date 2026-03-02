@@ -274,14 +274,21 @@
             </div>
             <div class="input-group">
                 <label>支付方式</label>
-                <div style="display:flex;flex-direction:column;gap:5px;">
-                    <div class="toggle-container">
-                        <button id="meth-ap" class="toggle-btn active">手機支付</button>
-                        <button id="meth-bank" class="toggle-btn">銀行繳費</button>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                    <div style="display:flex;align-items:center;gap:7px;">
+                        <span style="font-size:10px;color:#aaa;font-weight:700;white-space:nowrap;min-width:28px;text-align:right;">一般</span>
+                        <div class="toggle-container" style="flex:1;">
+                            <button id="meth-ap" class="toggle-btn active">手機支付</button>
+                            <button id="meth-on" class="toggle-btn">網上/App</button>
+                            <button id="meth-card" class="toggle-btn">實體卡</button>
+                        </div>
                     </div>
-                    <div class="toggle-container">
-                        <button id="meth-on" class="toggle-btn">網上/App</button>
-                        <button id="meth-nonbank" class="toggle-btn">非銀行繳費</button>
+                    <div style="display:flex;align-items:center;gap:7px;">
+                        <span style="font-size:10px;color:#aaa;font-weight:700;white-space:nowrap;min-width:28px;text-align:right;">繳費</span>
+                        <div class="toggle-container" style="flex:1;">
+                            <button id="meth-bank" class="toggle-btn disabled">銀行繳費</button>
+                            <button id="meth-nonbank" class="toggle-btn disabled">非銀行繳費</button>
+                        </div>
                     </div>
                 </div>
             </div>
