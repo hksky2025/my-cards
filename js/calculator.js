@@ -167,6 +167,34 @@ export function calcBaseReward(card, params) {
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
 
+        case 'bliss': {
+            const today = new Date();
+            // 門檻：2026年底前豁免，之後需每月 $2,000
+            const thresholdWaived = today <= new Date(logic.thresholdWaivedUntil);
+            const meetsThreshold = thresholdWaived || isMet;
+            if (!meetsThreshold) return { val: amt * logic.baseRate, rate: '0.4%（未達$2,000門檻）' };
+
+            // 指定網上商戶推廣期判斷
+            const selectedPromoActive = today <= new Date(logic.selectedPromoEnd);
+
+            if (meth === 'Online') {
+                // 指定網上商戶：推廣期內計6%（首$10,000）
+                if (sub === 'BLISS_SELECTED' && selectedPromoActive) {
+                    const val = Math.min(amt, logic.selectedCap) * logic.selectedRate
+                              + Math.max(0, amt - logic.selectedCap) * logic.baseRate;
+                    const overNote = amt > logic.selectedCap ? `，超出$${(amt - logic.selectedCap).toLocaleString()}計0.4%` : '';
+                    return { val, rate: `6%（指定網上商戶，首$${logic.selectedCap.toLocaleString()}${overNote}）` };
+                }
+                // 一般網上：4%（首$10,000）
+                const val = Math.min(amt, logic.onlineCap) * logic.onlineRate
+                          + Math.max(0, amt - logic.onlineCap) * logic.baseRate;
+                const overNote = amt > logic.onlineCap ? `，超出$${(amt - logic.onlineCap).toLocaleString()}計0.4%` : '';
+                return { val, rate: `4%（網上簽賬，首$${logic.onlineCap.toLocaleString()}${overNote}）` };
+            }
+            // 本地實體/手機：0.4%
+            return { val: amt * logic.baseRate, rate: '0.4%（本地實體）' };
+        }
+
         case 'go': {
             // 超市判斷：sub tag 優先，其次 cat
             const isSuper = (sub && ['WELLCOME','PARKNSHOP','AEON_SUPER','TASTE','CITY_SUPER','JASONS','GREAT','MARKETPLACE','FUSION','SOGO_FRESH'].includes(sub)) || cat === 'Super';

@@ -164,6 +164,7 @@ function renderCapProgress(cards, getCardTotal) {
         motion: [{ label: '餐飲/網購6%封頂', cap: 3636 }],
         waku:   [{ label: '網購6%封頂', cap: 3571 }],
         mmpower:[{ label: '三類共享額外回贈上限$500（海外>網上>自選）', cap: Math.round(500/0.056) }],
+        bliss:  [{ label: '網上4%封頂（首$10,000）', cap: 10000 }, { label: '指定商戶6%封頂（首$10,000）', cap: 10000 }],
     };
 
     const cardsWithCap = cards.filter(c => CAP_INFO[c.id]);
