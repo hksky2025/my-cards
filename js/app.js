@@ -431,6 +431,8 @@ async function handleAnalyze() {
         if (cat === 'Insurance' && !['hsbc','boc'].includes(c.bank)) continue;
         // 繳費方式：只適用於 HSBC/中銀，其他銀行直接跳過
         if (['BankBill','NonBankBill'].includes(globalMethod) && !['hsbc','boc'].includes(c.bank)) continue;
+        // 銀行/非銀行繳費：中銀只適用 HSBC EveryMile、Red、VS、Cheers、Sogo，Bliss/Go 唔適用
+        if (['BankBill','NonBankBill'].includes(globalMethod) && ['bliss','go','aia'].includes(c.id)) continue;
 
         if (c.id === 'dbs_eminent') {
 
