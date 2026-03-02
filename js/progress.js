@@ -71,11 +71,11 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
     if (bocCards.length > 0) {
         html += barHTML('🏦 中銀', 'boc', bocTotal, bocCards);
     }
-    // 建銀保費年度上限追蹤（信用額 $42,000）
+    // 建銀保費年度上限追蹤（信用額 $130,000）
     const ccbCards = cards.filter(c => c.bank === 'ccb');
     if (ccbCards.length > 0 && getCCBInsuranceYear) {
         const ccbInsYear = getCCBInsuranceYear();
-        const CCB_CAP = 42000;
+        const CCB_CAP = 130000;
         const ccbPct = Math.min((ccbInsYear / CCB_CAP) * 100, 100);
         const reached = ccbInsYear >= CCB_CAP;
         html += `
