@@ -67,5 +67,29 @@
     "keywords": [],
     "minAmt": 999999,
     "displayOnly": true
+  },
+  {
+    "id": "boc_bliss_online_2026",
+    "bank": "boc",
+    "cardId": "bliss",
+    "name": "中銀 Bliss Card 指定網上商戶6%",
+    "startDate": "2026-03-02",
+    "endDate": "2026-06-30",
+    "remarks": "Amazon、FARFETCH、Net-A-Porter等8個指定商戶網上簽賬6%（首$10,000）",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true
+  },
+  {
+    "id": "boc_bliss_crazy_2026",
+    "bank": "boc",
+    "cardId": "bliss",
+    "name": "中銀 Bliss Card 狂賞派",
+    "startDate": "2026-03-02",
+    "endDate": "2026-06-30",
+    "remarks": "網上平日額外+2%（上限$60），紅日額外+5%（上限$200）；本地實體需達$5,000門檻",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true
   }
 ]
