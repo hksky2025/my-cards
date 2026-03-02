@@ -326,5 +326,25 @@
         "BILL"
       ]
     }
+  },
+  {
+    "id": "bliss",
+    "name": "中銀 Bliss Card",
+    "bank": "boc",
+    "type": "cash",
+    "color": "#b31d28",
+    "notes": "網上4%（首$10,000）；指定網上商戶6%（首$10,000，推廣至2026-06-30）；本地實體0.4%；每月需累積$2,000（2026年底前豁免）",
+    "crazyEligible": false,
+    "logic": {
+      "type": "bliss",
+      "baseRate": 0.004,
+      "onlineRate": 0.04,
+      "onlineCap": 10000,
+      "selectedRate": 0.06,
+      "selectedCap": 10000,
+      "selectedPromoEnd": "2026-06-30",
+      "monthlyThreshold": 2000,
+      "thresholdWaivedUntil": "2026-12-31"
+    }
   }
 ]

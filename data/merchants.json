@@ -1781,5 +1781,85 @@
     "sub": "",
     "meth": "Online",
     "notes": "⚠️ 需用網上銀行繳費，直刷唔保證有回贈"
+  },
+  {
+    "name": "Amazon",
+    "aliases": [
+      "amazon.com",
+      "amazon hk"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "Buy & Ship",
+    "aliases": [
+      "buyandship",
+      "buy and ship"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "FARFETCH",
+    "aliases": [
+      "farfetch"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "同程旅行",
+    "aliases": [
+      "tongcheng",
+      "ly.com",
+      "tongcheng travel"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "Mytheresa",
+    "aliases": [
+      "mytheresa"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "Net-A-Porter",
+    "aliases": [
+      "net a porter",
+      "netaporter",
+      "net-a-porter"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "The Outnet",
+    "aliases": [
+      "outnet",
+      "the outnet",
+      "theoutnet"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
+  },
+  {
+    "name": "Selfridges",
+    "aliases": [
+      "selfridges"
+    ],
+    "cat": "Online",
+    "meth": "Online",
+    "sub": "BLISS_SELECTED"
   }
 ]
