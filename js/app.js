@@ -491,7 +491,9 @@ async function handleAnalyze() {
             baseRes.rate = `4% (已達上限 $300)`;
         }
 
-        const crazyBonus = isCrazyCat(cat, sub) ? calcCrazyBonus(c, params) : 0;
+        // 狂賞派：7大類別；Bliss Card 網購另外唔限類別
+        const isOnlineBliss = c.id === 'bliss' && globalMethod === 'Online';
+        const crazyBonus = (isCrazyCat(cat, sub) || isOnlineBliss) ? calcCrazyBonus(c, params) : 0;
         let extraCash = 0;
         const activePromos = [];
         if (crazyBonus > 0) activePromos.push('狂賞派');
@@ -528,8 +530,8 @@ function refreshProgress() {
 
 function syncMonthTotal() {
     const el = document.getElementById('currentSpent');
-    // 顯示中銀 Visa 卡（cheers + sogo）當月合計，供狂賞派門檻參考
-    if (el) el.value = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
+    // 顯示中銀 Visa 卡（cheers + sogo + bliss）當月合計，供狂賞派門檻參考
+    if (el) el.value = getCardMonthTotal('cheers') + getCardMonthTotal('sogo') + getCardMonthTotal('bliss');
 }
 
 function isCrazyCat(cat, sub) {
