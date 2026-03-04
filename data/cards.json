@@ -346,5 +346,45 @@
       "monthlyThreshold": 2000,
       "thresholdWaivedUntil": "2026-12-31"
     }
+  },
+  {
+    "id": "bea_world",
+    "name": "東亞 World Mastercard",
+    "bank": "bea",
+    "type": "cash",
+    "color": "#c8102e",
+    "notes": "達$4,000門檻且已登記BEA Mall App：海外/餐飲/電子/運動醫療5%；其他0.4%；推廣至2026-06-30",
+    "crazyEligible": false,
+    "logic": {
+      "type": "bea_world",
+      "baseRate": 0.004,
+      "bonusRate": 0.05,
+      "bonusCats": [
+        "Overseas",
+        "Dining",
+        "Electronics",
+        "Medical",
+        "Leisure"
+      ],
+      "monthlyThreshold": 4000,
+      "promoEnd": "2026-06-30"
+    }
+  },
+  {
+    "id": "bea_titanium",
+    "name": "東亞 i-Titanium",
+    "bank": "bea",
+    "type": "cash",
+    "color": "#4a4a4a",
+    "notes": "達$2,000門檻：網上/手機支付4%（上限$300/月）；其他0.4%；推廣至2026-12-31",
+    "crazyEligible": false,
+    "logic": {
+      "type": "bea_titanium",
+      "baseRate": 0.004,
+      "bonusRate": 0.04,
+      "monthlyCap": 300,
+      "monthlyThreshold": 2000,
+      "promoEnd": "2026-12-31"
+    }
   }
 ]
