@@ -372,7 +372,13 @@ async function handleAddTransaction() {
     if (!amt || amt <= 0) return alert('請輸入有效金額');
     if (!cardId) return alert('請選擇信用卡');
 
-    const txn = { merchant, amt, date, cardId, cat, method: globalMethod };
+    // 取得當前商戶 sub tag（用於指定商戶上限追蹤）
+    const matchedM = allMerchants.find(m => {
+        const input = merchant.toLowerCase();
+        return input === m.name.toLowerCase() || (m.aliases && m.aliases.some(a => input.includes(a.toLowerCase())));
+    });
+    const txnSub = matchedM?.sub || null;
+    const txn = { merchant, amt, date, cardId, cat, method: globalMethod, sub: txnSub };
     const saved = await saveTransaction(txn);
     addTransaction(saved);
     document.getElementById('amount').value = '';
@@ -436,6 +442,10 @@ async function handleAnalyze() {
         mmOverseasSpent * 0.056 + mmOnlineSpent * 0.046 + mmSelfSpent * 0.006,
         500
     );
+    // Bliss Card：網上同指定商戶獨立追蹤上限
+    const blissOnlineUsed = getCardMonthCatTotal('bliss', null, ['Online'], null);  // 一般網上（非指定商戶）
+    const blissSelectedUsed = getCardMonthCatTotal('bliss', null, ['Online'], 'BLISS_SELECTED'); // 指定商戶
+
     // 東亞 World Mastercard：$4,000 門檻 + 登記狀態 + 已用上限
     const beaWorldSpent = getCardMonthTotal('bea_world');
     const beaIsMet = (beaWorldSpent + amt) >= 4000;
@@ -447,7 +457,7 @@ async function handleAnalyze() {
     const beaTiIsMet = (beaTiSpent + amt) >= 2000;
     const beaTiUsed = Math.min(beaTiSpent * 0.04, 300); // 已用嘅 $300 上限估算
 
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed };
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {

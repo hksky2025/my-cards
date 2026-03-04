@@ -83,8 +83,8 @@ export function getCardYearTotal(cardId) {
         .reduce((sum, t) => sum + t.amt, 0);
 }
 
-// 指定卡按類別/方式篩選當月簽賬（用於 MMPower 共享上限追蹤）
-export function getCardMonthCatTotal(cardId, cats, meths) {
+// 指定卡按類別/方式/sub篩選當月簽賬（用於 MMPower、Bliss 上限追蹤）
+export function getCardMonthCatTotal(cardId, cats, meths, sub) {
     const now = new Date();
     const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
     return transactions
@@ -92,6 +92,10 @@ export function getCardMonthCatTotal(cardId, cats, meths) {
             if (!t.date.startsWith(ym) || t.cardId !== cardId) return false;
             if (cats && cats.length && !cats.includes(t.cat)) return false;
             if (meths && meths.length && !meths.includes(t.method)) return false;
+            // sub 篩選：傳入 sub 字串時，只計匹配的；傳入 null 時計全部（包括冇 sub 的）
+            if (sub !== undefined && sub !== null) {
+                if (t.sub !== sub) return false;
+            }
             return true;
         })
         .reduce((sum, t) => sum + t.amt, 0);

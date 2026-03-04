@@ -226,20 +226,32 @@ export function calcBaseReward(card, params) {
             const selectedPromoActive = today <= new Date(logic.selectedPromoEnd);
 
             if (meth === 'Online') {
-                // 指定網上商戶：推廣期內計6%（首$10,000）
+                // 指定網上商戶：推廣期內計6%（首$10,000，獨立上限）
                 if (sub === 'BLISS_SELECTED' && selectedPromoActive) {
-                    const val = Math.min(amt, logic.selectedCap) * logic.selectedRate
-                              + Math.max(0, amt - logic.selectedCap) * logic.baseRate;
-                    const overNote = amt > logic.selectedCap ? `，超出$${(amt - logic.selectedCap).toLocaleString()}計0.4%` : '';
-                    return { val, rate: `6%（指定網上商戶，首$${logic.selectedCap.toLocaleString()}${overNote}）` };
+                    const usedSelected = params.blissSelectedUsed || 0;
+                    const remainSelected = Math.max(0, logic.selectedCap - usedSelected);
+                    const effectiveAmt = Math.min(amt, remainSelected);
+                    const overAmt = amt - effectiveAmt;
+                    const val = effectiveAmt * logic.selectedRate + overAmt * logic.baseRate;
+                    const afterUsed = Math.min(usedSelected + effectiveAmt, logic.selectedCap).toFixed(0);
+                    const capNote = overAmt > 0
+                        ? `（指定商戶上限$${logic.selectedCap.toLocaleString()}，已用$${afterUsed}，超出$${overAmt.toLocaleString()}計0.4%）`
+                        : `（指定商戶首$${logic.selectedCap.toLocaleString()}，已用$${afterUsed}）`;
+                    return { val, rate: `6%${capNote}` };
                 }
-                // 一般網上：4%（首$10,000）
-                const val = Math.min(amt, logic.onlineCap) * logic.onlineRate
-                          + Math.max(0, amt - logic.onlineCap) * logic.baseRate;
-                const overNote = amt > logic.onlineCap ? `，超出$${(amt - logic.onlineCap).toLocaleString()}計0.4%` : '';
-                return { val, rate: `4%（網上簽賬，首$${logic.onlineCap.toLocaleString()}${overNote}）` };
+                // 一般網上：4%（首$10,000，獨立上限）
+                const usedOnline = params.blissOnlineUsed || 0;
+                const remainOnline = Math.max(0, logic.onlineCap - usedOnline);
+                const effectiveAmt = Math.min(amt, remainOnline);
+                const overAmt = amt - effectiveAmt;
+                const val = effectiveAmt * logic.onlineRate + overAmt * logic.baseRate;
+                const afterUsed = Math.min(usedOnline + effectiveAmt, logic.onlineCap).toFixed(0);
+                const capNote = overAmt > 0
+                    ? `（網上上限$${logic.onlineCap.toLocaleString()}，已用$${afterUsed}，超出$${overAmt.toLocaleString()}計0.4%）`
+                    : `（網上首$${logic.onlineCap.toLocaleString()}，已用$${afterUsed}）`;
+                return { val, rate: `4%${capNote}` };
             }
-            // 本地實體/手機：0.4%
+            // 本地實體/手機/實體卡：0.4%
             return { val: amt * logic.baseRate, rate: '0.4%（本地實體）' };
         }
 
