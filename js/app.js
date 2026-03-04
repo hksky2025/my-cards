@@ -208,6 +208,16 @@ window.addEventListener('DOMContentLoaded', async () => {
                 if (!(c.id in saved)) {
                     cardStatus[c.id] = true;
                     needSave = true;
+                    console.log('🆕 新卡預設啟用:', c.id);
+                }
+            });
+            // 強制修正：Firebase 曾意外儲存 false 的新卡，重設為 true
+            const NEWLY_ADDED = ['bea_world', 'bea_titanium', 'bliss'];
+            NEWLY_ADDED.forEach(id => {
+                if (id in saved && saved[id] === false) {
+                    cardStatus[id] = true;
+                    needSave = true;
+                    console.log('🔧 修正新卡狀態:', id);
                 }
             });
             if (needSave) await saveCardStatus(cardStatus);
