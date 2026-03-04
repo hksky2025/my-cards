@@ -436,17 +436,18 @@ async function handleAnalyze() {
         mmOverseasSpent * 0.056 + mmOnlineSpent * 0.046 + mmSelfSpent * 0.006,
         500
     );
-    // 東亞 World Mastercard：$4,000 門檻 + 登記狀態
+    // 東亞 World Mastercard：$4,000 門檻 + 登記狀態 + 已用上限
     const beaWorldSpent = getCardMonthTotal('bea_world');
     const beaIsMet = (beaWorldSpent + amt) >= 4000;
     const beaWorldRegistered = document.getElementById('beaWorldRegistered')?.checked ?? true;
+    const beaWorldUsed = Math.min(beaWorldSpent * 0.046, 460); // 已用嘅 $460 上限估算
 
     // 東亞 i-Titanium：$2,000 門檻 + 已用上限追蹤
     const beaTiSpent = getCardMonthTotal('bea_titanium');
     const beaTiIsMet = (beaTiSpent + amt) >= 2000;
     const beaTiUsed = Math.min(beaTiSpent * 0.04, 300); // 已用嘅 $300 上限估算
 
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered };
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {

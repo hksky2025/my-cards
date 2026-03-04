@@ -177,10 +177,20 @@ export function calcBaseReward(card, params) {
             // 需達 $4,000/月門檻
             const beaMet = params.beaIsMet !== undefined ? params.beaIsMet : isMet;
             if (!beaMet) return { val: amt * logic.baseRate, rate: '0.4%（未達$4,000門檻）' };
-            // 合資格類別：海外/餐飲/電子/運動醫療 → 5%
+            // 合資格類別：海外/餐飲/電子/運動醫療 → 5%（每月上限$460）
             const isBonus = logic.bonusCats.includes(cat);
-            return { val: amt * (isBonus ? logic.bonusRate : logic.baseRate),
-                     rate: isBonus ? '5%（海外/餐飲/電子/運動醫療）' : '0.4%' };
+            if (isBonus) {
+                const usedCap = params.beaWorldUsed || 0;
+                const remain = Math.max(0, logic.monthlyCap - usedCap);
+                const extraRate = logic.bonusRate - logic.baseRate; // 4.6%
+                const extra = Math.min(amt * extraRate, remain);
+                const total = amt * logic.baseRate + extra;
+                const afterUsed = Math.min(usedCap + extra, logic.monthlyCap).toFixed(0);
+                const capNote = extra < amt * extraRate
+                    ? `（上限$${logic.monthlyCap}，已用$${afterUsed}）` : `（上限$${logic.monthlyCap}/月）`;
+                return { val: total, rate: `5%${capNote}` };
+            }
+            return { val: amt * logic.baseRate, rate: '0.4%' };
         }
 
         case 'bea_titanium': {
