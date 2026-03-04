@@ -353,7 +353,7 @@
     "bank": "bea",
     "type": "cash",
     "color": "#c8102e",
-    "notes": "達$4,000門檻且已登記BEA Mall App：海外/餐飲/電子/運動醫療5%；其他0.4%；推廣至2026-06-30",
+    "notes": "達$4,000門檻且已登記BEA Mall App：海外/餐飲/電子/運動醫療5%（每月上限$460）；其他0.4%；推廣至2026-06-30",
     "crazyEligible": false,
     "logic": {
       "type": "bea_world",
@@ -367,7 +367,9 @@
         "Leisure"
       ],
       "monthlyThreshold": 4000,
-      "promoEnd": "2026-06-30"
+      "promoEnd": "2026-06-30",
+      "monthlyCap": 460,
+      "monthlyCapPoints": 115000
     }
   },
   {
