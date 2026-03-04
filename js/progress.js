@@ -191,7 +191,7 @@ function renderCapProgress(cards, getCardTotal) {
         red:         [{ label: '網購4%封頂', cap: 10000 }],
         dbs_eminent: [{ label: '指定類別5%封頂', cap: 8000 }, { label: '一般零售1%封頂', cap: 20000 }],
         citi_club:   [{ label: '全部回贈上限$300/月', cap: 300/0.04 }],
-        sogo:   [{ label: '崇光：5% / ApplePay 額外+5%手機(上限$100/月)', cap: 0 }],
+        sogo:   [{ label: 'ApplePay 額外+5%手機回贈封頂（上限$100/月）', cap: 2000 }],
         motion: [{ label: '餐飲/網購6%封頂', cap: 3636 }],
         waku:   [{ label: '網購6%封頂', cap: 3571 }],
         mmpower:[{ label: '三類共享額外回贈上限$500（海外>網上>自選）', cap: Math.round(500/0.056) }],
