@@ -3,7 +3,7 @@
 const BANK_COLORS = {
     boc: '#c8960c', hsbc: '#db0011', hangseng: '#008154',
     sc: '#1a56a0', ccb: '#003b8e', aeon: '#800080',
-    citic: '#7b5ea7', mox: '#05d5a1', dbs: '#e85d04', citi: '#003087'
+    citic: '#7b5ea7', mox: '#05d5a1', dbs: '#e85d04', citi: '#003087', bea: '#c8102e'
 };
 
 const MILES_COLOR = '#004a99';
@@ -14,7 +14,7 @@ const CASH_COLOR = '#d32f2f';
  * @param {Array} processed - 已計算好的卡片結果陣列
  */
 export function renderResults(processed, cat = '') {
-    const BANK_ORDER = { hsbc: 1, boc: 2, ccb: 3, hangseng: 4, sc: 5, dbs: 6, citi: 7, citic: 8, mox: 9, aeon: 10 };
+    const BANK_ORDER = { hsbc: 1, boc: 2, ccb: 3, hangseng: 4, sc: 5, dbs: 6, citi: 7, citic: 8, mox: 9, aeon: 10, bea: 11 };
     const resultsEl = document.getElementById('results');
     const milesEl = document.getElementById('miles-results');
     const cashEl = document.getElementById('cash-results');
@@ -50,7 +50,7 @@ export function renderResults(processed, cat = '') {
 export function renderCardManager(cards, cardStatus, onToggle) {
     const BANK_LABELS = {
         hsbc: '匯豐', boc: '中銀', hangseng: '恒生',
-        sc: '渣打', dbs: '星展', citi: 'Citi', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON'
+        sc: '渣打', dbs: '星展', citi: 'Citi', citic: '中信', ccb: '建行', mox: 'Mox', aeon: 'AEON', bea: '東亞'
     };
 
     const container = document.getElementById('bankGroupsContainer');

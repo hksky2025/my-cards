@@ -167,6 +167,44 @@ export function calcBaseReward(card, params) {
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
 
+        case 'bea_world': {
+            const today = new Date();
+            const promoActive = today <= new Date(logic.promoEnd);
+            // 未登記或推廣期外：只有基本 0.4%
+            if (!params.beaWorldRegistered || !promoActive) {
+                return { val: amt * logic.baseRate, rate: '0.4%（未登記或推廣期外）' };
+            }
+            // 需達 $4,000/月門檻
+            const beaMet = params.beaIsMet !== undefined ? params.beaIsMet : isMet;
+            if (!beaMet) return { val: amt * logic.baseRate, rate: '0.4%（未達$4,000門檻）' };
+            // 合資格類別：海外/餐飲/電子/運動醫療 → 5%
+            const isBonus = logic.bonusCats.includes(cat);
+            return { val: amt * (isBonus ? logic.bonusRate : logic.baseRate),
+                     rate: isBonus ? '5%（海外/餐飲/電子/運動醫療）' : '0.4%' };
+        }
+
+        case 'bea_titanium': {
+            const today = new Date();
+            const promoActive = today <= new Date(logic.promoEnd);
+            if (!promoActive) return { val: amt * logic.baseRate, rate: '0.4%（推廣期外）' };
+            // 需達 $2,000/月門檻
+            const beaTiMet = params.beaTiIsMet !== undefined ? params.beaTiIsMet : isMet;
+            if (!beaTiMet) return { val: amt * logic.baseRate, rate: '0.4%（未達$2,000門檻）' };
+            // 網上或手機支付 → 4%（上限$300/月）
+            const isBonus = meth === 'Online' || meth === 'ApplePay';
+            if (isBonus) {
+                const usedCap = params.beaTiUsed || 0;
+                const remain = Math.max(0, logic.monthlyCap - usedCap);
+                const extra = Math.min(amt * (logic.bonusRate - logic.baseRate), remain);
+                const total = amt * logic.baseRate + extra;
+                const afterUsed = Math.min(usedCap + extra, logic.monthlyCap).toFixed(0);
+                const capNote = extra < amt * (logic.bonusRate - logic.baseRate)
+                    ? `（上限$${logic.monthlyCap}，已用$${afterUsed}）` : '';
+                return { val: total, rate: `4%（網上/手機）${capNote}` };
+            }
+            return { val: amt * logic.baseRate, rate: '0.4%' };
+        }
+
         case 'bliss': {
             const today = new Date();
             // 門檻：2026年底前豁免，之後需每月 $2,000

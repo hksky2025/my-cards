@@ -159,6 +159,17 @@ window.addEventListener('DOMContentLoaded', async () => {
         reader.readAsArrayBuffer(file);
         e.target.value = ''; // reset input
     });
+    // BEA World 登記 toggle
+    const beaReg = document.getElementById('beaWorldRegistered');
+    if (beaReg) {
+        beaReg.addEventListener('change', () => {
+            const label = document.getElementById('beaWorldRegLabel');
+            if (label) label.textContent = beaReg.checked ? '已登記' : '未登記';
+            if (label) label.style.color = beaReg.checked ? '#c0550a' : '#aaa';
+            handleAnalyze();
+        });
+    }
+
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('meth-card').addEventListener('click', () => updateMethod('Physical'));
@@ -425,7 +436,17 @@ async function handleAnalyze() {
         mmOverseasSpent * 0.056 + mmOnlineSpent * 0.046 + mmSelfSpent * 0.006,
         500
     );
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet };
+    // 東亞 World Mastercard：$4,000 門檻 + 登記狀態
+    const beaWorldSpent = getCardMonthTotal('bea_world');
+    const beaIsMet = (beaWorldSpent + amt) >= 4000;
+    const beaWorldRegistered = document.getElementById('beaWorldRegistered')?.checked ?? true;
+
+    // 東亞 i-Titanium：$2,000 門檻 + 已用上限追蹤
+    const beaTiSpent = getCardMonthTotal('bea_titanium');
+    const beaTiIsMet = (beaTiSpent + amt) >= 2000;
+    const beaTiUsed = Math.min(beaTiSpent * 0.04, 300); // 已用嘅 $300 上限估算
+
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {
@@ -523,9 +544,17 @@ async function handleAnalyze() {
 // ── 進度 ──────────────────────────────────────────────
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
+    syncBeaToggle(enabledCards);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal);
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
+}
+
+function syncBeaToggle(enabledCards) {
+    const row = document.getElementById('beaWorldToggleRow');
+    if (!row) return;
+    const hasBeaWorld = enabledCards.some(c => c.id === 'bea_world');
+    row.style.display = hasBeaWorld ? 'block' : 'none';
 }
 
 function syncMonthTotal() {
