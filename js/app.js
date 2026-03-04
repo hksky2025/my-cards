@@ -348,6 +348,7 @@ function updateMethod(m) {
 }
 
 async function handleCardToggle(cardId, newStatus) {
+    console.log('🔄 handleCardToggle:', cardId, newStatus);
     cardStatus[cardId] = newStatus;
     await saveCardStatus(cardStatus);
     populateCardSelect();
