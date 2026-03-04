@@ -24,8 +24,10 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
     const bocCards = cards.filter(c => c.bank === 'boc' && c.logic?.requiresMet);
     // 恒生受門檻影響的卡
     const hangsengCards = cards.filter(c => c.bank === 'hangseng' && c.logic?.requiresMet);
+    // 獨立門檻的卡（Bliss $2,000 / BEA World $4,000 / BEA Titanium $2,000）
+    const indivThreshCards = cards.filter(c => ['bliss','bea_world','bea_titanium'].includes(c.id));
 
-    if (bocCards.length === 0 && hangsengCards.length === 0) {
+    if (bocCards.length === 0 && hangsengCards.length === 0 && indivThreshCards.length === 0) {
         el.innerHTML = '';
         return;
     }
@@ -99,6 +101,33 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
         html += barHTML('🏦 恒生', 'hangseng', hangsengTotal, hangsengCards);
     }
 
+    // 獨立門檻卡（Bliss / BEA）
+    if (indivThreshCards.length > 0) {
+        indivThreshCards.forEach(c => {
+            const thresh = c.logic.monthlyThreshold;
+            const spent = getCardTotal ? getCardTotal(c.id) : 0;
+            const pct = Math.min((spent / thresh) * 100, 100);
+            const reached = spent >= thresh;
+            const remaining = Math.max(thresh - spent, 0);
+            const bankColor = { boc: '#c8960c', bea: '#c8102e' }[c.bank] || '#888';
+            html += `
+            <div class="threshold-block">
+                <div class="progress-title" style="margin-top:8px;">
+                    <span>${c.name}</span>
+                    <span class="progress-amt ${reached ? 'reached' : ''}">
+                        $${spent.toLocaleString()} / $${thresh.toLocaleString()}
+                    </span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar" style="width:${pct}%; background:${reached ? '#4caf50' : bankColor}"></div>
+                </div>
+                <div class="progress-sub">
+                    ${reached ? '✅ 已達門檻！優惠已激活' : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`}
+                </div>
+            </div>`;
+        });
+    }
+
     html += '</div>';
     el.innerHTML = html;
 }
@@ -159,7 +188,9 @@ function renderCapProgress(cards, getCardTotal) {
 
     // 定義各卡封頂資訊
     const CAP_INFO = {
-        red:    [{ label: '網購4%封頂', cap: 10000 }],
+        red:         [{ label: '網購4%封頂', cap: 10000 }],
+        dbs_eminent: [{ label: '指定類別5%封頂', cap: 8000 }, { label: '一般零售1%封頂', cap: 20000 }],
+        citi_club:   [{ label: '全部回贈上限$300/月', cap: 300/0.04 }],
         sogo:   [{ label: '崇光：5% / ApplePay 額外+5%手機(上限$100/月)', cap: 0 }],
         motion: [{ label: '餐飲/網購6%封頂', cap: 3636 }],
         waku:   [{ label: '網購6%封頂', cap: 3571 }],
