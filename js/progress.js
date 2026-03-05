@@ -9,7 +9,7 @@
  */
 export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly, getCCBInsuranceYear) {
     renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranceYear);
-    renderPromoCountdown(promos, cards);
+    renderPromoCountdown(promos, cards, getCardTotal);
     renderCapProgress(cards, getCardTotal);
 }
 
@@ -133,7 +133,7 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
 }
 
 // ── 推廣倒數 ─────────────────────────────────────────
-function renderPromoCountdown(promos, cards) {
+function renderPromoCountdown(promos, cards, getCardTotal) {
     const el = document.getElementById('progress-promos');
     if (!el) return;
 
@@ -150,18 +150,74 @@ function renderPromoCountdown(promos, cards) {
         return;
     }
 
-    el.innerHTML = `
+    // 分開春日自主賞同一般推廣
+    const springPromos = activePromos.filter(p => p.springPromo);
+    const regularPromos = activePromos.filter(p => !p.springPromo);
+
+    // 計算東亞所有卡當月簽賬合計
+    const beaCards = cards.filter(c => c.bank === 'bea');
+    const beaMonthTotal = getCardTotal
+        ? beaCards.reduce((sum, c) => sum + getCardTotal(c.id), 0)
+        : 0;
+
+    // 春日自主賞：顯示當前進行中階段
+    const currentSpring = springPromos.find(p => {
+        const start = new Date(p.startDate);
+        const end = new Date(p.endDate);
+        return today >= start && today <= end;
+    }) || springPromos[0];
+
+    let springHTML = '';
+    if (currentSpring) {
+        const end = new Date(currentSpring.endDate);
+        const daysLeft = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+        const colorClass = daysLeft <= 7 ? 'days-urgent' : daysLeft <= 14 ? 'days-warning' : 'days-ok';
+        const tiers = currentSpring.tiers || [];
+
+        const currentTier = [...tiers].reverse().find(t => beaMonthTotal >= t.threshold);
+        const nextTier = tiers.find(t => beaMonthTotal < t.threshold);
+        const maxTier = tiers[tiers.length - 1];
+        const progressTarget = nextTier ? nextTier.threshold : maxTier.threshold;
+        const pct = Math.min((beaMonthTotal / progressTarget) * 100, 100);
+        const remaining = Math.max(progressTarget - beaMonthTotal, 0);
+
+        springHTML = `
+        <div class="progress-card" style="border-left:4px solid #c8102e;margin-bottom:10px;">
+            <div class="progress-title">
+                <span>🌸 ${currentSpring.name}</span>
+                <div class="days-badge ${colorClass}">剩 ${daysLeft} 日</div>
+            </div>
+            <div class="progress-sub" style="margin:2px 0 8px;">${currentSpring.startDate} → ${currentSpring.endDate}</div>
+            <div class="progress-title" style="margin-top:4px;">
+                <span>東亞卡合計簽賬</span>
+                <span class="progress-amt ${currentTier ? 'reached' : ''}">$${beaMonthTotal.toLocaleString()}</span>
+            </div>
+            <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width:${pct}%;background:${currentTier ? '#4caf50' : '#c8102e'};"></div>
+            </div>
+            <div class="progress-sub" style="margin-top:4px;">
+                ${currentTier
+                    ? `✅ 已達 <strong>$${currentTier.threshold.toLocaleString()}</strong>，獲 <strong>$${currentTier.reward}</strong> 現金回贈${nextTier ? `；再簽 <strong>$${remaining.toLocaleString()}</strong> 升至 $${nextTier.reward}` : '（已達最高獎賞！🎉）'}`
+                    : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 達 $${progressTarget.toLocaleString()} 獲 $${(nextTier || maxTier).reward} 回贈`
+                }
+            </div>
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+                ${tiers.map(t => {
+                    const achieved = beaMonthTotal >= t.threshold;
+                    return `<span style="font-size:10px;padding:3px 8px;border-radius:8px;font-weight:700;background:${achieved ? '#c8102e' : '#f0f0f0'};color:${achieved ? '#fff' : '#888'};">$${(t.threshold/1000).toFixed(0)}K → $${t.reward}</span>`;
+                }).join('')}
+            </div>
+        </div>`;
+    }
+
+    // 一般推廣倒數
+    const regularHTML = regularPromos.length > 0 ? `
         <div class="progress-card">
             <div class="progress-title">📅 推廣優惠倒數</div>
-            ${activePromos.map(p => {
+            ${regularPromos.map(p => {
                 const end = new Date(p.endDate);
                 const daysLeft = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
-                const isUrgent = daysLeft <= 7;
-                const isWarning = daysLeft <= 14;
-                const colorClass = isUrgent ? 'days-urgent' : isWarning ? 'days-warning' : 'days-ok';
-                const bankCard = cards.find(c => c.bank === p.bank);
-                const bankClass = p.bank;
-
+                const colorClass = daysLeft <= 7 ? 'days-urgent' : daysLeft <= 14 ? 'days-warning' : 'days-ok';
                 return `
                     <div class="promo-progress-row">
                         <div class="promo-progress-info">
@@ -171,14 +227,12 @@ function renderPromoCountdown(promos, cards) {
                                 ${p.remarks ? `<span class="promo-remark">${p.remarks}</span>` : ''}
                             </div>
                         </div>
-                        <div class="days-badge ${colorClass}">
-                            剩 ${daysLeft} 日
-                        </div>
-                    </div>
-                `;
+                        <div class="days-badge ${colorClass}">剩 ${daysLeft} 日</div>
+                    </div>`;
             }).join('')}
-        </div>
-    `;
+        </div>` : '';
+
+    el.innerHTML = springHTML + regularHTML;
 }
 
 // ── 各卡封頂進度 ─────────────────────────────────────
