@@ -1,12 +1,12 @@
 // app.js — 主程式入口 (v2.2: 修復卡片選擇器時序問題)
 
-import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js';
-import { loadMerchants, findMerchant } from './matcher.js';
-import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js';
-import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction } from './firebase.js';
-import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js';
-import { renderProgress, renderAnnualProgress, renderAnnualCardProgress } from './progress.js';
-import { initCalendar, renderCalendar } from './calendar.js';
+import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js?v=20260306';
+import { loadMerchants, findMerchant } from './matcher.js?v=20260306';
+import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js?v=20260306';
+import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction, loadProgressOrder, saveProgressOrder } from './firebase.js?v=20260306';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js?v=20260306';
+import { renderProgress, renderAnnualProgress, renderAnnualCardProgress } from './progress.js?v=20260306';
+import { initCalendar, renderCalendar } from './calendar.js?v=20260306';
 
 const HOLIDAYS_2026 = [
     "2026-01-01","2026-02-17","2026-02-18","2026-02-19",
@@ -228,6 +228,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         // 用 Firebase 狀態更新 UI
         renderCardManager(allCards, cardStatus, handleCardToggle);
         populateCardSelect(); // 再次更新（反映 Firebase 的啟用狀態）
+        initProgressDrag(); // 進度頁拖動排序初始化
 
         // 月曆 render 回調
 
@@ -570,6 +571,73 @@ function refreshProgress() {
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal);
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
+    applyProgressOrder();
+}
+
+// ── 進度頁拖動排序 ────────────────────────────────────
+const DEFAULT_ORDER = ['threshold','ccb','promos','caps','annual-cards','annual'];
+let progressOrder = [...DEFAULT_ORDER];
+
+function applyProgressOrder() {
+    const container = document.getElementById('progress-sortable');
+    if (!container) return;
+    progressOrder.forEach(sectionId => {
+        const el = container.querySelector(`[data-section="${sectionId}"]`);
+        if (el) container.appendChild(el);
+    });
+}
+
+async function initProgressDrag() {
+    const saved = await loadProgressOrder();
+    if (saved && Array.isArray(saved)) progressOrder = saved;
+    applyProgressOrder();
+
+    const container = document.getElementById('progress-sortable');
+    if (!container) return;
+
+    let dragSrc = null;
+
+    container.addEventListener('dragstart', e => {
+        dragSrc = e.target.closest('.progress-section');
+        if (!dragSrc) return;
+        dragSrc.style.opacity = '0.4';
+        e.dataTransfer.effectAllowed = 'move';
+    });
+
+    container.addEventListener('dragend', e => {
+        const sec = e.target.closest('.progress-section');
+        if (sec) sec.style.opacity = '';
+        container.querySelectorAll('.progress-section').forEach(s => s.classList.remove('drag-over'));
+    });
+
+    container.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        const target = e.target.closest('.progress-section');
+        container.querySelectorAll('.progress-section').forEach(s => s.classList.remove('drag-over'));
+        if (target && target !== dragSrc) target.classList.add('drag-over');
+    });
+
+    container.addEventListener('drop', e => {
+        e.preventDefault();
+        const target = e.target.closest('.progress-section');
+        if (!target || target === dragSrc || !dragSrc) return;
+        target.classList.remove('drag-over');
+
+        // 插入位置
+        const sections = [...container.querySelectorAll('.progress-section')];
+        const srcIdx = sections.indexOf(dragSrc);
+        const tgtIdx = sections.indexOf(target);
+        if (srcIdx < tgtIdx) {
+            container.insertBefore(dragSrc, target.nextSibling);
+        } else {
+            container.insertBefore(dragSrc, target);
+        }
+
+        // 儲存新順序
+        progressOrder = [...container.querySelectorAll('.progress-section')].map(s => s.dataset.section);
+        saveProgressOrder(progressOrder);
+    });
 }
 
 function syncBeaToggle(enabledCards) {

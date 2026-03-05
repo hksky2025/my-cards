@@ -126,3 +126,25 @@ function loadFromLocal(key) {
 function saveToLocal(key, data) {
     localStorage.setItem(LOCAL_KEY_PREFIX + key, JSON.stringify(data));
 }
+
+// ── 進度頁排列順序 ────────────────────────────────────
+export async function loadProgressOrder() {
+    if (!currentUser) return loadFromLocal('progressOrder');
+    try {
+        const ref = doc(db, 'users', currentUser.uid, 'settings', 'progressOrder');
+        const snap = await getDoc(ref);
+        return snap.exists() ? snap.data().order : null;
+    } catch (err) {
+        return loadFromLocal('progressOrder');
+    }
+}
+
+export async function saveProgressOrder(order) {
+    if (!currentUser) return saveToLocal('progressOrder', order);
+    try {
+        const ref = doc(db, 'users', currentUser.uid, 'settings', 'progressOrder');
+        await setDoc(ref, { order, updatedAt: new Date().toISOString() });
+    } catch (err) {
+        saveToLocal('progressOrder', order);
+    }
+}
