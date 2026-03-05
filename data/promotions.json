@@ -34,7 +34,8 @@
     },
     "excludeSubs": [
       "Red8_BOC"
-    ]
+    ],
+    "_updated": "20260306"
   },
   {
     "id": "boc_cheers_crazy_2026",
@@ -46,7 +47,8 @@
     "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true
+    "displayOnly": true,
+    "_updated": "20260306"
   },
   {
     "id": "boc_bliss_online_2026",
@@ -58,7 +60,8 @@
     "remarks": "Amazon、FARFETCH、Net-A-Porter等8個指定商戶網上簽賬6%（首$10,000）",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true
+    "displayOnly": true,
+    "_updated": "20260306"
   },
   {
     "id": "boc_bliss_crazy_2026",
@@ -70,7 +73,8 @@
     "remarks": "網上平日額外+2%（上限$60），紅日額外+5%（上限$200）；本地實體需達$5,000門檻",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true
+    "displayOnly": true,
+    "_updated": "20260306"
   },
   {
     "id": "bea_world_2026",
@@ -82,7 +86,8 @@
     "remarks": "需登記BEA Mall App + 達$4,000/月門檻；海外/餐飲/電子/運動醫療5%",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true
+    "displayOnly": true,
+    "_updated": "20260306"
   },
   {
     "id": "bea_titanium_2026",
@@ -94,7 +99,8 @@
     "remarks": "達$2,000/月門檻；網上購物+手機付款4%（每月上限$300）",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true
+    "displayOnly": true,
+    "_updated": "20260306"
   },
   {
     "id": "boc_sogo_crazy_2026",
@@ -106,6 +112,63 @@
     "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true
+    "displayOnly": true,
+    "_updated": "20260306"
+  },
+  {
+    "id": "bea_spring_2026_p1",
+    "bank": "bea",
+    "cardId": "ALL_BEA",
+    "name": "東亞春日自主賞 階段1",
+    "startDate": "2026-03-02",
+    "endDate": "2026-03-31",
+    "remarks": "累積$8,000→$250 / $18,000→$600 / $40,000→$1,200現金回贈；需登記BEA Mall App",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true,
+    "springPromo": true,
+    "tiers": [
+      {
+        "threshold": 8000,
+        "reward": 250
+      },
+      {
+        "threshold": 18000,
+        "reward": 600
+      },
+      {
+        "threshold": 40000,
+        "reward": 1200
+      }
+    ],
+    "_updated": "20260306"
+  },
+  {
+    "id": "bea_spring_2026_p2",
+    "bank": "bea",
+    "cardId": "ALL_BEA",
+    "name": "東亞春日自主賞 階段2",
+    "startDate": "2026-04-01",
+    "endDate": "2026-04-30",
+    "remarks": "累積$8,000→$250 / $18,000→$600 / $40,000→$1,200現金回贈；階段1已登記者毋須再登記",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true,
+    "springPromo": true,
+    "tiers": [
+      {
+        "threshold": 8000,
+        "reward": 250
+      },
+      {
+        "threshold": 18000,
+        "reward": 600
+      },
+      {
+        "threshold": 40000,
+        "reward": 1200
+      }
+    ],
+    "_updated": "20260306"
   }
 ]
