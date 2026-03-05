@@ -33,8 +33,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // 步驟一：先載入所有 JSON（確保 allCards 有值先）
     const [merchants, cards, promos] = await Promise.all([
-        fetchJSON('./data/merchants.json?v=20260306'),
-        fetchJSON('./data/cards.json?v=20260306'),
+        fetchJSON('./data/merchants.json?v=20260307'),
+        fetchJSON('./data/cards.json?v=20260307'),
         fetchJSON('./data/promotions.json?v=20260306')
     ]);
     allCards = cards;
