@@ -147,6 +147,10 @@ function renderCCBProgress(cards, getCCBInsuranceYear) {
     `;
 }
 
+export function renderPromoCountdownOnly(promos, cards, getCardTotal) {
+    renderPromoCountdown(promos, cards, getCardTotal);
+}
+
 function renderPromoCountdown(promos, cards, getCardTotal) {
     const el = document.getElementById('progress-promos');
     if (!el) return;

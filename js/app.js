@@ -5,7 +5,7 @@ import { loadMerchants, findMerchant } from './matcher.js?v=20260306';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js?v=20260306';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction, loadProgressOrder, saveProgressOrder } from './firebase.js?v=20260306';
 import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js?v=20260306';
-import { renderProgress, renderAnnualProgress, renderAnnualCardProgress } from './progress.js?v=20260306';
+import { renderProgress, renderAnnualProgress, renderAnnualCardProgress, renderPromoCountdownOnly } from './progress.js?v=20260306';
 import { initCalendar, renderCalendar } from './calendar.js?v=20260306';
 
 const HOLIDAYS_2026 = [
@@ -284,6 +284,7 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
     document.querySelectorAll('.tab-panel').forEach(p => p.style.display = p.id === `tab-${tab}` ? 'block' : 'none');
     if (tab === 'progress') refreshProgress();
+    if (tab === 'promo') refreshPromoTab();
     if (tab === 'txn') renderTransactions(allCards);
     if (tab === 'calendar') renderCalendar(getTransactions(), allCards);
 }
@@ -575,8 +576,13 @@ function refreshProgress() {
 }
 
 // ── 進度頁拖動排序 ────────────────────────────────────
-const DEFAULT_ORDER = ['threshold','ccb','promos','caps','annual-cards','annual'];
+const DEFAULT_ORDER = ['threshold','ccb','caps','annual-cards','annual'];
 let progressOrder = [...DEFAULT_ORDER];
+
+function refreshPromoTab() {
+    const enabledCards = allCards.filter(c => cardStatus[c.id]);
+    renderPromoCountdownOnly(allPromos, enabledCards, getCardMonthTotal);
+}
 
 function applyProgressOrder() {
     const container = document.getElementById('progress-sortable');
