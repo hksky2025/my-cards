@@ -6,36 +6,11 @@
     "name": "HSBC Red 指定商戶8%回贈",
     "startDate": "2026-01-01",
     "endDate": "2026-03-31",
-    "keywords": [
-      "壽司郎",
-      "sushiro",
-      "譚仔",
-      "譚仔三哥",
-      "譚仔雲南",
-      "taamjai",
-      "the coffee academics",
-      "coffee academics",
-      "gu",
-      "decathlon",
-      "迪卡儂",
-      "lululemon",
-      "namco",
-      "taito station",
-      "taito"
-    ],
+    "keywords": ["壽司郎","sushiro","譚仔","譚仔三哥","譚仔雲南","taamjai","the coffee academics","coffee academics","gu","decathlon","迪卡儂","lululemon","namco","taito station","taito"],
     "minAmt": 1,
     "remarks": "⚠️ 每月首HK$1,250簽賬適用，推廣至2026年3月31日",
-    "bonus": {
-      "type": "red_designated",
-      "cashRate": 0.08,
-      "cashCap": 1250,
-      "milesRate": 1.25,
-      "overCapRate": 0.004
-    },
-    "excludeSubs": [
-      "Red8_BOC"
-    ],
-    "_updated": "20260306"
+    "bonus": {"type": "red_designated","cashRate": 0.08,"cashCap": 1250,"milesRate": 1.25,"overCapRate": 0.004},
+    "excludeSubs": ["Red8_BOC"]
   },
   {
     "id": "boc_cheers_crazy_2026",
@@ -47,8 +22,7 @@
     "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
+    "displayOnly": true
   },
   {
     "id": "boc_bliss_online_2026",
@@ -60,8 +34,7 @@
     "remarks": "Amazon、FARFETCH、Net-A-Porter等8個指定商戶網上簽賬6%（首$10,000）",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
+    "displayOnly": true
   },
   {
     "id": "boc_bliss_crazy_2026",
@@ -73,8 +46,7 @@
     "remarks": "網上平日額外+2%（上限$60），紅日額外+5%（上限$200）；本地實體需達$5,000門檻",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
+    "displayOnly": true
   },
   {
     "id": "bea_world_2026",
@@ -86,8 +58,7 @@
     "remarks": "需登記BEA Mall App + 達$4,000/月門檻；海外/餐飲/電子/運動醫療5%",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
+    "displayOnly": true
   },
   {
     "id": "bea_titanium_2026",
@@ -99,8 +70,7 @@
     "remarks": "達$2,000/月門檻；網上購物+手機付款4%（每月上限$300）",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
+    "displayOnly": true
   },
   {
     "id": "boc_sogo_crazy_2026",
@@ -112,8 +82,7 @@
     "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻",
     "keywords": [],
     "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
+    "displayOnly": true
   },
   {
     "id": "bea_spring_2026_p1",
@@ -128,20 +97,10 @@
     "displayOnly": true,
     "springPromo": true,
     "tiers": [
-      {
-        "threshold": 8000,
-        "reward": 250
-      },
-      {
-        "threshold": 18000,
-        "reward": 600
-      },
-      {
-        "threshold": 40000,
-        "reward": 1200
-      }
-    ],
-    "_updated": "20260306"
+      {"threshold": 8000, "reward": 250},
+      {"threshold": 18000, "reward": 600},
+      {"threshold": 40000, "reward": 1200}
+    ]
   },
   {
     "id": "bea_spring_2026_p2",
@@ -156,19 +115,9 @@
     "displayOnly": true,
     "springPromo": true,
     "tiers": [
-      {
-        "threshold": 8000,
-        "reward": 250
-      },
-      {
-        "threshold": 18000,
-        "reward": 600
-      },
-      {
-        "threshold": 40000,
-        "reward": 1200
-      }
-    ],
-    "_updated": "20260306"
+      {"threshold": 8000, "reward": 250},
+      {"threshold": 18000, "reward": 600},
+      {"threshold": 40000, "reward": 1200}
+    ]
   }
 ]
