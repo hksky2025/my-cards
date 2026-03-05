@@ -144,16 +144,13 @@
     "bank": "hsbc",
     "type": "both",
     "color": "#db0011",
-    "notes": "家居/電器/超市類3.6%，其他0.4%",
+    "notes": "指定賞家居商戶（超市/家居/電器/電訊/寵物）3.6%，其他0.4%",
     "logic": {
       "type": "vs",
       "bonusSubs": [
         "VS"
       ],
-      "bonusCats": [
-        "Home",
-        "Electronics"
-      ],
+      "bonusCats": [],
       "bonusRate": 0.036,
       "baseRate": 0.004
     }

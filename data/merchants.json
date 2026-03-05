@@ -199,21 +199,21 @@
       "broadway"
     ],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
     "name": "BRUNO",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
     "name": "中原電器",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
@@ -222,14 +222,14 @@
       "fortress"
     ],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
     "name": "衛訊",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
@@ -238,21 +238,21 @@
       "yoho"
     ],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "Online"
   },
   {
     "name": "蘇寧",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
     "name": "J SELECT",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
@@ -261,7 +261,7 @@
       "panasonic"
     ],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
@@ -270,28 +270,28 @@
       "price.com"
     ],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "Online"
   },
   {
     "name": "偉明電業",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
     "name": "W-Mall",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "Online"
   },
   {
     "name": "生活影音",
     "aliases": [],
     "cat": "Electronics",
-    "sub": "BOC_CRAZY",
+    "sub": "BOC_CRAZY,VS",
     "meth": "ApplePay"
   },
   {
@@ -1120,7 +1120,7 @@
       "broadway hk"
     ],
     "cat": "Electronics",
-    "sub": "",
+    "sub": "VS",
     "meth": "ApplePay"
   },
   {
