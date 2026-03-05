@@ -153,6 +153,7 @@ function renderPromoCountdown(promos, cards, getCardTotal) {
     // 分開春日自主賞同一般推廣
     const springPromos = activePromos.filter(p => p.springPromo);
     const regularPromos = activePromos.filter(p => !p.springPromo);
+    console.log('📅 activePromos:', activePromos.length, '| spring:', springPromos.length, '| regular:', regularPromos.length);
 
     // 計算東亞所有卡當月簽賬合計
     const beaCards = cards.filter(c => c.bank === 'bea');
