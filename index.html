@@ -28,8 +28,8 @@
 
         /* Bottom Tab Nav */
         .tab-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
-        .tab-btn{flex:1;padding:12px 0 8px;border:none;background:none;font-size:10px;font-weight:700;color:#aaa;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:0.2s;}
-        .tab-btn .tab-icon{font-size:20px;}
+        .tab-btn{flex:1;padding:10px 0 6px;border:none;background:none;font-size:9px;font-weight:700;color:#aaa;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:0.2s;}
+        .tab-btn .tab-icon{font-size:18px;}
         .tab-btn.active{color:#db0011;}
         .tab-panel{display:none;}
         #tab-calc{display:block;}
@@ -100,6 +100,24 @@
         .remark-tip{font-size:11px;color:#c0550a;font-weight:600;margin-top:6px;padding:5px 8px;display:block;background:#fff8f2;border-radius:8px;border-left:3px solid #f90;}
 
         /* ── 進度面板 ── */
+        /* ── 兌換頁 ── */
+        .redeem-card{background:#fafafa;border:1px solid #eee;border-radius:18px;padding:16px;margin-bottom:14px;}
+        .redeem-card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+        .redeem-bank-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+        .redeem-card-name{font-weight:700;font-size:14px;color:#222;}
+        .redeem-card-unit{font-size:11px;color:#888;margin-top:1px;}
+        .redeem-input-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+        .redeem-input-row label{font-size:12px;color:#666;white-space:nowrap;}
+        .redeem-input{flex:1;border:1.5px solid #ddd;border-radius:10px;padding:8px 12px;font-size:15px;font-weight:700;text-align:right;outline:none;}
+        .redeem-input:focus{border-color:#db0011;}
+        .redeem-results{display:flex;gap:8px;}
+        .redeem-result-box{flex:1;background:#fff;border:1.5px solid #eee;border-radius:12px;padding:10px 12px;text-align:center;}
+        .redeem-result-box.highlight{border-color:#db0011;background:#fff8f8;}
+        .redeem-result-label{font-size:10px;color:#888;margin-bottom:4px;}
+        .redeem-result-val{font-size:18px;font-weight:800;color:#db0011;}
+        .redeem-result-sub{font-size:10px;color:#aaa;margin-top:2px;}
+        .redeem-note{font-size:10px;color:#aaa;margin-top:8px;line-height:1.5;}
+        .redeem-section-title{font-size:11px;font-weight:700;color:#aaa;letter-spacing:1px;margin:16px 0 8px;text-transform:uppercase;}
         .progress-card{background:#fafafa;border:1px solid #eee;border-radius:18px;padding:16px;margin-bottom:16px;}
         .progress-section{position:relative;}
         .drag-handle{position:absolute;left:-4px;top:50%;transform:translateY(-50%);color:#ccc;font-size:18px;cursor:grab;padding:4px 6px;line-height:1;user-select:none;z-index:10;opacity:0;transition:opacity 0.2s;}
@@ -404,6 +422,11 @@
         <div id="calendar-container" style="padding:0 4px;width:100%;box-sizing:border-box;"></div>
     </div>
 
+    <!-- ── 兌換 Tab ── -->
+    <div id="tab-redeem" class="tab-panel">
+        <div id="redeem-container"></div>
+    </div>
+
 </div>
 
 <!-- 底部 Tab 導航 -->
@@ -422,6 +445,9 @@
     </button>
     <button class="tab-btn" data-tab="calendar">
         <span class="tab-icon">📅</span>月曆
+    </button>
+    <button class="tab-btn" data-tab="redeem">
+        <span class="tab-icon">🎫</span>兌換
     </button>
 </nav>
 
