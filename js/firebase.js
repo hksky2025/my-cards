@@ -7,12 +7,12 @@ import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, deleteD
 
 // ⚠️ 填入你的 Firebase 項目設定
 const firebaseConfig = {
-  apiKey: "AIzaSyDI_l82e8kf1AmtGd03-pHy_huNl-84TA0",
-  authDomain: "card-46fe5.firebaseapp.com",
-  projectId: "card-46fe5",
-  storageBucket: "card-46fe5.firebasestorage.app",
-  messagingSenderId: "1022014496693",
-  appId: "1:1022014496693:web:265f9317cbc40dba4443fc",
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -146,5 +146,21 @@ export async function saveProgressOrder(order) {
         await setDoc(ref, { order, updatedAt: new Date().toISOString() });
     } catch (err) {
         saveToLocal('progressOrder', order);
+    }
+}
+
+export async function clearAllTransactions() {
+    if (!currentUser) {
+        saveToLocal('transactions', []);
+        return;
+    }
+    try {
+        const col = collection(db, 'users', currentUser.uid, 'transactions');
+        const snap = await getDocs(col);
+        const deletes = snap.docs.map(d => deleteDoc(d.ref));
+        await Promise.all(deletes);
+    } catch (err) {
+        console.warn('clearAllTransactions 失敗', err);
+        saveToLocal('transactions', []);
     }
 }

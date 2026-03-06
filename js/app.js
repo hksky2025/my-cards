@@ -3,7 +3,7 @@
 import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js?v=20260306';
 import { loadMerchants, findMerchant } from './matcher.js?v=20260306';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js?v=20260306';
-import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction, loadProgressOrder, saveProgressOrder } from './firebase.js?v=20260306';
+import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction, loadProgressOrder, saveProgressOrder, clearAllTransactions } from './firebase.js?v=20260306';
 import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, renderCatStats, getTransactions, getLastMonthTotal } from './transactions.js?v=20260306';
 import { renderProgress, renderAnnualProgress, renderAnnualCardProgress, renderPromoCountdownOnly } from './progress.js?v=20260306';
 import { initCalendar, renderCalendar } from './calendar.js?v=20260306';
@@ -71,6 +71,24 @@ window.addEventListener('DOMContentLoaded', async () => {
         }, 400); // 停止輸入 400ms 後自動計算
     });
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
+
+    // 清除所有記錄
+    document.getElementById('clearAllTxnBtn').addEventListener('click', async () => {
+        const txns = getTransactions();
+        if (txns.length === 0) return alert('目前冇任何記錄');
+        if (!confirm(`確定刪除全部 ${txns.length} 筆記錄？此操作不可還原！`)) return;
+        const btn = document.getElementById('clearAllTxnBtn');
+        btn.textContent = '⏳ 刪除中...';
+        btn.disabled = true;
+        await clearAllTransactions();
+        initTransactions([], () => { syncMonthTotal(); refreshProgress(); renderTransactions(allCards); renderCatStats(); });
+        renderTransactions(allCards);
+        renderCatStats();
+        refreshProgress();
+        btn.textContent = '🗑️ 清除所有記錄';
+        btn.disabled = false;
+        alert('✅ 已清除所有記錄');
+    });
 
     // 匯出 Excel
     document.getElementById('exportExcelBtn').addEventListener('click', () => {
