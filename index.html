@@ -125,12 +125,27 @@
         .redeem-total-box.highlight{border-color:#db0011;background:#fff8f8;}
         .redeem-total-label{font-size:10px;color:#888;margin-bottom:4px;}
         .redeem-total-val{font-size:20px;font-weight:800;color:#db0011;}
+        /* ── 分類統計 ── */
+        .cat-stats-card{background:#fafafa;border:1px solid #eee;border-radius:18px;padding:16px;margin-bottom:14px;}
+        .cat-stats-title{font-size:13px;font-weight:800;color:#222;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+        .cat-stats-total{font-size:12px;font-weight:700;color:#db0011;}
+        .cat-stat-row{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+        .cat-stat-left{display:flex;align-items:center;gap:5px;width:110px;flex-shrink:0;}
+        .cat-stat-icon{font-size:14px;line-height:1;}
+        .cat-stat-label{font-size:11px;color:#444;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .cat-stat-bar-wrap{flex:1;background:#f0f0f0;border-radius:6px;height:7px;overflow:hidden;}
+        .cat-stat-bar{height:100%;background:#db0011;border-radius:6px;transition:width 0.4s ease;}
+        .cat-stat-right{display:flex;flex-direction:column;align-items:flex-end;width:68px;flex-shrink:0;}
+        .cat-stat-amt{font-size:12px;font-weight:700;color:#222;}
+        .cat-stat-pct{font-size:10px;color:#aaa;}
         .progress-card{background:#fafafa;border:1px solid #eee;border-radius:18px;padding:16px;margin-bottom:16px;}
         .progress-section{position:relative;}
         .drag-handle{position:absolute;left:-4px;top:50%;transform:translateY(-50%);color:#ccc;font-size:18px;cursor:grab;padding:4px 6px;line-height:1;user-select:none;z-index:10;opacity:0;transition:opacity 0.2s;}
         .progress-section:hover .drag-handle{opacity:1;}
         .drag-handle:active{cursor:grabbing;}
         .progress-section.drag-over{border-top:2px solid #db0011;}
+        .progress-amt.near{color:#ff9800;font-weight:800;}
+        .affected-tag.near{background:#fff3e0;color:#ff9800;border:1px solid #ff9800;}
         .annual-total{font-size:14px;color:#555;margin-bottom:12px;}
         .annual-total strong{color:#1a56a0;font-size:18px;}
         .annual-chart{display:flex;gap:4px;align-items:flex-end;height:100px;margin:12px 0 4px;}
@@ -389,6 +404,7 @@
     <!-- ── 進度 Tab ── -->
     <div id="tab-progress" class="tab-panel">
         <div id="progress-sortable">
+        <div id="progress-trend"></div>
             <div class="progress-section" data-section="threshold" draggable="true">
                 <div class="drag-handle" title="拖動排序">⠿</div>
                 <div id="progress-threshold"></div>
@@ -421,6 +437,7 @@
                 <input type="file" id="importExcelInput" accept=".xlsx,.xls" style="display:none;">
             </label>
         </div>
+        <div id="txn-cat-stats"></div>
         <div id="txn-list"></div>
     </div>
 
