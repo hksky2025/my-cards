@@ -226,22 +226,71 @@ export function renderTransactions(cards) {
 
     const monthTotal = thisMonth.reduce((s, t) => s + t.amt, 0);
 
+    // 較早記錄按月分組
+    const olderGroups = {};
+    older.forEach(t => {
+        const grpYm = t.date.substring(0, 7); // 'YYYY-MM'
+        if (!olderGroups[grpYm]) olderGroups[grpYm] = [];
+        olderGroups[grpYm].push(t);
+    });
+    // 按月份倒序排列（最近先）
+    const sortedGrpKeys = Object.keys(olderGroups).sort((a, b) => b.localeCompare(a));
+
+    // 月份 label helper
+    function ymLabel(ymStr) {
+        const [y, m] = ymStr.split('-');
+        return `${y}年${parseInt(m)}月`;
+    }
+
+    const olderHTML = sortedGrpKeys.map(grpYm => {
+        const grpTxns = olderGroups[grpYm].sort((a, b) => b.date.localeCompare(a.date));
+        const grpTotal = grpTxns.reduce((s, t) => s + t.amt, 0);
+        const grpId = 'grp-' + grpYm.replace('-', '');
+        return `
+            <div class="txn-month-header txn-group-toggle" data-grp="${grpId}" style="margin-top:12px;cursor:pointer;">
+                <span>📅 ${ymLabel(grpYm)}</span>
+                <span style="display:flex;align-items:center;gap:8px;">
+                    <span class="txn-month-total">$${grpTotal.toLocaleString()}</span>
+                    <span class="txn-grp-arrow" id="arrow-${grpId}">▾</span>
+                </span>
+            </div>
+            <div class="txn-grp-body" id="${grpId}">
+                ${grpTxns.map(t => txnRow(t, cards)).join('')}
+            </div>`;
+    }).join('');
+
     el.innerHTML = `
         <div class="txn-month-header">
             <span>本月 (${ym})</span>
             <span class="txn-month-total">合計 $${monthTotal.toLocaleString()}</span>
         </div>
         ${thisMonth.length === 0 ? '<div class="txn-empty">未有本月記錄</div>' : ''}
-        ${thisMonth.map(t => txnRow(t, cards)).join('')}
-        ${older.length > 0 ? `
-            <div class="txn-month-header" style="margin-top:16px">
-                <span>較早記錄</span>
-            </div>
-            ${older.map(t => txnRow(t, cards)).join('')}
-        ` : ''}
+        ${thisMonth.sort((a,b) => b.date.localeCompare(a.date)).map(t => txnRow(t, cards)).join('')}
+        ${olderHTML}
     `;
 
-    // 綁定刪除按鈕（呼叫 app.js 的 handleDeleteTxn 確保同步刪除 Firebase）
+    // 摺疊/展開舊月份
+    el.querySelectorAll('.txn-group-toggle').forEach(header => {
+        header.addEventListener('click', () => {
+            const grpId = header.dataset.grp;
+            const body = document.getElementById(grpId);
+            const arrow = document.getElementById('arrow-' + grpId);
+            if (!body) return;
+            const isOpen = body.style.display !== 'none';
+            body.style.display = isOpen ? 'none' : 'block';
+            if (arrow) arrow.textContent = isOpen ? '▸' : '▾';
+        });
+    });
+
+    // 預設摺疊所有舊月份
+    el.querySelectorAll('.txn-grp-body').forEach(body => {
+        body.style.display = 'none';
+    });
+    el.querySelectorAll('.txn-grp-arrow').forEach(arrow => {
+        arrow.textContent = '▸';
+    });
+
+    // 綁定刪除按鈕
     el.querySelectorAll('.txn-delete-btn').forEach(btn => {
         btn.onclick = () => {
             if (window.handleDeleteTxn) {
