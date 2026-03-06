@@ -106,8 +106,8 @@ export function renderRedeem(enabledCards) {
         + '<div class="redeem-total-bar" id="redeem-total">'
         + '<div class="redeem-total-title">📊 合計</div>'
         + '<div class="redeem-total-row">'
-        + '<div class="redeem-total-box" id="total-miles"><div class="redeem-total-label">✈️ 里數合計</div><div class="redeem-total-val">0 里</div></div>'
         + '<div class="redeem-total-box highlight" id="total-cash"><div class="redeem-total-label">💰 現金回贈合計</div><div class="redeem-total-val">HK$0</div></div>'
+        + '<div class="redeem-total-box" id="total-miles"><div class="redeem-total-label">✈️ 里數合計</div><div class="redeem-total-val">0 里</div></div>'
         + '</div>'
         + '</div>';
 
