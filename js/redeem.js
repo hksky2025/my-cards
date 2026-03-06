@@ -1,104 +1,99 @@
-// redeem.js — 積分／里數兌換頁
+// redeem.js — 積分／里數／RC 兌換頁
 
+// ── 卡片資料 ──────────────────────────────────────────
 const REDEEM_CARDS = [
-    {
-        id: 'bea_world',
-        name: '東亞 World Mastercard',
-        bank: 'bea',
-        color: '#c8102e',
-        unit: '獎分',
-        pointsPerHKD: 1,        // 簽 $1 = 1分（基本）
-        cash: { points: 200, hkd: 1 },           // 200分 = $1
-        miles: { points: 10, miles: 1 },          // 10分 = 1里（亞洲萬里通）
-        milesProgram: '亞洲萬里通',
-        note: '海外/餐飲/電子/運動醫療簽賬享5倍獎分（需登記BEA Mall App + 達$4,000/月）',
-    },
-    {
-        id: 'ccb_eye',
-        name: '建銀 eye卡',
-        bank: 'ccb',
-        color: '#da291c',
-        unit: '積分',
-        pointsPerHKD: 1,        // $1 = 1分（基本）；網上/拍卡 $1 = 5分
-        cash: { points: 25000, hkd: 100 },        // 25,000分 = $100（最低兌換單位）
-        miles: { points: 15, miles: 1 },          // $3 = 1里（即15分 = 1里，網上/拍卡5倍積分）
-        milesProgram: '亞洲萬里通',
-        minRedeemPoints: 25000,
-        note: '最低兌換單位 25,000分 = $100現金回贈；兌換里數需另繳手續費',
-    },
-    {
-        id: 'cheers',
-        name: '中銀 Cheers VI',
-        bank: 'boc',
-        color: '#c8960c',
-        unit: '積分',
-        pointsPerHKD: 1,
-        cash: { points: 250, hkd: 1 },            // 250分 = $1
-        miles: { points: 15, miles: 1 },          // 15分 = 1里（亞洲萬里通）
-        milesProgram: '亞洲萬里通',
-        note: '積分換里數比率：15積分 = 1亞洲萬里通里數',
-    },
     {
         id: 'red',
         name: 'HSBC Red',
         bank: 'hsbc',
         color: '#db0011',
+        type: 'rc',
         unit: 'RC（獎賞錢）',
-        isRC: true,
-        cash: { rc: 1, hkd: 1 },             // $1 RC = HK$1
-        miles: { rc: 1, miles: 10 },         // $1 RC = 10里
+        cash: { rc: 1, hkd: 1 },
+        miles: { rc: 1, miles: 10 },
         milesProgram: '亞洲萬里通 / Avios / KrisFlyer',
-        note: '$1 RC = HK$1 現金 或 10里；網上簽賬每月首 $10,000 享 4% RC 回贈',
+        note: '$1 RC = HK$1 現金 或 10里',
     },
     {
         id: 'vs',
         name: 'HSBC VS (賞家居)',
         bank: 'hsbc',
         color: '#db0011',
+        type: 'rc',
         unit: 'RC（獎賞錢）',
-        isRC: true,
-        cash: { rc: 1, hkd: 1 },             // $1 RC = HK$1
-        miles: { rc: 1, miles: 10 },         // $1 RC = 10里
+        cash: { rc: 1, hkd: 1 },
+        miles: { rc: 1, miles: 10 },
         milesProgram: '亞洲萬里通 / Avios / KrisFlyer',
-        note: '$1 RC = HK$1 現金 或 10里；配合最紅自主獎賞可達 3.6% RC 回贈',
-    },
-    {
-        id: 'dbs_black',
-        name: 'DBS Black World',
-        bank: 'dbs',
-        color: '#e4002b',
-        unit: 'DBS$',
-        isDBS: true,
-        // 簽賬賺 DBS$：本地 $6 = 1 DBS$；海外 $4 = 1 DBS$
-        localRate: 6,    // $6 = 1 DBS$
-        overseasRate: 4, // $4 = 1 DBS$
-        // 兌換
-        cash: { dbs: 1, hkd: 1 },                // 1 DBS$ = HK$1
-        miles: { dbs: 1, miles: 1 },             // DBS$1 = 1里（多個航空公司）
-        milesProgram: '亞洲萬里通 / Avios / KrisFlyer',
-        note: 'DBS$ 永不過期；本地 $6 = 1 DBS$；1 DBS$ = HK$1 或 1里（亞洲萬里通）；兌換里數免手續費',
+        note: '$1 RC = HK$1 現金 或 10里',
     },
     {
         id: 'everymile',
         name: 'HSBC EveryMile',
         bank: 'hsbc',
         color: '#db0011',
+        type: 'rc',
         unit: 'RC（獎賞錢）',
-        isRC: true,
-        localRate: 5,        // 本地 $5 = 1里（即 $5 = $0.05 RC... 實際係 $100 = $1 RC，但 EM 特別：$5=1里即$5賺$0.25RC@1%）
-        cash: { rc: 1, hkd: 1 },             // $1 RC = HK$1
-        miles: { rc: 1, miles: 20 },         // $1 RC = 20里（EveryMile 獨有，係其他卡兩倍）
+        cash: { rc: 1, hkd: 1 },
+        miles: { rc: 1, miles: 20 },
         milesProgram: '亞洲萬里通 / Avios / KrisFlyer 等16個計劃',
-        note: '$1 RC = HK$1 現金 或 20里；EveryMile 兌換里數比率係其他 HSBC 卡兩倍',
+        note: '$1 RC = HK$1 現金 或 20里（係其他 HSBC 卡兩倍）',
+    },
+    {
+        id: 'dbs_black',
+        name: 'DBS Black World',
+        bank: 'dbs',
+        color: '#e4002b',
+        type: 'dbs',
+        unit: 'DBS$',
+        localSpendPerDBS: 125,
+        milesPerDBS: 1000 / 48,
+        milesProgram: '亞洲萬里通',
+        note: '本地簽賬：HK$250 = DBS$2；DBS$48 = 1,000里；即 HK$6 = 1里\nDBS$ 永不過期；兌換里數免手續費',
+    },
+    {
+        id: 'bea_world',
+        name: '東亞 World Mastercard',
+        bank: 'bea',
+        color: '#c8102e',
+        type: 'points',
+        unit: '獎分',
+        cash: { points: 200, hkd: 1 },
+        miles: { points: 10, miles: 1 },
+        milesProgram: '亞洲萬里通',
+        note: '200獎分 = $1 現金回贈；10獎分 = 1亞洲萬里通里數\n海外/餐飲/電子/運動醫療享5倍獎分（需登記BEA Mall App + 達$4,000/月）',
+    },
+    {
+        id: 'ccb_eye',
+        name: '建銀 eye卡',
+        bank: 'ccb',
+        color: '#da291c',
+        type: 'points',
+        unit: '積分',
+        cash: { points: 25000, hkd: 100 },
+        miles: { points: 15, miles: 1 },
+        milesProgram: '亞洲萬里通',
+        minRedeemPoints: 25000,
+        note: '最低兌換：25,000積分 = $100 現金回贈\n15積分 = 1亞洲萬里通里數（需另繳手續費）',
+    },
+    {
+        id: 'cheers',
+        name: '中銀 Cheers VI',
+        bank: 'boc',
+        color: '#c8960c',
+        type: 'points',
+        unit: '積分',
+        cash: { points: 250, hkd: 1 },
+        miles: { points: 15, miles: 1 },
+        milesProgram: '亞洲萬里通',
+        note: '250積分 = $1 現金回贈；15積分 = 1亞洲萬里通里數',
     },
 ];
 
-// 渲染兌換頁
+// ── 主 render 函數 ────────────────────────────────────
 export function renderRedeem(enabledCards) {
     const el = document.getElementById('redeem-container');
     if (!el) return;
 
-    // 只顯示用戶已啟用嘅積分/里數卡
     const enabledIds = enabledCards.map(c => c.id);
     const cards = REDEEM_CARDS.filter(c => enabledIds.includes(c.id));
 
@@ -109,236 +104,143 @@ export function renderRedeem(enabledCards) {
 
     el.innerHTML = cards.map(card => renderCard(card)).join('');
 
-    // 加 input 事件
     cards.forEach(card => {
-        const input = document.getElementById(`redeem-input-${card.id}`);
+        const input = document.getElementById('redeem-input-' + card.id);
         if (input) {
-            input.addEventListener('input', () => updateCardResult(card, input.value));
+            input.addEventListener('input', function() {
+                updateCardResult(card, parseFloat(input.value) || 0);
+            });
         }
     });
 }
 
+// ── 各卡 HTML ─────────────────────────────────────────
 function renderCard(card) {
     const bankColors = { bea: '#c8102e', ccb: '#da291c', boc: '#c8960c', dbs: '#e4002b', hsbc: '#db0011' };
     const color = bankColors[card.bank] || '#888';
+    const noteHTML = card.note.split('\n').map(function(l) { return '<div>' + l + '</div>'; }).join('');
 
-    if (card.isRC) {
-        // RC 卡（HSBC Red / Visa Signature / EveryMile）
-        const milesLabel = card.id === 'everymile' ? '✈️ 兌換里數（20倍）' : '✈️ 兌換里數（10倍）';
-        return `
-        <div class="redeem-card">
-            <div class="redeem-card-header">
-                <div class="redeem-bank-dot" style="background:${color};"></div>
-                <div>
-                    <div class="redeem-card-name">${card.name}</div>
-                    <div class="redeem-card-unit">${card.unit} · $1 RC = HK$1 或 ${card.miles.miles}里</div>
-                </div>
-            </div>
-            <div class="redeem-input-row">
-                <label>輸入 RC</label>
-                <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0" step="0.01">
-                <span style="font-size:12px;color:#666;">RC</span>
-            </div>
-            <div class="redeem-results">
-                <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
-                    <div class="redeem-result-label">💰 兌換現金</div>
-                    <div class="redeem-result-val">$0</div>
-                    <div class="redeem-result-sub">$1 RC = HK$1</div>
-                </div>
-                <div class="redeem-result-box" id="redeem-miles-${card.id}">
-                    <div class="redeem-result-label">${milesLabel}</div>
-                    <div class="redeem-result-val">0里</div>
-                    <div class="redeem-result-sub">${card.milesProgram}</div>
-                </div>
-            </div>
-            <div class="redeem-note">${card.note}</div>
-        </div>`;
+    if (card.type === 'rc') {
+        return '<div class="redeem-card">'
+            + '<div class="redeem-card-header">'
+            + '<div class="redeem-bank-dot" style="background:' + color + ';"></div>'
+            + '<div><div class="redeem-card-name">' + card.name + '</div>'
+            + '<div class="redeem-card-unit">' + card.unit + ' · $1 RC = HK$1 或 ' + card.miles.miles + '里</div></div>'
+            + '</div>'
+            + '<div class="redeem-input-row">'
+            + '<label>輸入 RC</label>'
+            + '<input class="redeem-input" id="redeem-input-' + card.id + '" type="number" placeholder="0" min="0" step="0.01">'
+            + '<span style="font-size:12px;color:#666;">RC</span>'
+            + '</div>'
+            + '<div class="redeem-results">'
+            + '<div class="redeem-result-box highlight" id="redeem-cash-' + card.id + '">'
+            + '<div class="redeem-result-label">💰 兌換現金</div>'
+            + '<div class="redeem-result-val">HK$0</div>'
+            + '<div class="redeem-result-sub">$1 RC = HK$1</div>'
+            + '</div>'
+            + '<div class="redeem-result-box" id="redeem-miles-' + card.id + '">'
+            + '<div class="redeem-result-label">✈️ 兌換里數</div>'
+            + '<div class="redeem-result-val">0 里</div>'
+            + '<div class="redeem-result-sub">' + card.milesProgram + '</div>'
+            + '</div>'
+            + '</div>'
+            + '<div class="redeem-note">' + noteHTML + '</div>'
+            + '</div>';
     }
 
-    if (card.isRC) {
-        const cashVal = val;
-        const milesVal = Math.floor(val * card.miles.miles);
-        const cashEl = document.getElementById(`redeem-cash-${card.id}`);
-        const milesEl = document.getElementById(`redeem-miles-${card.id}`);
-        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = `$${cashVal.toFixed(2).replace(/\.00$/, '')}`;
-        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = `${milesVal.toLocaleString()}里`;
-        return;
+    if (card.type === 'dbs') {
+        return '<div class="redeem-card">'
+            + '<div class="redeem-card-header">'
+            + '<div class="redeem-bank-dot" style="background:' + color + ';"></div>'
+            + '<div><div class="redeem-card-name">' + card.name + '</div>'
+            + '<div class="redeem-card-unit">' + card.unit + ' · 本地 HK$250 = DBS$2</div></div>'
+            + '</div>'
+            + '<div class="redeem-input-row">'
+            + '<label>輸入 DBS$</label>'
+            + '<input class="redeem-input" id="redeem-input-' + card.id + '" type="number" placeholder="0" min="0" step="1">'
+            + '<span style="font-size:12px;color:#666;">DBS$</span>'
+            + '</div>'
+            + '<div class="redeem-results">'
+            + '<div class="redeem-result-box" id="redeem-spend-' + card.id + '">'
+            + '<div class="redeem-result-label">💳 對應簽賬</div>'
+            + '<div class="redeem-result-val">HK$0</div>'
+            + '<div class="redeem-result-sub">HK$250 = DBS$2</div>'
+            + '</div>'
+            + '<div class="redeem-result-box highlight" id="redeem-miles-' + card.id + '">'
+            + '<div class="redeem-result-label">✈️ 兌換里數</div>'
+            + '<div class="redeem-result-val">0 里</div>'
+            + '<div class="redeem-result-sub">' + card.milesProgram + '</div>'
+            + '</div>'
+            + '</div>'
+            + '<div class="redeem-note">' + noteHTML + '</div>'
+            + '</div>';
     }
 
-    if (card.isMilesOnly) {
-        // EveryMile：純里數卡，顯示里數成本參考
-        return `
-        <div class="redeem-card">
-            <div class="redeem-card-header">
-                <div class="redeem-bank-dot" style="background:${color};"></div>
-                <div>
-                    <div class="redeem-card-name">${card.name}</div>
-                    <div class="redeem-card-unit">直接賺里數 · 本地 $${card.localRate} = 1里</div>
-                </div>
-            </div>
-            <div class="redeem-input-row">
-                <label>輸入里數</label>
-                <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0">
-                <span style="font-size:12px;color:#666;">里</span>
-            </div>
-            <div class="redeem-results">
-                <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
-                    <div class="redeem-result-label">💳 對應簽賬金額</div>
-                    <div class="redeem-result-val">$0</div>
-                    <div class="redeem-result-sub">本地 @$${card.localRate}/里</div>
-                </div>
-            </div>
-            <div class="redeem-note">${card.note}</div>
-        </div>`;
-    }
-
-    if (card.isDBS) {
-        // DBS：特殊 DBS$ 系統
-        return `
-        <div class="redeem-card">
-            <div class="redeem-card-header">
-                <div class="redeem-bank-dot" style="background:${color};"></div>
-                <div>
-                    <div class="redeem-card-name">${card.name}</div>
-                    <div class="redeem-card-unit">${card.unit}（本地 $${card.localRate}=1 DBS$；海外 $${card.overseasRate}=1 DBS$）</div>
-                </div>
-            </div>
-            <div class="redeem-input-row">
-                <label>輸入 DBS$</label>
-                <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0">
-                <span style="font-size:12px;color:#666;">DBS$</span>
-            </div>
-            <div class="redeem-results">
-                <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
-                    <div class="redeem-result-label">💰 兌換現金</div>
-                    <div class="redeem-result-val">$0</div>
-                    <div class="redeem-result-sub">1 DBS$ = HK$1</div>
-                </div>
-                <div class="redeem-result-box" id="redeem-miles-${card.id}">
-                    <div class="redeem-result-label">✈️ 兌換里數</div>
-                    <div class="redeem-result-val">0里</div>
-                    <div class="redeem-result-sub">${card.milesProgram}</div>
-                </div>
-            </div>
-            <div class="redeem-note">${card.note}</div>
-        </div>`;
-    }
-
-    // 一般積分卡（東亞、建銀、中銀）
-    return `
-    <div class="redeem-card">
-        <div class="redeem-card-header">
-            <div class="redeem-bank-dot" style="background:${color};"></div>
-            <div>
-                <div class="redeem-card-name">${card.name}</div>
-                <div class="redeem-card-unit">${card.unit}（${card.cash.points}分 = $${card.cash.hkd}）</div>
-            </div>
-        </div>
-        <div class="redeem-input-row">
-            <label>輸入${card.unit}</label>
-            <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0">
-            <span style="font-size:12px;color:#666;">${card.unit}</span>
-        </div>
-        <div class="redeem-results">
-            <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
-                <div class="redeem-result-label">💰 兌換現金</div>
-                <div class="redeem-result-val">$0</div>
-                <div class="redeem-result-sub">${card.cash.points}${card.unit} = $${card.cash.hkd}</div>
-            </div>
-            <div class="redeem-result-box" id="redeem-miles-${card.id}">
-                <div class="redeem-result-label">✈️ 兌換里數</div>
-                <div class="redeem-result-val">0里</div>
-                <div class="redeem-result-sub">${card.miles.points}${card.unit} = ${card.miles.miles}里（${card.milesProgram}）</div>
-            </div>
-        </div>
-        ${card.minRedeemPoints ? `<div class="redeem-note">⚠️ 最低兌換：${card.minRedeemPoints.toLocaleString()}${card.unit}</div>` : ''}
-        <div class="redeem-note">${card.note}</div>
-    </div>`;
+    // 一般積分卡
+    return '<div class="redeem-card">'
+        + '<div class="redeem-card-header">'
+        + '<div class="redeem-bank-dot" style="background:' + color + ';"></div>'
+        + '<div><div class="redeem-card-name">' + card.name + '</div>'
+        + '<div class="redeem-card-unit">' + card.unit + ' · ' + card.cash.points + card.unit + ' = $' + card.cash.hkd + '</div></div>'
+        + '</div>'
+        + '<div class="redeem-input-row">'
+        + '<label>輸入' + card.unit + '</label>'
+        + '<input class="redeem-input" id="redeem-input-' + card.id + '" type="number" placeholder="0" min="0">'
+        + '<span style="font-size:12px;color:#666;">' + card.unit + '</span>'
+        + '</div>'
+        + '<div class="redeem-results">'
+        + '<div class="redeem-result-box highlight" id="redeem-cash-' + card.id + '">'
+        + '<div class="redeem-result-label">💰 兌換現金</div>'
+        + '<div class="redeem-result-val">$0</div>'
+        + '<div class="redeem-result-sub">' + card.cash.points + card.unit + ' = $' + card.cash.hkd + '</div>'
+        + '</div>'
+        + '<div class="redeem-result-box" id="redeem-miles-' + card.id + '">'
+        + '<div class="redeem-result-label">✈️ 兌換里數</div>'
+        + '<div class="redeem-result-val">0 里</div>'
+        + '<div class="redeem-result-sub">' + card.miles.points + card.unit + ' = ' + card.miles.miles + '里（' + card.milesProgram + '）</div>'
+        + '</div>'
+        + '</div>'
+        + '<div class="redeem-note">' + noteHTML + '</div>'
+        + '</div>';
 }
 
-function updateCardResult(card, rawVal) {
-    const val = parseFloat(rawVal) || 0;
-
-    if (card.isRC) {
-        // RC 卡（HSBC Red / Visa Signature / EveryMile）
-        const milesLabel = card.id === 'everymile' ? '✈️ 兌換里數（20倍）' : '✈️ 兌換里數（10倍）';
-        return `
-        <div class="redeem-card">
-            <div class="redeem-card-header">
-                <div class="redeem-bank-dot" style="background:${color};"></div>
-                <div>
-                    <div class="redeem-card-name">${card.name}</div>
-                    <div class="redeem-card-unit">${card.unit} · $1 RC = HK$1 或 ${card.miles.miles}里</div>
-                </div>
-            </div>
-            <div class="redeem-input-row">
-                <label>輸入 RC</label>
-                <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0" step="0.01">
-                <span style="font-size:12px;color:#666;">RC</span>
-            </div>
-            <div class="redeem-results">
-                <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
-                    <div class="redeem-result-label">💰 兌換現金</div>
-                    <div class="redeem-result-val">$0</div>
-                    <div class="redeem-result-sub">$1 RC = HK$1</div>
-                </div>
-                <div class="redeem-result-box" id="redeem-miles-${card.id}">
-                    <div class="redeem-result-label">${milesLabel}</div>
-                    <div class="redeem-result-val">0里</div>
-                    <div class="redeem-result-sub">${card.milesProgram}</div>
-                </div>
-            </div>
-            <div class="redeem-note">${card.note}</div>
-        </div>`;
-    }
-
-    if (card.isRC) {
-        const cashVal = val;
-        const milesVal = Math.floor(val * card.miles.miles);
-        const cashEl = document.getElementById(`redeem-cash-${card.id}`);
-        const milesEl = document.getElementById(`redeem-miles-${card.id}`);
-        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = `$${cashVal.toFixed(2).replace(/\.00$/, '')}`;
-        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = `${milesVal.toLocaleString()}里`;
+// ── 計算更新 ──────────────────────────────────────────
+function updateCardResult(card, val) {
+    if (card.type === 'rc') {
+        var cashEl = document.getElementById('redeem-cash-' + card.id);
+        var milesEl = document.getElementById('redeem-miles-' + card.id);
+        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = 'HK$' + val.toLocaleString();
+        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = Math.floor(val * card.miles.miles).toLocaleString() + ' 里';
         return;
     }
 
-    if (card.isMilesOnly) {
-        // EveryMile：里數 → 對應簽賬金額
-        const spendVal = val * card.localRate;
-        const cashEl = document.getElementById(`redeem-cash-${card.id}`);
-        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = `$${spendVal.toLocaleString()}`;
-        return;
-    }
-
-    if (card.isDBS) {
-        // DBS$：→ 現金（1 DBS$=HK$1）；→ 里數（DBS$1=1里）
-        const cashVal = val;
-        const milesVal = Math.floor(val);
-        const cashEl = document.getElementById(`redeem-cash-${card.id}`);
-        const milesEl = document.getElementById(`redeem-miles-${card.id}`);
-        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = `$${cashVal.toFixed(0)}`;
-        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = `${milesVal.toLocaleString()}里`;
+    if (card.type === 'dbs') {
+        var spendEl = document.getElementById('redeem-spend-' + card.id);
+        var milesEl = document.getElementById('redeem-miles-' + card.id);
+        var spendVal = val * card.localSpendPerDBS;
+        var milesVal = Math.floor(val * card.milesPerDBS);
+        if (spendEl) spendEl.querySelector('.redeem-result-val').textContent = 'HK$' + spendVal.toLocaleString();
+        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = milesVal.toLocaleString() + ' 里';
         return;
     }
 
     // 一般積分卡
-    const cashVal = (val / card.cash.points) * card.cash.hkd;
-    const milesVal = Math.floor(val / card.miles.points) * card.miles.miles;
-
-    const cashEl = document.getElementById(`redeem-cash-${card.id}`);
-    const milesEl = document.getElementById(`redeem-miles-${card.id}`);
+    var cashEl = document.getElementById('redeem-cash-' + card.id);
+    var milesEl = document.getElementById('redeem-miles-' + card.id);
+    var isMin = card.minRedeemPoints && val > 0 && val < card.minRedeemPoints;
+    var cashVal = Math.floor(val / card.cash.points * card.cash.hkd);
+    var milesVal = Math.floor(val / card.miles.points) * card.miles.miles;
 
     if (cashEl) {
-        const display = card.minRedeemPoints
-            ? val >= card.minRedeemPoints
-                ? `$${Math.floor(val / card.cash.points * card.cash.hkd)}`
-                : `未達最低（${card.minRedeemPoints.toLocaleString()}分）`
-            : `$${cashVal.toFixed(0)}`;
-        cashEl.querySelector('.redeem-result-val').textContent = display;
-        cashEl.querySelector('.redeem-result-val').style.color = 
-            (card.minRedeemPoints && val < card.minRedeemPoints) ? '#aaa' : '#db0011';
+        var valEl = cashEl.querySelector('.redeem-result-val');
+        var subEl = cashEl.querySelector('.redeem-result-sub');
+        valEl.textContent = isMin ? '未達最低' : ('$' + cashVal.toLocaleString());
+        valEl.style.color = isMin ? '#bbb' : '#db0011';
+        if (subEl) subEl.textContent = isMin
+            ? ('最低 ' + card.minRedeemPoints.toLocaleString() + card.unit)
+            : (card.cash.points + card.unit + ' = $' + card.cash.hkd);
     }
     if (milesEl) {
-        milesEl.querySelector('.redeem-result-val').textContent = `${milesVal.toLocaleString()}里`;
+        milesEl.querySelector('.redeem-result-val').textContent = milesVal.toLocaleString() + ' 里';
     }
 }
