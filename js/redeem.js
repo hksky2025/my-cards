@@ -153,7 +153,7 @@ function renderCard(card) {
             + '<div class="redeem-card-header">'
             + '<div class="redeem-bank-dot" style="background:' + color + ';"></div>'
             + '<div><div class="redeem-card-name">' + card.name + '</div>'
-            + '<div class="redeem-card-unit">' + card.unit + ' · 本地 HK$250 = DBS$2</div></div>'
+            + '<div class="redeem-card-unit">' + card.unit + ' · DBS$1 = HK$1；DBS$48 = 1,000里</div></div>'
             + '</div>'
             + '<div class="redeem-input-row">'
             + '<label>輸入 DBS$</label>'
@@ -164,7 +164,7 @@ function renderCard(card) {
             + '<div class="redeem-result-box" id="redeem-spend-' + card.id + '">'
             + '<div class="redeem-result-label">💳 對應簽賬</div>'
             + '<div class="redeem-result-val">HK$0</div>'
-            + '<div class="redeem-result-sub">HK$250 = DBS$2</div>'
+            + '<div class="redeem-result-sub">DBS$1 = HK$1</div>'
             + '</div>'
             + '<div class="redeem-result-box highlight" id="redeem-miles-' + card.id + '">'
             + '<div class="redeem-result-label">✈️ 兌換里數</div>'
@@ -217,7 +217,7 @@ function updateCardResult(card, val) {
     if (card.type === 'dbs') {
         var spendEl = document.getElementById('redeem-spend-' + card.id);
         var milesEl = document.getElementById('redeem-miles-' + card.id);
-        var spendVal = val * card.localSpendPerDBS;
+        var spendVal = val;  // 1 DBS$ = HK$1
         var milesVal = Math.floor(val * card.milesPerDBS);
         if (spendEl) spendEl.querySelector('.redeem-result-val').textContent = 'HK$' + spendVal.toLocaleString();
         if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = milesVal.toLocaleString() + ' 里';
