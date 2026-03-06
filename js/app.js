@@ -140,7 +140,18 @@ window.addEventListener('DOMContentLoaded', async () => {
                     if (!row['日期'] || !row['金額 (HK$)']) continue;
 
                     const txn = {
-                        date: String(row['日期']).substring(0, 10),
+                    // Excel 日期可能係數字（序列號）或字串
+                    let rawDate = row['日期'];
+                    let dateStr;
+                    if (typeof rawDate === 'number') {
+                        // Excel 序列號轉日期（Excel 以 1900-01-01 為第1天）
+                        const excelEpoch = new Date(1899, 11, 30);
+                        const d = new Date(excelEpoch.getTime() + rawDate * 86400000);
+                        dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+                    } else {
+                        dateStr = String(rawDate).substring(0, 10);
+                    }
+                        date: dateStr,
                         merchant: row['商戶'] || '',
                         cat: CAT_MAP[row['類別']] || 'General',
                         amt: Number(row['金額 (HK$)']),
