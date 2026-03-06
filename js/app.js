@@ -7,6 +7,7 @@ import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransac
 import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js?v=20260306';
 import { renderProgress, renderAnnualProgress, renderAnnualCardProgress, renderPromoCountdownOnly } from './progress.js?v=20260306';
 import { initCalendar, renderCalendar } from './calendar.js?v=20260306';
+import { renderRedeem } from './redeem.js?v=20260306';
 
 const HOLIDAYS_2026 = [
     "2026-01-01","2026-02-17","2026-02-18","2026-02-19",
@@ -287,6 +288,7 @@ function switchTab(tab) {
     if (tab === 'promo') refreshPromoTab();
     if (tab === 'txn') renderTransactions(allCards);
     if (tab === 'calendar') renderCalendar(getTransactions(), allCards);
+    if (tab === 'redeem') renderRedeem(allCards.filter(c => cardStatus[c.id]));
 }
 
 // ── 事件處理 ──────────────────────────────────────────
