@@ -102,13 +102,20 @@ export function renderRedeem(enabledCards) {
         return;
     }
 
-    el.innerHTML = cards.map(card => renderCard(card)).join('');
+    el.innerHTML = cards.map(card => renderCard(card)).join('')
+        + '<div class="redeem-total-bar" id="redeem-total">'
+        + '<div class="redeem-total-title">📊 合計</div>'
+        + '<div class="redeem-total-row">'
+        + '<div class="redeem-total-box" id="total-miles"><div class="redeem-total-label">✈️ 里數合計</div><div class="redeem-total-val">0 里</div></div>'
+        + '<div class="redeem-total-box highlight" id="total-cash"><div class="redeem-total-label">💰 現金回贈合計</div><div class="redeem-total-val">HK$0</div></div>'
+        + '</div>'
+        + '</div>';
 
     cards.forEach(card => {
         const input = document.getElementById('redeem-input-' + card.id);
         if (input) {
             input.addEventListener('input', function() {
-                updateCardResult(card, parseFloat(input.value) || 0);
+                updateCardResult(card, parseFloat(input.value) || 0, cards);
             });
         }
     });
@@ -205,12 +212,13 @@ function renderCard(card) {
 }
 
 // ── 計算更新 ──────────────────────────────────────────
-function updateCardResult(card, val) {
+function updateCardResult(card, val, cards) {
     if (card.type === 'rc') {
         var cashEl = document.getElementById('redeem-cash-' + card.id);
         var milesEl = document.getElementById('redeem-miles-' + card.id);
         if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = 'HK$' + val.toLocaleString();
         if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = Math.floor(val * card.miles.miles).toLocaleString() + ' 里';
+        updateTotal(cards);
         return;
     }
 
@@ -221,6 +229,7 @@ function updateCardResult(card, val) {
         var milesVal = Math.floor(val * card.milesPerDBS);
         if (spendEl) spendEl.querySelector('.redeem-result-val').textContent = 'HK$' + spendVal.toLocaleString();
         if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = milesVal.toLocaleString() + ' 里';
+        updateTotal(cards);
         return;
     }
 
@@ -243,4 +252,36 @@ function updateCardResult(card, val) {
     if (milesEl) {
         milesEl.querySelector('.redeem-result-val').textContent = milesVal.toLocaleString() + ' 里';
     }
+    updateTotal(cards);
+}
+
+function updateTotal(cards) {
+    var totalMiles = 0;
+    var totalCash = 0;
+
+    cards.forEach(function(card) {
+        var input = document.getElementById('redeem-input-' + card.id);
+        var val = parseFloat((input && input.value) || 0) || 0;
+        if (val <= 0) return;
+
+        if (card.type === 'rc') {
+            totalCash += val;
+            totalMiles += Math.floor(val * card.miles.miles);
+        } else if (card.type === 'dbs') {
+            // DBS：里數只計，現金面值
+            totalCash += val;
+            totalMiles += Math.floor(val * card.milesPerDBS);
+        } else {
+            // 積分卡：現金
+            if (!card.minRedeemPoints || val >= card.minRedeemPoints) {
+                totalCash += Math.floor(val / card.cash.points * card.cash.hkd);
+            }
+            totalMiles += Math.floor(val / card.miles.points) * card.miles.miles;
+        }
+    });
+
+    var milesEl = document.getElementById('total-miles');
+    var cashEl = document.getElementById('total-cash');
+    if (milesEl) milesEl.querySelector('.redeem-total-val').textContent = totalMiles.toLocaleString() + ' 里';
+    if (cashEl) cashEl.querySelector('.redeem-total-val').textContent = 'HK$' + totalCash.toLocaleString();
 }
