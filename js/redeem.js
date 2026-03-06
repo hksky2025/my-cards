@@ -39,6 +39,30 @@ const REDEEM_CARDS = [
         note: '積分換里數比率：15積分 = 1亞洲萬里通里數',
     },
     {
+        id: 'red',
+        name: 'HSBC Red',
+        bank: 'hsbc',
+        color: '#db0011',
+        unit: 'RC（獎賞錢）',
+        isRC: true,
+        cash: { rc: 1, hkd: 1 },             // $1 RC = HK$1
+        miles: { rc: 1, miles: 10 },         // $1 RC = 10里
+        milesProgram: '亞洲萬里通 / Avios / KrisFlyer',
+        note: '$1 RC = HK$1 現金 或 10里；網上簽賬每月首 $10,000 享 4% RC 回贈',
+    },
+    {
+        id: 'vs',
+        name: 'HSBC VS (賞家居)',
+        bank: 'hsbc',
+        color: '#db0011',
+        unit: 'RC（獎賞錢）',
+        isRC: true,
+        cash: { rc: 1, hkd: 1 },             // $1 RC = HK$1
+        miles: { rc: 1, miles: 10 },         // $1 RC = 10里
+        milesProgram: '亞洲萬里通 / Avios / KrisFlyer',
+        note: '$1 RC = HK$1 現金 或 10里；配合最紅自主獎賞可達 3.6% RC 回贈',
+    },
+    {
         id: 'dbs_black',
         name: 'DBS Black World',
         bank: 'dbs',
@@ -49,23 +73,23 @@ const REDEEM_CARDS = [
         localRate: 6,    // $6 = 1 DBS$
         overseasRate: 4, // $4 = 1 DBS$
         // 兌換
-        cash: { dbs: 8, hkd: 10 },               // DBS$8 = $10（即1.25倍）
+        cash: { dbs: 1, hkd: 1 },                // 1 DBS$ = HK$1
         miles: { dbs: 1, miles: 1 },             // DBS$1 = 1里（多個航空公司）
         milesProgram: '亞洲萬里通 / Avios / KrisFlyer',
-        note: 'DBS$ 永不過期；兌換里數免手續費；iGO Rewards 兌換機票/酒店享55折',
+        note: 'DBS$ 永不過期；本地 $6 = 1 DBS$；1 DBS$ = HK$1 或 1里（亞洲萬里通）；兌換里數免手續費',
     },
     {
         id: 'everymile',
         name: 'HSBC EveryMile',
         bank: 'hsbc',
         color: '#db0011',
-        unit: '里數',
-        isMilesOnly: true,
-        // 本地 $5 = 1里
-        localRate: 5,
-        milesProgram: '亞洲萬里通',
-        milesValue: { miles: 1, hkd: 5 },    // 每里成本 $5
-        note: 'EveryMile 直接賺里數，唔設積分系統；本地簽賬 $5 = 1里',
+        unit: 'RC（獎賞錢）',
+        isRC: true,
+        localRate: 5,        // 本地 $5 = 1里（即 $5 = $0.05 RC... 實際係 $100 = $1 RC，但 EM 特別：$5=1里即$5賺$0.25RC@1%）
+        cash: { rc: 1, hkd: 1 },             // $1 RC = HK$1
+        miles: { rc: 1, miles: 20 },         // $1 RC = 20里（EveryMile 獨有，係其他卡兩倍）
+        milesProgram: '亞洲萬里通 / Avios / KrisFlyer 等16個計劃',
+        note: '$1 RC = HK$1 現金 或 20里；EveryMile 兌換里數比率係其他 HSBC 卡兩倍',
     },
 ];
 
@@ -97,6 +121,49 @@ export function renderRedeem(enabledCards) {
 function renderCard(card) {
     const bankColors = { bea: '#c8102e', ccb: '#da291c', boc: '#c8960c', dbs: '#e4002b', hsbc: '#db0011' };
     const color = bankColors[card.bank] || '#888';
+
+    if (card.isRC) {
+        // RC 卡（HSBC Red / Visa Signature / EveryMile）
+        const milesLabel = card.id === 'everymile' ? '✈️ 兌換里數（20倍）' : '✈️ 兌換里數（10倍）';
+        return `
+        <div class="redeem-card">
+            <div class="redeem-card-header">
+                <div class="redeem-bank-dot" style="background:${color};"></div>
+                <div>
+                    <div class="redeem-card-name">${card.name}</div>
+                    <div class="redeem-card-unit">${card.unit} · $1 RC = HK$1 或 ${card.miles.miles}里</div>
+                </div>
+            </div>
+            <div class="redeem-input-row">
+                <label>輸入 RC</label>
+                <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0" step="0.01">
+                <span style="font-size:12px;color:#666;">RC</span>
+            </div>
+            <div class="redeem-results">
+                <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
+                    <div class="redeem-result-label">💰 兌換現金</div>
+                    <div class="redeem-result-val">$0</div>
+                    <div class="redeem-result-sub">$1 RC = HK$1</div>
+                </div>
+                <div class="redeem-result-box" id="redeem-miles-${card.id}">
+                    <div class="redeem-result-label">${milesLabel}</div>
+                    <div class="redeem-result-val">0里</div>
+                    <div class="redeem-result-sub">${card.milesProgram}</div>
+                </div>
+            </div>
+            <div class="redeem-note">${card.note}</div>
+        </div>`;
+    }
+
+    if (card.isRC) {
+        const cashVal = val;
+        const milesVal = Math.floor(val * card.miles.miles);
+        const cashEl = document.getElementById(`redeem-cash-${card.id}`);
+        const milesEl = document.getElementById(`redeem-miles-${card.id}`);
+        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = `$${cashVal.toFixed(2).replace(/\.00$/, '')}`;
+        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = `${milesVal.toLocaleString()}里`;
+        return;
+    }
 
     if (card.isMilesOnly) {
         // EveryMile：純里數卡，顯示里數成本參考
@@ -145,7 +212,7 @@ function renderCard(card) {
                 <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
                     <div class="redeem-result-label">💰 兌換現金</div>
                     <div class="redeem-result-val">$0</div>
-                    <div class="redeem-result-sub">DBS$8 = HK$10</div>
+                    <div class="redeem-result-sub">1 DBS$ = HK$1</div>
                 </div>
                 <div class="redeem-result-box" id="redeem-miles-${card.id}">
                     <div class="redeem-result-label">✈️ 兌換里數</div>
@@ -192,6 +259,49 @@ function renderCard(card) {
 function updateCardResult(card, rawVal) {
     const val = parseFloat(rawVal) || 0;
 
+    if (card.isRC) {
+        // RC 卡（HSBC Red / Visa Signature / EveryMile）
+        const milesLabel = card.id === 'everymile' ? '✈️ 兌換里數（20倍）' : '✈️ 兌換里數（10倍）';
+        return `
+        <div class="redeem-card">
+            <div class="redeem-card-header">
+                <div class="redeem-bank-dot" style="background:${color};"></div>
+                <div>
+                    <div class="redeem-card-name">${card.name}</div>
+                    <div class="redeem-card-unit">${card.unit} · $1 RC = HK$1 或 ${card.miles.miles}里</div>
+                </div>
+            </div>
+            <div class="redeem-input-row">
+                <label>輸入 RC</label>
+                <input class="redeem-input" id="redeem-input-${card.id}" type="number" placeholder="0" min="0" step="0.01">
+                <span style="font-size:12px;color:#666;">RC</span>
+            </div>
+            <div class="redeem-results">
+                <div class="redeem-result-box highlight" id="redeem-cash-${card.id}">
+                    <div class="redeem-result-label">💰 兌換現金</div>
+                    <div class="redeem-result-val">$0</div>
+                    <div class="redeem-result-sub">$1 RC = HK$1</div>
+                </div>
+                <div class="redeem-result-box" id="redeem-miles-${card.id}">
+                    <div class="redeem-result-label">${milesLabel}</div>
+                    <div class="redeem-result-val">0里</div>
+                    <div class="redeem-result-sub">${card.milesProgram}</div>
+                </div>
+            </div>
+            <div class="redeem-note">${card.note}</div>
+        </div>`;
+    }
+
+    if (card.isRC) {
+        const cashVal = val;
+        const milesVal = Math.floor(val * card.miles.miles);
+        const cashEl = document.getElementById(`redeem-cash-${card.id}`);
+        const milesEl = document.getElementById(`redeem-miles-${card.id}`);
+        if (cashEl) cashEl.querySelector('.redeem-result-val').textContent = `$${cashVal.toFixed(2).replace(/\.00$/, '')}`;
+        if (milesEl) milesEl.querySelector('.redeem-result-val').textContent = `${milesVal.toLocaleString()}里`;
+        return;
+    }
+
     if (card.isMilesOnly) {
         // EveryMile：里數 → 對應簽賬金額
         const spendVal = val * card.localRate;
@@ -201,8 +311,8 @@ function updateCardResult(card, rawVal) {
     }
 
     if (card.isDBS) {
-        // DBS$：→ 現金（DBS$8=$10）；→ 里數（DBS$1=1里）
-        const cashVal = (val / 8) * 10;
+        // DBS$：→ 現金（1 DBS$=HK$1）；→ 里數（DBS$1=1里）
+        const cashVal = val;
         const milesVal = Math.floor(val);
         const cashEl = document.getElementById(`redeem-cash-${card.id}`);
         const milesEl = document.getElementById(`redeem-miles-${card.id}`);
