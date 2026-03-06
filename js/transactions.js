@@ -128,6 +128,93 @@ export function getYearMonthlyBreakdown() {
  * 渲染交易記錄列表
  * @param {Array} cards - cards.json 資料
  */
+
+// ── 分類統計 ──────────────────────────────────────────
+const CAT_META = {
+    'Dining':      { label: '餐飲食肆',       icon: '🍽️' },
+    'Super':       { label: '超級市場',       icon: '🛒' },
+    'Online':      { label: '一般網購',       icon: '🛍️' },
+    'Electronics': { label: '電子產品/電訊',  icon: '🔌' },
+    'Transport':   { label: '交通/叫車/油站', icon: '🚌' },
+    'Home':        { label: '家居用品',       icon: '🏠' },
+    'Pet':         { label: '寵物護理',       icon: '🐾' },
+    'Leisure':     { label: '休閒娛樂',       icon: '🎡' },
+    'Medical':     { label: '醫療服務',       icon: '🏥' },
+    'Sport':       { label: '運動服飾',       icon: '👟' },
+    'Fitness':     { label: '健身中心',       icon: '🏋️' },
+    'Travel':      { label: '旅遊機票/酒店',  icon: '✈️' },
+    'Jewelry':     { label: '珠寶服飾',       icon: '💍' },
+    'Coffee':      { label: '咖啡輕食',       icon: '☕' },
+    'Overseas':    { label: '海外外幣',       icon: '🌍' },
+    'Insurance':   { label: '保險保費',       icon: '🛡️' },
+    'SOGO':        { label: '崇光百貨/SOGO', icon: '🏬' },
+    'General':     { label: '一般本地消費',   icon: '🏷️' },
+};
+
+
+export function getLastMonthTotal() {
+    const now = new Date();
+    const last = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const ym = `${last.getFullYear()}-${String(last.getMonth() + 1).padStart(2, '0')}`;
+    return transactions
+        .filter(t => t.date.startsWith(ym))
+        .reduce((sum, t) => sum + t.amt, 0);
+}
+
+export function renderCatStats() {
+    const el = document.getElementById('txn-cat-stats');
+    if (!el) return;
+
+    const now = new Date();
+    const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const thisMonth = transactions.filter(t => t.date.startsWith(ym));
+
+    if (thisMonth.length === 0) {
+        el.innerHTML = '';
+        return;
+    }
+
+    // 統計每個類別
+    const totals = {};
+    thisMonth.forEach(t => {
+        const cat = t.cat || 'General';
+        totals[cat] = (totals[cat] || 0) + t.amt;
+    });
+
+    // 按金額排序
+    const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+    const grandTotal = thisMonth.reduce((s, t) => s + t.amt, 0);
+    const maxAmt = sorted[0][1];
+
+    const rows = sorted.map(([cat, amt]) => {
+        const meta = CAT_META[cat] || { label: cat, icon: '🏷️' };
+        const pct = Math.round((amt / grandTotal) * 100);
+        const barPct = Math.round((amt / maxAmt) * 100);
+        return `
+        <div class="cat-stat-row">
+            <div class="cat-stat-left">
+                <span class="cat-stat-icon">${meta.icon}</span>
+                <span class="cat-stat-label">${meta.label}</span>
+            </div>
+            <div class="cat-stat-bar-wrap">
+                <div class="cat-stat-bar" style="width:${barPct}%"></div>
+            </div>
+            <div class="cat-stat-right">
+                <span class="cat-stat-amt">$${amt.toLocaleString()}</span>
+                <span class="cat-stat-pct">${pct}%</span>
+            </div>
+        </div>`;
+    }).join('');
+
+    el.innerHTML = `
+        <div class="cat-stats-card">
+            <div class="cat-stats-title">📂 本月分類統計
+                <span class="cat-stats-total">合計 $${grandTotal.toLocaleString()}</span>
+            </div>
+            ${rows}
+        </div>`;
+}
+
 export function renderTransactions(cards) {
     const el = document.getElementById('txn-list');
     if (!el) return;

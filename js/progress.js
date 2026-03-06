@@ -7,8 +7,9 @@
  * @param {number} monthTotal - 當月累積簽賬
  * @param {Function} getCardTotal - (cardId) => number
  */
-export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly, getCCBInsuranceYear) {
+export function renderProgress(cards, promos, monthTotal, getCardTotal, getYearTotal, getCardYearTotal, getYearMonthly, getCCBInsuranceYear, getLastMonthTotal) {
     renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranceYear);
+    renderMonthTrend(monthTotal, getLastMonthTotal);
     renderCCBProgress(cards, getCCBInsuranceYear);
     renderPromoCountdown(promos, cards, getCardTotal);
     renderCapProgress(cards, getCardTotal);
@@ -40,27 +41,29 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
     function barHTML(label, bankClass, total, affectedCards) {
         const pct = Math.min((total / THRESHOLD) * 100, 100);
         const reached = total >= THRESHOLD;
+        const nearThreshold = !reached && pct >= 80; // 80% 以上顯示橙色
         const remaining = Math.max(THRESHOLD - total, 0);
-        const barColor = reached ? '#4caf50' : (bankClass === 'boc' ? '#c8960c' : '#008154');
+        const barColor = reached ? '#4caf50' : nearThreshold ? '#ff9800' : (bankClass === 'boc' ? '#c8960c' : '#008154');
+        const subText = reached
+            ? '✅ 已達門檻！優惠已激活'
+            : nearThreshold
+                ? `🟠 快到喇！再簽 <strong>$${remaining.toLocaleString()}</strong> 即達門檻`
+                : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`;
         return `
             <div class="threshold-block">
                 <div class="progress-title" style="margin-top:8px;">
                     <span>${label}</span>
-                    <span class="progress-amt ${reached ? 'reached' : ''}">
+                    <span class="progress-amt ${reached ? 'reached' : nearThreshold ? 'near' : ''}">
                         $${total.toLocaleString()} / $${THRESHOLD.toLocaleString()}
                     </span>
                 </div>
                 <div class="progress-bar-wrap">
                     <div class="progress-bar" style="width:${pct}%; background:${barColor}"></div>
                 </div>
-                <div class="progress-sub">
-                    ${reached
-                        ? '✅ 已達門檻！優惠已激活'
-                        : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`}
-                </div>
+                <div class="progress-sub">${subText}</div>
                 <div class="progress-affected">
                     ${affectedCards.map(c => `
-                        <span class="affected-tag ${c.bank}-tag ${reached ? 'active' : ''}">
+                        <span class="affected-tag ${c.bank}-tag ${reached ? 'active' : nearThreshold ? 'near' : ''}">
                             ${c.name}
                         </span>
                     `).join('')}
@@ -88,22 +91,27 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
             const spent = getCardTotal ? getCardTotal(c.id) : 0;
             const pct = Math.min((spent / thresh) * 100, 100);
             const reached = spent >= thresh;
+            const nearThreshold = !reached && pct >= 80;
             const remaining = Math.max(thresh - spent, 0);
             const bankColor = { boc: '#c8960c', bea: '#c8102e' }[c.bank] || '#888';
+            const indivBarColor = reached ? '#4caf50' : nearThreshold ? '#ff9800' : bankColor;
+            const indivSubText = reached
+                ? '✅ 已達門檻！優惠已激活'
+                : nearThreshold
+                    ? `🟠 快到喇！再簽 <strong>$${remaining.toLocaleString()}</strong> 即達門檻`
+                    : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`;
             html += `
             <div class="threshold-block">
                 <div class="progress-title" style="margin-top:8px;">
                     <span>${c.name}</span>
-                    <span class="progress-amt ${reached ? 'reached' : ''}">
+                    <span class="progress-amt ${reached ? 'reached' : nearThreshold ? 'near' : ''}">
                         $${spent.toLocaleString()} / $${thresh.toLocaleString()}
                     </span>
                 </div>
                 <div class="progress-bar-wrap">
-                    <div class="progress-bar" style="width:${pct}%; background:${reached ? '#4caf50' : bankColor}"></div>
+                    <div class="progress-bar" style="width:${pct}%; background:${indivBarColor}"></div>
                 </div>
-                <div class="progress-sub">
-                    ${reached ? '✅ 已達門檻！優惠已激活' : `⏳ 再簽 <strong>$${remaining.toLocaleString()}</strong> 可達門檻`}
-                </div>
+                <div class="progress-sub">${indivSubText}</div>
             </div>`;
         });
     }
@@ -113,6 +121,52 @@ function renderThresholdProgress(cards, monthTotal, getCardTotal, getCCBInsuranc
 }
 
 // ── 推廣倒數 ─────────────────────────────────────────
+// ── 月度簽賬趨勢 ─────────────────────────────────────
+function renderMonthTrend(thisMonthTotal, getLastMonthTotal) {
+    const el = document.getElementById('progress-trend');
+    if (!el) return;
+
+    const lastMonthTotal = getLastMonthTotal ? getLastMonthTotal() : 0;
+    const diff = thisMonthTotal - lastMonthTotal;
+    const now = new Date();
+    const thisMonthName = `${now.getMonth() + 1}月`;
+    const lastMonthName = now.getMonth() === 0 ? '12月' : `${now.getMonth()}月`;
+
+    const diffText = diff === 0
+        ? '與上月相同'
+        : diff > 0
+            ? `比${lastMonthName}多簽 <strong style="color:#db0011;">$${diff.toLocaleString()}</strong> 🔺`
+            : `比${lastMonthName}少簽 <strong style="color:#4caf50;">$${Math.abs(diff).toLocaleString()}</strong> 🔻`;
+
+    // 進度條：以兩個月最大值為基準
+    const maxVal = Math.max(thisMonthTotal, lastMonthTotal, 1);
+    const thisPct = Math.round((thisMonthTotal / maxVal) * 100);
+    const lastPct = Math.round((lastMonthTotal / maxVal) * 100);
+
+    el.innerHTML = `
+        <div class="progress-card">
+            <div class="progress-title"><span>📈 月度簽賬趨勢</span></div>
+            <div style="margin-top:10px;">
+                <div class="progress-title" style="margin-bottom:4px;">
+                    <span style="font-size:12px;color:#666;">${thisMonthName}（本月）</span>
+                    <span class="progress-amt">$${thisMonthTotal.toLocaleString()}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar" style="width:${thisPct}%;background:#db0011;"></div>
+                </div>
+                <div class="progress-title" style="margin-top:8px;margin-bottom:4px;">
+                    <span style="font-size:12px;color:#666;">${lastMonthName}（上月）</span>
+                    <span class="progress-amt" style="color:#aaa;">$${lastMonthTotal.toLocaleString()}</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="progress-bar" style="width:${lastPct}%;background:#ddd;"></div>
+                </div>
+            </div>
+            <div class="progress-sub" style="margin-top:10px;">${diffText}</div>
+        </div>
+    `;
+}
+
 // ── 建銀年度保費上限進度 ────────────────────────────
 function renderCCBProgress(cards, getCCBInsuranceYear) {
     const el = document.getElementById('progress-ccb');

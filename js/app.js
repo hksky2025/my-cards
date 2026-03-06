@@ -4,7 +4,7 @@ import { calcBaseReward, calcCrazyBonus, calcPromoBonus } from './calculator.js?
 import { loadMerchants, findMerchant } from './matcher.js?v=20260306';
 import { renderResults, renderCardManager, renderMatchHint, renderDateStatus } from './renderer.js?v=20260306';
 import { initAuth, loadCardStatus, saveCardStatus, loadTransactions, saveTransaction, removeTransaction, loadProgressOrder, saveProgressOrder } from './firebase.js?v=20260306';
-import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, getTransactions } from './transactions.js?v=20260306';
+import { initTransactions, addTransaction, deleteTransaction, getCurrentMonthTotal, getCardMonthTotal, getCardMonthCatTotal, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, renderTransactions, renderCatStats, getTransactions, getLastMonthTotal } from './transactions.js?v=20260306';
 import { renderProgress, renderAnnualProgress, renderAnnualCardProgress, renderPromoCountdownOnly } from './progress.js?v=20260306';
 import { initCalendar, renderCalendar } from './calendar.js?v=20260306';
 import { renderRedeem } from './redeem.js?v=20260306';
@@ -152,6 +152,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 }
                 alert(`✅ 成功匯入 ${imported} 筆記錄`);
                 renderTransactions(allCards);
+                renderCatStats();
             } catch (err) {
                 alert('❌ 匯入失敗，請確認檔案格式正確');
                 console.error(err);
@@ -240,12 +241,14 @@ window.addEventListener('DOMContentLoaded', async () => {
             syncMonthTotal();
             refreshProgress();
             renderTransactions(allCards);
+            renderCatStats();
         });
 
         initCalendar();
         syncMonthTotal();
         refreshProgress();
         renderTransactions(allCards);
+        renderCatStats();
     });
 });
 
@@ -286,7 +289,7 @@ function switchTab(tab) {
     document.querySelectorAll('.tab-panel').forEach(p => p.style.display = p.id === `tab-${tab}` ? 'block' : 'none');
     if (tab === 'progress') refreshProgress();
     if (tab === 'promo') refreshPromoTab();
-    if (tab === 'txn') renderTransactions(allCards);
+    if (tab === 'txn') { renderTransactions(allCards); renderCatStats(); }
     if (tab === 'calendar') renderCalendar(getTransactions(), allCards);
     if (tab === 'redeem') renderRedeem(allCards.filter(c => cardStatus[c.id]));
 }
@@ -405,6 +408,7 @@ window.handleDeleteTxn = async (id) => {
     await removeTransaction(id);
     deleteTransaction(id);
     renderTransactions(allCards);
+    renderCatStats();
     syncMonthTotal();
     refreshProgress();
 };
@@ -571,7 +575,7 @@ async function handleAnalyze() {
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     syncBeaToggle(enabledCards);
-    renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal);
+    renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, getLastMonthTotal);
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
     applyProgressOrder();
