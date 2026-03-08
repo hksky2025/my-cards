@@ -287,7 +287,7 @@ function renderPromoCountdown(promos, cards, getCardTotal) {
     const regularHTML = regularPromos.length > 0 ? `
         <div class="progress-card">
             <div class="progress-title">📅 推廣優惠倒數</div>
-            ${regularPromos.map(p => {
+            ${[...regularPromos].sort((a, b) => new Date(a.endDate) - new Date(b.endDate)).map(p => {
                 const end = new Date(p.endDate);
                 const daysLeft = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
                 const colorClass = daysLeft <= 7 ? 'days-urgent' : daysLeft <= 14 ? 'days-warning' : 'days-ok';
