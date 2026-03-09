@@ -144,6 +144,31 @@
         .progress-section:hover .drag-handle{opacity:1;}
         .drag-handle:active{cursor:grabbing;}
         .progress-section.drag-over{border-top:2px solid #db0011;}
+
+        /* 推廣到期提醒條 */
+        .promo-alert-item{display:flex;align-items:center;gap:8px;background:#fff3e0;border:1px solid #ffb74d;border-radius:12px;padding:9px 13px;margin-bottom:6px;}
+        .promo-alert-item.urgent{background:#fff0f0;border-color:#db0011;}
+        .promo-alert-name{flex:1;font-size:12px;font-weight:700;color:#333;}
+        .promo-alert-days{font-size:12px;font-weight:800;color:#ff9800;white-space:nowrap;}
+        .promo-alert-days.urgent{color:#db0011;}
+
+        /* 點解說明 modal */
+        .explain-btn{background:none;border:none;font-size:14px;cursor:pointer;padding:2px 4px;opacity:0.6;vertical-align:middle;}
+        .explain-btn:hover{opacity:1;}
+        #explainModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:flex-end;justify-content:center;}
+        #explainModal.open{display:flex;}
+        #explainModalBox{background:#fff;border-radius:20px 20px 0 0;padding:24px 20px 32px;width:100%;max-width:500px;max-height:70vh;overflow-y:auto;}
+        #explainModalTitle{font-size:16px;font-weight:800;color:#222;margin-bottom:16px;}
+        .explain-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0f0f0;}
+        .explain-row:last-child{border-bottom:none;}
+        .explain-label{font-size:13px;color:#555;flex:1;}
+        .explain-val{font-size:13px;font-weight:700;color:#db0011;text-align:right;}
+        .explain-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;margin-top:-4px;}
+
+        /* 月曆週合計 */
+        .cal-week-total{display:flex;justify-content:flex-end;padding:2px 6px;font-size:10px;color:#aaa;font-weight:600;}
+        .cal-day.highest{background:#fff0f0;}
+        .cal-day.highest .cal-day-amt{color:#db0011;font-weight:800;}
         .progress-amt.near{color:#ff9800;font-weight:800;}
         .affected-tag.near{background:#fff3e0;color:#ff9800;border:1px solid #ff9800;}
         .annual-total{font-size:14px;color:#555;margin-bottom:12px;}
@@ -294,6 +319,7 @@
 
     <!-- ── 計算 Tab ── -->
     <div id="tab-calc" class="tab-panel">
+        <div id="promoAlertBanner" style="display:none;"></div>
         <button id="managerToggleBtn" class="manager-toggle-btn">⚙️ 編輯我的卡片清單</button>
         <div id="cardManagerPanel" class="card-manager-content">
             <div id="bankGroupsContainer"></div>
@@ -497,5 +523,14 @@
 </nav>
 
 <script type="module" src="./js/app.js?v=20260306"></script>
+    <!-- 點解說明 Modal -->
+    <div id="explainModal">
+        <div id="explainModalBox">
+            <button class="explain-close" id="explainModalClose">✕</button>
+            <div id="explainModalTitle">回贈計算說明</div>
+            <div id="explainModalContent"></div>
+        </div>
+    </div>
+
 </body>
 </html>
