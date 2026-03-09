@@ -55,45 +55,6 @@ export function calcBaseReward(card, params) {
             return { val: miles * 0.1, miles, rate: `$${ratePerMile}/里` };
         }
 
-        case 'sc_cathay': {
-            // 國泰/HKExpress：$2/里（常規，唔受門檻影響）
-            if (sub && sub.includes('CX')) {
-                const miles = Math.floor(amt / logic.cxRatePerMile);
-                return { val: miles * 0.1, miles, rate: `$${logic.cxRatePerMile}/里（國泰/HKExpress）` };
-            }
-
-            const scbMet = params.scbTier || 0; // 0=未達, 1=達$4000, 2=達$15000
-
-            // 指定商戶5%現金回贈（需達$4,000門檻）
-            if (sub && sub.includes('SCB_5PCT')) {
-                if (scbMet >= 1) {
-                    return { val: amt * logic.designatedRate, rate: `5%（指定商戶，${scbMet >= 2 ? '已達$15,000' : '已達$4,000'}）` };
-                } else {
-                    // 未達門檻：餐飲/旅遊/海外$4/里，其他$6/里
-                    const isDiningEtc = ['Dining','Travel','Overseas'].includes(cat);
-                    const rpm = isDiningEtc ? logic.diningTravelOverseasRatePerMile : logic.tier0RatePerMile;
-                    const miles = Math.floor(amt / rpm);
-                    return { val: miles * 0.1, miles, rate: `$${rpm}/里（未達$4,000門檻）` };
-                }
-            }
-
-            // 餐飲/旅遊/海外：$4/里（常規，唔受門檻影響）
-            if (['Dining','Travel','Overseas'].includes(cat)) {
-                const miles = Math.floor(amt / logic.diningTravelOverseasRatePerMile);
-                return { val: miles * 0.1, miles, rate: `$${logic.diningTravelOverseasRatePerMile}/里（餐飲/旅遊/海外）` };
-            }
-
-            // 其他簽賬：視乎門檻
-            if (scbMet >= 2) {
-                return { val: amt * logic.tier2BaseRate, rate: `1.2%（已達$15,000）` };
-            } else if (scbMet >= 1) {
-                return { val: amt * logic.tier1BaseRate, rate: `0.56%（已達$4,000）` };
-            } else {
-                const miles = Math.floor(amt / logic.tier0RatePerMile);
-                return { val: miles * 0.1, miles, rate: `$${logic.tier0RatePerMile}/里（未達$4,000）` };
-            }
-        }
-
         case 'cheers': {
             const isBonus = logic.requiresMet ? isMet && logic.bonusCats.includes(cat) : logic.bonusCats.includes(cat);
             if (isBonus) {
