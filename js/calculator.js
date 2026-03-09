@@ -140,6 +140,33 @@ export function calcBaseReward(card, params) {
             return null; // 非優惠類別，唔顯示
         }
 
+        case 'enjoy': {
+            // yuu積分回贈：200積分=$1
+            // 特約餐飲（ENJOY_DINING）：$1=4分=2%
+            // 特約購物（ENJOY_SHOP）：$1=3分=1.5%
+            // Shell（ENJOY_SHELL）：$1=2分=1%
+            // 美心其他/GNC（ENJOY_OTHER）：$1=2分=1%
+            // 其他：$1=1分=0.5%
+            let enjoyRate = logic.baseRate; // 0.5%
+            let rateLabel = '0.5% (yuu積分)';
+
+            if (sub && sub.includes('ENJOY_DINING')) {
+                enjoyRate = logic.diningRate; // 2%
+                rateLabel = '2% (yuu特約餐飲)';
+            } else if (sub && sub.includes('ENJOY_SHOP')) {
+                enjoyRate = logic.shoppingRate; // 1.5%
+                rateLabel = '1.5% (yuu特約購物)';
+            } else if (sub && sub.includes('ENJOY_SHELL')) {
+                enjoyRate = logic.shellRate; // 1%
+                rateLabel = '1% (yuu Shell)';
+            } else if (sub && sub.includes('ENJOY_OTHER')) {
+                enjoyRate = logic.maxOtherRate; // 1%
+                rateLabel = '1% (yuu美心其他/GNC)';
+            }
+
+            return { val: amt * enjoyRate, rate: rateLabel };
+        }
+
         case 'vs': {
             const isBonus = (sub && logic.bonusSubs.some(s => sub.includes(s))) || logic.bonusCats.includes(cat);
             return { val: amt * (isBonus ? logic.bonusRate : logic.baseRate), rate: `${(isBonus ? logic.bonusRate : logic.baseRate) * 100}%` };
