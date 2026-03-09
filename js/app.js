@@ -214,6 +214,21 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // 渣打國泰卡 tier 按鈕
+    let scbTier = 0;
+    document.querySelectorAll('.scb-tier-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            scbTier = parseInt(btn.dataset.tier);
+            document.querySelectorAll('.scb-tier-btn').forEach(b => {
+                const active = b.dataset.tier === btn.dataset.tier;
+                b.style.background = active ? '#006b4d' : '#fff';
+                b.style.color = active ? '#fff' : '#006b4d';
+            });
+            handleAnalyze();
+        });
+    });
+    window.getScbTier = () => scbTier;
+
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('meth-card').addEventListener('click', () => updateMethod('Physical'));
@@ -461,6 +476,7 @@ async function handleAnalyze() {
     // enjoy toggle 顯示狀態同步
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     syncEnjoyToggle(enabledCards);
+    syncScbToggle(enabledCards);
 
     // 狂賞派 $5,000 門檻：只計中銀 Visa 卡（cheers + sogo）當月簽賬
     const bocVisaTotal = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
@@ -527,8 +543,9 @@ async function handleAnalyze() {
     const beaTiUsed = Math.min(beaTiSpent * 0.04, 300); // 已用嘅 $300 上限估算
 
     const enjoyPromoMet = document.getElementById('enjoyPromoMet')?.checked ?? false;
+    const scbTier = window.getScbTier ? window.getScbTier() : 0;
 
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed, enjoyPromoMet };
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed, enjoyPromoMet, scbTier };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {
@@ -628,6 +645,7 @@ function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     syncBeaToggle(enabledCards);
     syncEnjoyToggle(enabledCards);
+    syncScbToggle(enabledCards);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, getLastMonthTotal);
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
@@ -732,6 +750,13 @@ function syncEnjoyToggle(enabledCards) {
         const cb = document.getElementById('enjoyPromoMet');
         if (cb) cb.checked = false;
     }
+}
+
+function syncScbToggle(enabledCards) {
+    const row = document.getElementById('scbToggleRow');
+    if (!row) return;
+    const hasScb = enabledCards.some(c => c.id === 'sc_cathay');
+    row.style.display = hasScb ? 'block' : 'none';
 }
 
 function syncMonthTotal() {
