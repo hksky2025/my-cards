@@ -72,6 +72,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
     document.getElementById('managerToggleBtn').addEventListener('click', toggleManager);
 
+    // explain modal 關閉
+    document.getElementById('explainModalClose')?.addEventListener('click', () => {
+        document.getElementById('explainModal')?.classList.remove('open');
+    });
+    document.getElementById('explainModal')?.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('explainModal'))
+            document.getElementById('explainModal').classList.remove('open');
+    });
+
     // 清除所有記錄
     document.getElementById('clearAllTxnBtn').addEventListener('click', async () => {
         const txns = getTransactions();
@@ -333,6 +342,7 @@ function switchTab(tab) {
     if (tab === 'progress') refreshProgress();
     if (tab === 'promo') refreshPromoTab();
     if (tab === 'txn') { renderTransactions(allCards); renderCatStats(); }
+    if (tab === 'calc') renderPromoAlertBanner();
     if (tab === 'calendar') renderCalendar(getTransactions(), allCards);
     if (tab === 'redeem') renderRedeem(allCards.filter(c => cardStatus[c.id]));
 }
@@ -734,6 +744,38 @@ function syncEnjoyToggle(enabledCards) {
     }
 }
 
+
+function renderPromoAlertBanner() {
+    const el = document.getElementById('promoAlertBanner');
+    if (!el) return;
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const soon = new Date(today);
+    soon.setDate(soon.getDate() + 14); // 14日內到期先顯示
+
+    const enabledCards = allCards.filter(c => cardStatus[c.id]);
+    const enabledIds = new Set(enabledCards.map(c => c.id));
+
+    const alerts = allPromos
+        .filter(p => {
+            const end = new Date(p.endDate);
+            return end >= today && end <= soon && (p.cardId === 'ALL_BEA' || enabledIds.has(p.cardId));
+        })
+        .sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
+
+    if (alerts.length === 0) { el.style.display = 'none'; return; }
+
+    el.style.display = 'block';
+    el.innerHTML = alerts.map(p => {
+        const daysLeft = Math.ceil((new Date(p.endDate) - today) / 86400000);
+        const urgent = daysLeft <= 7;
+        return `<div class="promo-alert-item ${urgent ? 'urgent' : ''}">
+            <span class="promo-alert-name">⏰ ${p.name}</span>
+            <span class="promo-alert-days ${urgent ? 'urgent' : ''}">剩 ${daysLeft} 日</span>
+        </div>`;
+    }).join('');
+}
 
 function syncMonthTotal() {
     const el = document.getElementById('currentSpent');

@@ -40,20 +40,36 @@ export function renderCalendar(transactions, cards) {
     const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
     // 月曆格
+    // 找出最高消費日
+    const maxDayAmt = Math.max(0, ...Object.values(dayTotals));
+
     let cells = '';
+    let weekAmt = 0;
+    let colCount = firstDay;
+
     for (let i = 0; i < firstDay; i++) {
         cells += `<div class="cal-day empty"></div>`;
     }
     for (let d = 1; d <= daysInMonth; d++) {
         const dateStr = `${ym}-${String(d).padStart(2,'0')}`;
-        const total = dayTotals[dateStr];
+        const total = dayTotals[dateStr] || 0;
         const isToday = dateStr === todayStr;
+        const isHighest = maxDayAmt > 0 && total === maxDayAmt;
         const amt = total ? (total >= 10000 ? `${(total/1000).toFixed(1)}k` : total.toLocaleString()) : '';
+        weekAmt += total;
+        colCount++;
         cells += `
-            <div class="cal-day ${total ? 'has-txn' : ''} ${isToday ? 'today' : ''}" data-date="${dateStr}">
+            <div class="cal-day ${total ? 'has-txn' : ''} ${isToday ? 'today' : ''} ${isHighest ? 'highest' : ''}" data-date="${dateStr}">
                 <span class="cal-day-num">${d}</span>
                 ${amt ? `<span class="cal-day-amt">$${amt}</span>` : ''}
             </div>`;
+        // 每週六（colCount % 7 === 0）或月底加週合計
+        if (colCount % 7 === 0 || d === daysInMonth) {
+            if (weekAmt > 0) {
+                cells += `<div class="cal-week-total" style="grid-column:1/-1;">週合計 $${weekAmt.toLocaleString()}</div>`;
+            }
+            weekAmt = 0;
+        }
     }
 
     el.innerHTML = `

@@ -136,9 +136,17 @@ function createCardEl(c, isMile) {
                 <button class="record-btn" data-cardid="${c.card.id}">記帳</button>
             </div>
         </div>
-        <div class="card-desc"><span class="card-desc-label">回饋</span>${c.baseRes.rate}</div>
+        <div class="card-desc" style="display:flex;align-items:center;gap:4px;">
+            <span class="card-desc-label">回饋</span>${c.baseRes.rate}
+            <button class="explain-btn" title="點解咁計？">ℹ️</button>
+        </div>
         ${c.card.notes ? `<div class="remark-tip">💡 ${c.card.notes}</div>` : ''}
     `;
+
+    // explain 按鈕
+    div.querySelector('.explain-btn').addEventListener('click', () => {
+        showExplain(c, isMile);
+    });
 
     // 點擊記帳按鈕
     div.querySelector('.record-btn').addEventListener('click', () => {
@@ -150,3 +158,34 @@ function createCardEl(c, isMile) {
 
     return div;
 }
+
+function showExplain(c, isMile) {
+    const modal = document.getElementById('explainModal');
+    const title = document.getElementById('explainModalTitle');
+    const box = document.getElementById('explainModalContent');
+    if (!modal || !box) return;
+
+    const base = c.baseRes.val.toFixed(1);
+    const extra = c.extraCash.toFixed(1);
+    const crazy = c.crazyBonus.toFixed(1);
+    const total = (c.baseRes.val + c.extraCash + c.crazyBonus).toFixed(1);
+
+    title.textContent = `${c.card.name} 回贈計算`;
+
+    let rows = '';
+    rows += `<div class="explain-row"><span class="explain-label">基本回贈（${c.baseRes.rate}）</span><span class="explain-val">${isMile ? c.baseRes.miles + ' 里' : '$' + base}</span></div>`;
+    if (c.extraCash > 0) rows += `<div class="explain-row"><span class="explain-label">額外回贈</span><span class="explain-val">+$${extra}</span></div>`;
+    if (c.crazyBonus > 0) rows += `<div class="explain-row"><span class="explain-label">狂賞派/推廣加成</span><span class="explain-val">+$${crazy}</span></div>`;
+    if (c.activePromos?.length) {
+        c.activePromos.forEach(p => {
+            rows += `<div class="explain-row"><span class="explain-label">🔥 推廣：${p}</span><span class="explain-val">已啟用</span></div>`;
+        });
+    }
+    if (!isMile) rows += `<div class="explain-row" style="background:#fff8f8;border-radius:8px;padding:10px;margin-top:4px;"><span class="explain-label" style="font-weight:800;color:#333;">合計回贈</span><span class="explain-val" style="font-size:16px;">$${total}</span></div>`;
+
+    if (c.card.notes) rows += `<div style="margin-top:12px;padding:10px;background:#fffbe6;border-radius:10px;font-size:12px;color:#666;">💡 ${c.card.notes}</div>`;
+
+    box.innerHTML = rows;
+    modal.classList.add('open');
+}
+
