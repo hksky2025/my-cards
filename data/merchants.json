@@ -6,42 +6,48 @@
     ],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "小巴",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "巴士",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "渡海小輪",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "電車",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "輕鐵",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "UBER",
@@ -50,21 +56,24 @@
     ],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "高德地圖",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "加德士",
     "aliases": [],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Esso",
@@ -73,7 +82,8 @@
     ],
     "cat": "Transport",
     "sub": "EM",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "新鮮生活",
@@ -82,7 +92,8 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "759阿信屋",
@@ -91,21 +102,24 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Big C",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "日記士多",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Don Don Donki",
@@ -114,28 +128,32 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "大生生活超市",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "GreenPrice",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "本灣水產",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "百佳超級市場",
@@ -145,35 +163,40 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "FUSION",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "TASTE",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "GREAT FOOD HALL",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "多來買",
     "aliases": [],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "惠康",
@@ -182,7 +205,10 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_SHOP"
+    ]
   },
   {
     "name": "Apple",
@@ -191,7 +217,8 @@
     ],
     "cat": "Electronics",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "百老滙",
@@ -200,21 +227,24 @@
     ],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "BRUNO",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "中原電器",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "豐澤",
@@ -223,14 +253,16 @@
     ],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "衛訊",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "友和YOHO",
@@ -239,21 +271,24 @@
     ],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "蘇寧",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "J SELECT",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Panasonic陳列室",
@@ -262,7 +297,8 @@
     ],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Price網購",
@@ -271,28 +307,32 @@
     ],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "偉明電業",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "W-Mall",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "生活影音",
     "aliases": [],
     "cat": "Electronics",
     "sub": "BOC_CRAZY,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "csl",
@@ -301,14 +341,16 @@
     ],
     "cat": "Electronics",
     "sub": "VS,CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "SmarTone",
     "aliases": [],
     "cat": "Electronics",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "3香港",
@@ -317,14 +359,16 @@
     ],
     "cat": "Electronics",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Now TV",
     "aliases": [],
     "cat": "Electronics",
     "sub": "VS,CITI_CLUB",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "網上行",
@@ -333,14 +377,16 @@
     ],
     "cat": "Electronics",
     "sub": "VS,CITI_CLUB",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Club Sim",
     "aliases": [],
     "cat": "Electronics",
     "sub": "VS",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "HKT家居電話",
@@ -349,42 +395,48 @@
     ],
     "cat": "Electronics",
     "sub": "VS",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "SUPREME",
     "aliases": [],
     "cat": "Electronics",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "日本城",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "at.home",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "生活提案",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "生活工房",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "蓆夢思",
@@ -393,21 +445,24 @@
     ],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "歐化寶",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "歐化傢俬",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "IKEA",
@@ -416,49 +471,58 @@
     ],
     "cat": "Home",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_SHOP"
+    ]
   },
   {
     "name": "KeyChain Pay",
     "aliases": [],
     "cat": "Home",
     "sub": "VS",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Q-Pets",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Pet Line",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "紅蘿蔔",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Whiskers N Paws",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "寵寵線",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Petmium寵物百貨",
@@ -467,21 +531,24 @@
     ],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "The Dog's Garden",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Three Little Meow",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "VSH香港專科獸醫醫院",
@@ -490,35 +557,40 @@
     ],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Paws in Motion",
     "aliases": [],
     "cat": "Pet",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Pop Mart",
     "aliases": [],
     "cat": "Leisure",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Namco",
     "aliases": [],
     "cat": "Leisure",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "永安旅遊",
     "aliases": [],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港瑰麗酒店",
@@ -527,35 +599,40 @@
     ],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Agoda",
     "aliases": [],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Expedia",
     "aliases": [],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "KKday",
     "aliases": [],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Trip.com",
     "aliases": [],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "國泰航空",
@@ -565,7 +642,8 @@
     ],
     "cat": "Travel",
     "sub": "BOC_CRAZY,CX",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "壽司郎",
@@ -574,14 +652,16 @@
     ],
     "cat": "Dining",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "譚仔",
     "aliases": [],
     "cat": "Dining",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "大快活",
@@ -590,7 +670,8 @@
     ],
     "cat": "Dining",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "大家樂",
@@ -599,7 +680,8 @@
     ],
     "cat": "Dining",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "美心皇宮",
@@ -608,21 +690,26 @@
     ],
     "cat": "Dining",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_DINING"
+    ]
   },
   {
     "name": "Foodpanda",
     "aliases": [],
     "cat": "Dining",
     "sub": "BOC_CRAZY,CITI_CLUB",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "OpenRice",
     "aliases": [],
     "cat": "Dining",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "淘寶",
@@ -631,7 +718,8 @@
     ],
     "cat": "Online",
     "sub": "EYE",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "養和醫院",
@@ -640,14 +728,16 @@
     ],
     "cat": "Medical",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "卓健醫療",
     "aliases": [],
     "cat": "Medical",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Medtimes時代醫療",
@@ -656,21 +746,24 @@
     ],
     "cat": "Medical",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "全仁醫務",
     "aliases": [],
     "cat": "Medical",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "香港國際專業體檢協會",
     "aliases": [],
     "cat": "Medical",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "萬寧",
@@ -679,7 +772,10 @@
     ],
     "cat": "General",
     "sub": "MANNINGS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_SHOP"
+    ]
   },
   {
     "name": "譚仔三哥米線",
@@ -689,7 +785,8 @@
     ],
     "cat": "Dining",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "譚仔雲南米線",
@@ -699,7 +796,8 @@
     ],
     "cat": "Dining",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "The Coffee Academics",
@@ -709,7 +807,8 @@
     ],
     "cat": "Coffee",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "GU",
@@ -718,7 +817,8 @@
     ],
     "cat": "Jewelry",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Decathlon",
@@ -728,7 +828,8 @@
     ],
     "cat": "Sport",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "lululemon",
@@ -737,7 +838,8 @@
     ],
     "cat": "Sport",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "TAITO STATION",
@@ -746,7 +848,8 @@
     ],
     "cat": "Leisure",
     "sub": "Red8_HSBC",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港迪士尼樂園",
@@ -757,7 +860,8 @@
     ],
     "cat": "Leisure",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港海洋公園",
@@ -767,7 +871,8 @@
     ],
     "cat": "Leisure",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "iTunes",
@@ -777,7 +882,8 @@
     ],
     "cat": "Online",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Cityline",
@@ -786,7 +892,8 @@
     ],
     "cat": "Leisure",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "中國旅行社",
@@ -796,7 +903,8 @@
     ],
     "cat": "Travel",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Klook",
@@ -805,7 +913,8 @@
     ],
     "cat": "Travel",
     "sub": "BOC_CRAZY,CITI_CLUB",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "麥當勞",
@@ -815,7 +924,8 @@
     ],
     "cat": "Dining",
     "sub": "BOC_CRAZY,CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "周生生",
@@ -824,7 +934,8 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "英皇鐘錶珠寶",
@@ -834,7 +945,8 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Nike",
@@ -843,7 +955,8 @@
     ],
     "cat": "Sport",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Adidas",
@@ -852,7 +965,8 @@
     ],
     "cat": "Sport",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "時間廊",
@@ -861,14 +975,16 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Farfetch",
     "aliases": [],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Net-A-Porter",
@@ -878,14 +994,16 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Mytheresa",
     "aliases": [],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Under Armour",
@@ -894,7 +1012,8 @@
     ],
     "cat": "Sport",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "New Balance",
@@ -903,7 +1022,8 @@
     ],
     "cat": "Sport",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Pure Fitness",
@@ -913,7 +1033,8 @@
     ],
     "cat": "Fitness",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Anytime Fitness",
@@ -922,7 +1043,8 @@
     ],
     "cat": "Fitness",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "California Fitness",
@@ -931,7 +1053,8 @@
     ],
     "cat": "Fitness",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Physical",
@@ -940,7 +1063,8 @@
     ],
     "cat": "Fitness",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "美心皇宮(酒席)",
@@ -949,7 +1073,10 @@
     ],
     "cat": "Banquet",
     "sub": "DBS_EXCL",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_DINING"
+    ]
   },
   {
     "name": "Netflix",
@@ -958,21 +1085,24 @@
     ],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Spotify",
     "aliases": [],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Airbnb",
     "aliases": [],
     "cat": "Travel",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "App Store",
@@ -981,7 +1111,8 @@
     ],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Pacific Coffee",
@@ -991,7 +1122,8 @@
     ],
     "cat": "Dining",
     "sub": "COFFEE",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "太興",
@@ -1000,7 +1132,8 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "翠華",
@@ -1009,7 +1142,8 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "一蘭拉麵",
@@ -1018,7 +1152,8 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "KFC",
@@ -1028,7 +1163,10 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_DINING"
+    ]
   },
   {
     "name": "Burger King",
@@ -1037,14 +1175,16 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Subway",
     "aliases": [],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Pizza Hut",
@@ -1053,7 +1193,10 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_DINING"
+    ]
   },
   {
     "name": "Domino's",
@@ -1063,7 +1206,8 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "吉野家",
@@ -1072,7 +1216,8 @@
     ],
     "cat": "Dining",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "百佳",
@@ -1082,7 +1227,8 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Market Place",
@@ -1091,7 +1237,8 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "7-Eleven",
@@ -1101,7 +1248,10 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_SHOP"
+    ]
   },
   {
     "name": "OK便利店",
@@ -1111,7 +1261,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "百老匯",
@@ -1121,7 +1272,8 @@
     ],
     "cat": "Electronics",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "中國移動CMHK",
@@ -1131,7 +1283,8 @@
     ],
     "cat": "Electronics",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "城巴",
@@ -1140,7 +1293,8 @@
     ],
     "cat": "Transport",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "九巴",
@@ -1150,7 +1304,8 @@
     ],
     "cat": "Transport",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "HKTaxi",
@@ -1159,7 +1314,8 @@
     ],
     "cat": "Transport",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "蜆殼Shell",
@@ -1168,7 +1324,10 @@
     ],
     "cat": "Transport",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_SHELL"
+    ]
   },
   {
     "name": "港怡醫院",
@@ -1177,7 +1336,8 @@
     ],
     "cat": "Medical",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "嘉諾撒醫院",
@@ -1186,7 +1346,8 @@
     ],
     "cat": "Medical",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港浸信會醫院",
@@ -1196,7 +1357,8 @@
     ],
     "cat": "Medical",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港快運",
@@ -1206,7 +1368,8 @@
     ],
     "cat": "Travel",
     "sub": "CX",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "香港航空",
@@ -1215,7 +1378,8 @@
     ],
     "cat": "Travel",
     "sub": "",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "康泰旅行社",
@@ -1225,14 +1389,16 @@
     ],
     "cat": "Travel",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "ZARA",
     "aliases": [],
     "cat": "Jewelry",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "H&M",
@@ -1242,7 +1408,8 @@
     ],
     "cat": "Jewelry",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Uniqlo",
@@ -1252,7 +1419,8 @@
     ],
     "cat": "Jewelry",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Giordano",
@@ -1261,7 +1429,8 @@
     ],
     "cat": "Jewelry",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "周大福",
@@ -1270,7 +1439,8 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "六福珠寶",
@@ -1279,7 +1449,8 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "謝瑞麟",
@@ -1288,7 +1459,8 @@
     ],
     "cat": "Jewelry",
     "sub": "BOC_CRAZY",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "UA院線",
@@ -1298,7 +1470,8 @@
     ],
     "cat": "Leisure",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "MCL院線",
@@ -1307,7 +1480,8 @@
     ],
     "cat": "Leisure",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "嘉禾院線",
@@ -1317,21 +1491,24 @@
     ],
     "cat": "Leisure",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Pet Central",
     "aliases": [],
     "cat": "Pet",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Pets Corner",
     "aliases": [],
     "cat": "Pet",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Amazon",
@@ -1341,14 +1518,16 @@
     ],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Steam",
     "aliases": [],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "Google Play",
@@ -1357,7 +1536,8 @@
     ],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "PlayStation Store",
@@ -1367,7 +1547,8 @@
     ],
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "屈臣氏",
@@ -1377,7 +1558,8 @@
     ],
     "cat": "General",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "星達院線",
@@ -1386,7 +1568,8 @@
     ],
     "cat": "Leisure",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "百老匯院線",
@@ -1396,7 +1579,8 @@
     ],
     "cat": "Leisure",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Cinema City",
@@ -1405,7 +1589,8 @@
     ],
     "cat": "Leisure",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "MCL 戲院",
@@ -1415,7 +1600,8 @@
     ],
     "cat": "Leisure",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "利苑",
@@ -1424,7 +1610,8 @@
     ],
     "cat": "Dining",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "cafe ToGather by LOG-ON",
@@ -1433,7 +1620,8 @@
     ],
     "cat": "Dining",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港沙田凱悅酒店餐飲",
@@ -1443,7 +1631,8 @@
     ],
     "cat": "Dining",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "香港尖沙咀凱悅酒店餐飲",
@@ -1453,7 +1642,8 @@
     ],
     "cat": "Dining",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Venchi",
@@ -1462,7 +1652,8 @@
     ],
     "cat": "Dining",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "ROYCE'",
@@ -1471,7 +1662,8 @@
     ],
     "cat": "Dining",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Circle K",
@@ -1481,7 +1673,8 @@
     ],
     "cat": "Super",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "city'super",
@@ -1490,7 +1683,8 @@
     ],
     "cat": "Super",
     "sub": "CITI_CLUB,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "city'super neighbourhood",
@@ -1499,7 +1693,8 @@
     ],
     "cat": "Super",
     "sub": "CITI_CLUB,VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "LOG-ON",
@@ -1509,7 +1704,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Pinkoi",
@@ -1518,7 +1714,8 @@
     ],
     "cat": "Online",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Farfetch HK",
@@ -1527,7 +1724,8 @@
     ],
     "cat": "Jewelry",
     "sub": "CITI_CLUB",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "卓健醫療中心",
@@ -1537,7 +1735,8 @@
     ],
     "cat": "Medical",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "維特健靈",
@@ -1546,7 +1745,8 @@
     ],
     "cat": "Medical",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Hair Corner",
@@ -1555,7 +1755,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Lobby by Hair Corner",
@@ -1564,7 +1765,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "LOBBY hair",
@@ -1573,7 +1775,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "JPAW HAIR SALON",
@@ -1582,7 +1785,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Saloon",
@@ -1591,7 +1795,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "So Sweet Kids Salon",
@@ -1600,7 +1805,8 @@
     ],
     "cat": "General",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Smart Charge",
@@ -1609,7 +1815,8 @@
     ],
     "cat": "Transport",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Starbucks",
@@ -1619,7 +1826,10 @@
     ],
     "cat": "Dining",
     "sub": "COFFEE,CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": [
+      "ENJOY_DINING"
+    ]
   },
   {
     "name": "1010",
@@ -1629,7 +1839,8 @@
     ],
     "cat": "Electronics",
     "sub": "CITI_CLUB",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Club Shopping",
@@ -1639,7 +1850,8 @@
     ],
     "cat": "Online",
     "sub": "CITI_CLUB",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "3hreeSixty",
@@ -1649,7 +1861,8 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "U購 Select",
@@ -1660,7 +1873,8 @@
     ],
     "cat": "Super",
     "sub": "VS",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "AEON 超級市場",
@@ -1671,7 +1885,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "一田超市",
@@ -1682,7 +1897,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "大昌食品專門店",
@@ -1692,7 +1908,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "價真棧",
@@ -1701,7 +1918,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "佳寶食品超級市場",
@@ -1712,7 +1930,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "Marks & Spencer Food",
@@ -1724,7 +1943,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "鄰住買",
@@ -1734,7 +1954,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "HKTVmall",
@@ -1744,7 +1965,8 @@
     ],
     "cat": "Super",
     "sub": "",
-    "meth": "Online"
+    "meth": "Online",
+    "subs": []
   },
   {
     "name": "崇光百貨",
@@ -1755,7 +1977,8 @@
     ],
     "cat": "SOGO",
     "sub": "SOGO",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "崇光超市 Freshmart",
@@ -1766,7 +1989,8 @@
     ],
     "cat": "SOGO",
     "sub": "SOGO",
-    "meth": "ApplePay"
+    "meth": "ApplePay",
+    "subs": []
   },
   {
     "name": "AIA保險",
@@ -1780,7 +2004,8 @@
     "cat": "Insurance",
     "sub": "",
     "meth": "Online",
-    "notes": "⚠️ 需用網上銀行繳費，直刷唔保證有回贈"
+    "notes": "⚠️ 需用網上銀行繳費，直刷唔保證有回贈",
+    "subs": []
   },
   {
     "name": "Amazon",
@@ -1790,7 +2015,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "Buy & Ship",
@@ -1800,7 +2026,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "FARFETCH",
@@ -1809,7 +2036,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "同程旅行",
@@ -1820,7 +2048,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "Mytheresa",
@@ -1829,7 +2058,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "Net-A-Porter",
@@ -1840,7 +2070,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "The Outnet",
@@ -1851,7 +2082,8 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
   },
   {
     "name": "Selfridges",
@@ -1860,6 +2092,104 @@
     ],
     "cat": "Online",
     "meth": "Online",
-    "sub": "BLISS_SELECTED"
+    "sub": "BLISS_SELECTED",
+    "subs": []
+  },
+  {
+    "name": "PHD Pizza",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "phd",
+      "phd pizza"
+    ]
+  },
+  {
+    "name": "美心MX",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "美心mx",
+      "maxim's mx"
+    ]
+  },
+  {
+    "name": "美心西餅",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "美心西餅",
+      "maxim's cake"
+    ]
+  },
+  {
+    "name": "東海堂",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "東海堂",
+      "arome"
+    ]
+  },
+  {
+    "name": "simplylife",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "simplylife"
+    ]
+  },
+  {
+    "name": "翠華餐廳",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "翠華",
+      "tsui wah"
+    ]
+  },
+  {
+    "name": "Shake Shack",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "shake shack"
+    ]
+  },
+  {
+    "name": "芝樂坊",
+    "cat": "Dining",
+    "subs": [
+      "ENJOY_DINING"
+    ],
+    "keywords": [
+      "芝樂坊",
+      "cheesecake factory"
+    ]
+  },
+  {
+    "name": "Oliver's",
+    "cat": "Super",
+    "subs": [
+      "ENJOY_SHOP"
+    ],
+    "keywords": [
+      "oliver's",
+      "olivers"
+    ]
   }
 ]

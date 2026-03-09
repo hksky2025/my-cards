@@ -385,5 +385,21 @@
       "monthlyThreshold": 2000,
       "promoEnd": "2026-12-31"
     }
+  },
+  {
+    "id": "enjoy",
+    "name": "恒生 enJoy卡",
+    "bank": "hangseng",
+    "type": "both",
+    "color": "#008154",
+    "notes": "特約餐飲商戶2%、特約購物商戶1.5%、Shell 1%、美心其他/GNC 1%、其他0.5%（200 yuu積分=$1）",
+    "logic": {
+      "type": "enjoy",
+      "diningRate": 0.02,
+      "shoppingRate": 0.015,
+      "shellRate": 0.01,
+      "maxOtherRate": 0.01,
+      "baseRate": 0.005
+    }
   }
 ]

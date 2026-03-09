@@ -183,5 +183,31 @@
     "minAmt": 999999,
     "displayOnly": true,
     "_updated": "20260308"
+  },
+  {
+    "id": "enjoy_daily_2026_p1",
+    "bank": "hangseng",
+    "cardId": "enjoy",
+    "name": "enJoy卡 日常日嚐簽賬賞 階段1",
+    "startDate": "2026-03-02",
+    "endDate": "2026-03-31",
+    "remarks": "達$5,000門檻；特約餐飲額外+10%（共12%）、特約購物額外+5%（共6.5%）；上限100,000 yuu積分",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true,
+    "_updated": "20260309"
+  },
+  {
+    "id": "enjoy_daily_2026_p2",
+    "bank": "hangseng",
+    "cardId": "enjoy",
+    "name": "enJoy卡 日常日嚐簽賬賞 階段2",
+    "startDate": "2026-04-01",
+    "endDate": "2026-04-30",
+    "remarks": "達$5,000門檻；特約餐飲額外+10%（共12%）、特約購物額外+5%（共6.5%）；上限100,000 yuu積分",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true,
+    "_updated": "20260309"
   }
 ]
