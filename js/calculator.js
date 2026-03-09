@@ -142,22 +142,20 @@ export function calcBaseReward(card, params) {
 
         case 'enjoy': {
             // yuu積分回贈：200積分=$1
-            // 特約餐飲（ENJOY_DINING）：$1=4分=2%
-            // 特約購物（ENJOY_SHOP）：$1=3分=1.5%
-            // Shell（ENJOY_SHELL）：$1=2分=1%
-            // 美心其他/GNC（ENJOY_OTHER）：$1=2分=1%
-            // 其他：$1=1分=0.5%
+            // 推廣期（2026-03-02至2026-04-30）達$5,000門檻：餐飲+10%、購物+5%
+            const enjoyPromoMet = params.enjoyPromoMet ?? false;
+
             let enjoyRate = logic.baseRate; // 0.5%
             let rateLabel = '0.5% (yuu積分)';
 
             if (sub && sub.includes('ENJOY_DINING')) {
-                enjoyRate = logic.diningRate; // 2%
-                rateLabel = '2% (yuu特約餐飲)';
+                enjoyRate = logic.diningRate + (enjoyPromoMet ? 0.10 : 0); // 2% or 12%
+                rateLabel = enjoyPromoMet ? '12% (yuu特約餐飲+推廣)' : '2% (yuu特約餐飲)';
             } else if (sub && sub.includes('ENJOY_SHOP')) {
-                enjoyRate = logic.shoppingRate; // 1.5%
-                rateLabel = '1.5% (yuu特約購物)';
+                enjoyRate = logic.shoppingRate + (enjoyPromoMet ? 0.05 : 0); // 1.5% or 6.5%
+                rateLabel = enjoyPromoMet ? '6.5% (yuu特約購物+推廣)' : '1.5% (yuu特約購物)';
             } else if (sub && sub.includes('ENJOY_SHELL')) {
-                enjoyRate = logic.shellRate; // 1%
+                enjoyRate = logic.shellRate; // 1%（推廣唔包括Shell）
                 rateLabel = '1% (yuu Shell)';
             } else if (sub && sub.includes('ENJOY_OTHER')) {
                 enjoyRate = logic.maxOtherRate; // 1%

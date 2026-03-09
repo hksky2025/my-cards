@@ -201,6 +201,19 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // enJoy 卡推廣門檻 toggle
+    const enjoyPromo = document.getElementById('enjoyPromoMet');
+    if (enjoyPromo) {
+        enjoyPromo.addEventListener('change', () => {
+            const label = document.getElementById('enjoyPromoLabel');
+            if (label) {
+                label.textContent = enjoyPromo.checked ? '已達門檻' : '未達門檻';
+                label.style.color = enjoyPromo.checked ? '#008154' : '#aaa';
+            }
+            handleAnalyze();
+        });
+    }
+
     document.getElementById('meth-ap').addEventListener('click', () => updateMethod('ApplePay'));
     document.getElementById('meth-on').addEventListener('click', () => updateMethod('Online'));
     document.getElementById('meth-card').addEventListener('click', () => updateMethod('Physical'));
@@ -505,7 +518,9 @@ async function handleAnalyze() {
     const beaTiIsMet = (beaTiSpent + amt) >= 2000;
     const beaTiUsed = Math.min(beaTiSpent * 0.04, 300); // 已用嘅 $300 上限估算
 
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed };
+    const enjoyPromoMet = document.getElementById('enjoyPromoMet')?.checked ?? false;
+
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed, enjoyPromoMet };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {
@@ -604,6 +619,7 @@ async function handleAnalyze() {
 function refreshProgress() {
     const enabledCards = allCards.filter(c => cardStatus[c.id]);
     syncBeaToggle(enabledCards);
+    syncEnjoyToggle(enabledCards);
     renderProgress(enabledCards, allPromos, getCurrentMonthTotal(), getCardMonthTotal, null, getCardYearTotal, getYearMonthlyBreakdown, getCCBInsuranceYearTotal, getLastMonthTotal);
     renderAnnualCardProgress(enabledCards, getCardYearTotal);
     renderAnnualProgress(enabledCards, getCardYearTotal, getYearMonthlyBreakdown);
@@ -686,6 +702,28 @@ function syncBeaToggle(enabledCards) {
     if (!row) return;
     const hasBeaWorld = enabledCards.some(c => c.id === 'bea_world');
     row.style.display = hasBeaWorld ? 'block' : 'none';
+}
+
+function syncEnjoyToggle(enabledCards) {
+    const row = document.getElementById('enjoyToggleRow');
+    if (!row) return;
+    const hasEnjoy = enabledCards.some(c => c.id === 'enjoy');
+    if (!hasEnjoy) { row.style.display = 'none'; return; }
+
+    // 推廣期判斷：2026-03-02 至 2026-04-30
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const promoStart = new Date('2026-03-02');
+    const promoEnd = new Date('2026-04-30');
+    const inPromo = today >= promoStart && today <= promoEnd;
+
+    row.style.display = inPromo ? 'block' : 'none';
+
+    // 推廣完結後自動 uncheck
+    if (!inPromo) {
+        const cb = document.getElementById('enjoyPromoMet');
+        if (cb) cb.checked = false;
+    }
 }
 
 function syncMonthTotal() {
