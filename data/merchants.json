@@ -103,7 +103,9 @@
     "cat": "Super",
     "sub": "VS",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "Big C",
@@ -164,7 +166,9 @@
     "cat": "Super",
     "sub": "VS",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "FUSION",
@@ -412,7 +416,9 @@
     "cat": "Home",
     "sub": "VS",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "at.home",
@@ -914,7 +920,9 @@
     "cat": "Travel",
     "sub": "BOC_CRAZY,CITI_CLUB",
     "meth": "Online",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "麥當勞",
@@ -1086,7 +1094,9 @@
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
     "meth": "Online",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "Spotify",
@@ -1094,7 +1104,9 @@
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
     "meth": "Online",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "Airbnb",
@@ -1228,7 +1240,9 @@
     "cat": "Super",
     "sub": "VS",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "SCB_5PCT"
+    ]
   },
   {
     "name": "Market Place",
@@ -2190,6 +2204,17 @@
     "keywords": [
       "oliver's",
       "olivers"
+    ]
+  },
+  {
+    "name": "快達票",
+    "aliases": [
+      "hk ticketing",
+      "hkticket"
+    ],
+    "cat": "Leisure",
+    "subs": [
+      "SCB_5PCT"
     ]
   }
 ]
