@@ -282,7 +282,8 @@ export function calcBaseReward(card, params) {
 
         case 'go': {
             // 超市判斷：sub tag 優先，其次 cat
-            const isSuper = (sub && ['WELLCOME','PARKNSHOP','AEON_SUPER','TASTE','CITY_SUPER','JASONS','GREAT','MARKETPLACE','FUSION','SOGO_FRESH'].includes(sub)) || cat === 'Super';
+            const superTags = ['WELLCOME','PARKNSHOP','AEON_SUPER','TASTE','CITY_SUPER','JASONS','GREAT','MARKETPLACE','FUSION','SOGO_FRESH'];
+            const isSuper = (sub && sub.some(s => superTags.includes(s))) || cat === 'Super';
             const r = isSuper ? logic.superRate : logic.baseRate;
             return { val: amt * r, rate: `${r * 100}%` };
         }

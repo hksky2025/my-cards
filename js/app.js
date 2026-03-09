@@ -475,7 +475,11 @@ async function handleAnalyze() {
     const mmMonthSpent = getCardMonthTotal('mmpower');
     const mmIsMet = (mmMonthSpent + amt) >= 5000;
     const merchant = findMerchant(rawInput);
-    const sub = merchant ? merchant.sub : null;
+    const subArr = merchant ? [
+        ...(merchant.sub ? [merchant.sub] : []),
+        ...(merchant.subs || [])
+    ] : [];
+    const sub = subArr.length > 0 ? subArr : null;
 
     // cat 優先順序：
     // 1. 識別到商戶 → 用商戶類別
