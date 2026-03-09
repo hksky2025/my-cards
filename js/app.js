@@ -458,6 +458,10 @@ window.handleDeleteTxn = async (id) => {
 // ── 核心運算 ──────────────────────────────────────────
 async function handleAnalyze() {
     try {
+    // enjoy toggle 顯示狀態同步
+    const enabledCards = allCards.filter(c => cardStatus[c.id]);
+    syncEnjoyToggle(enabledCards);
+
     // 狂賞派 $5,000 門檻：只計中銀 Visa 卡（cheers + sogo）當月簽賬
     const bocVisaTotal = getCardMonthTotal('cheers') + getCardMonthTotal('sogo');
     const spent = bocVisaTotal;
