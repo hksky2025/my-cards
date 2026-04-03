@@ -180,11 +180,14 @@
     "bank": "boc",
     "type": "both",
     "color": "#b31d28",
-    "notes": "指定Go商戶5%（Keeta/美團/惠康/京東等）；其他0.4%；手機簽賬額外積分；推廣至2026年6月30日",
+    "notes": "指定Go商戶5%（Keeta/美團/惠康/京東等，每月上限$100）；手機簽賬1.2%（鑽石卡3X積分，每月上限$100）；其他0.4%",
     "crazyEligible": false,
     "logic": {
       "type": "go",
       "goRate": 0.05,
+      "goCap": 100,
+      "mobileRate": 0.012,
+      "mobileCap": 100,
       "baseRate": 0.004
     }
   },
