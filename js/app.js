@@ -538,7 +538,9 @@ async function handleAnalyze() {
     const beaTiUsed = Math.min(beaTiSpent * 0.04, 300); // 已用嘅 $300 上限估算
 
     const enjoyPromoMet = document.getElementById('enjoyPromoMet')?.checked ?? false;
-    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed, enjoyPromoMet };
+    const goMobileUsed = Math.min(getCardMonthTotal('go') * 0.012, 100); // Go卡手機簽賬已用上限估算
+
+    const params = { amt, cat, meth: globalMethod, isMet, sub, isRedDay: isMannRedDay, isCrazyRedDay, motionMet, mmExtraUsed, mmIsMet, beaIsMet, beaTiIsMet, beaTiUsed, beaWorldRegistered, beaWorldUsed, blissOnlineUsed, blissSelectedUsed, enjoyPromoMet, goMobileUsed };
 
     const processed = [];
     for (const c of allCards.filter(c => cardStatus[c.id])) {

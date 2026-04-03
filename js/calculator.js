@@ -278,10 +278,20 @@ export function calcBaseReward(card, params) {
         }
 
         case 'go': {
-            // 指定Go商戶（GO_5PCT）：5%現金回贈
-            // 其他：0.4%基本積分
+            // 指定Go商戶（GO_5PCT）：5%現金回贈，每月上限$100
             if (sub && sub.some(s => s === 'GO_5PCT')) {
-                return { val: amt * logic.goRate, rate: `5%（指定Go商戶）` };
+                const val = Math.min(amt * logic.goRate, logic.goCap);
+                const capped = amt * logic.goRate > logic.goCap;
+                return { val, rate: capped ? `5%（每月上限$${logic.goCap}，已達上限）` : `5%（指定Go商戶）` };
+            }
+            // 手機簽賬（ApplePay/實體卡Apple Pay）：鑽石卡3X積分=1.2%，每月上限$100
+            if (meth === 'ApplePay' || meth === 'Physical') {
+                const goMobileUsed = params.goMobileUsed || 0;
+                const remain = Math.max(0, logic.mobileCap - goMobileUsed);
+                if (remain > 0) {
+                    const val = Math.min(amt * logic.mobileRate, remain);
+                    return { val, rate: `1.2%（手機簽賬3X積分，每月上限$${logic.mobileCap}）` };
+                }
             }
             return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
