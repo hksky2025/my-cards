@@ -65,19 +65,6 @@
     "_updated": "20260306"
   },
   {
-    "id": "boc_sogo_crazy_2026",
-    "bank": "boc",
-    "cardId": "sogo",
-    "name": "中銀 Sogo Visa Signature 狂賞派",
-    "startDate": "2026-01-01",
-    "endDate": "2026-06-30",
-    "remarks": "紅日額外5%回贈；平日額外2%；需當月累積簽賬$5,000達門檻",
-    "keywords": [],
-    "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260306"
-  },
-  {
     "id": "bea_spring_2026_p1",
     "bank": "bea",
     "cardId": "ALL_BEA",
@@ -203,6 +190,19 @@
     "startDate": "2026-04-01",
     "endDate": "2026-12-31",
     "remarks": "月累積$3,000門檻；指定商戶/網上娛樂/網上服飾高達8%；網購5%；海外外幣4%；每月上限$500",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true,
+    "_updated": "20260403"
+  },
+  {
+    "id": "boc_go_2026_h1",
+    "bank": "boc",
+    "cardId": "go",
+    "name": "中銀 Go卡 指定商戶5%現金回贈",
+    "startDate": "2026-01-01",
+    "endDate": "2026-06-30",
+    "remarks": "Keeta、美團、惠康、Market Place、京東、滴滴等指定商戶5%；手機簽賬額外積分；豁免$1,500門檻至6月底",
     "keywords": [],
     "minAmt": 999999,
     "displayOnly": true,

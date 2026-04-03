@@ -207,7 +207,8 @@
     "sub": "VS",
     "meth": "ApplePay",
     "subs": [
-      "ENJOY_SHOP"
+      "ENJOY_SHOP",
+      "GO_5PCT"
     ]
   },
   {
@@ -1216,7 +1217,9 @@
     "cat": "Super",
     "sub": "VS",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "GO_5PCT"
+    ]
   },
   {
     "name": "7-Eleven",
@@ -1844,7 +1847,9 @@
     "cat": "Super",
     "sub": "VS",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "GO_5PCT"
+    ]
   },
   {
     "name": "U購 Select",
@@ -2169,11 +2174,80 @@
     "name": "Oliver's",
     "cat": "Super",
     "subs": [
-      "ENJOY_SHOP"
+      "ENJOY_SHOP",
+      "GO_5PCT"
     ],
     "keywords": [
       "oliver's",
       "olivers"
+    ]
+  },
+  {
+    "name": "Keeta",
+    "aliases": [
+      "keeta",
+      "喼踢"
+    ],
+    "cat": "Dining",
+    "subs": [
+      "GO_5PCT"
+    ]
+  },
+  {
+    "name": "美團",
+    "aliases": [
+      "meituan",
+      "美团"
+    ],
+    "cat": "Dining",
+    "subs": [
+      "GO_5PCT"
+    ]
+  },
+  {
+    "name": "大眾點評",
+    "aliases": [
+      "大众点评",
+      "dianping"
+    ],
+    "cat": "Dining",
+    "subs": [
+      "GO_5PCT"
+    ]
+  },
+  {
+    "name": "高速鐵路",
+    "aliases": [
+      "高鐵",
+      "hsr",
+      "mtr express"
+    ],
+    "cat": "Transport",
+    "subs": [
+      "GO_5PCT"
+    ]
+  },
+  {
+    "name": "滴滴出行",
+    "aliases": [
+      "didi",
+      "滴滴"
+    ],
+    "cat": "Transport",
+    "subs": [
+      "GO_5PCT"
+    ]
+  },
+  {
+    "name": "京東",
+    "aliases": [
+      "jd",
+      "jd.com",
+      "京东"
+    ],
+    "cat": "Online",
+    "subs": [
+      "GO_5PCT"
     ]
   }
 ]

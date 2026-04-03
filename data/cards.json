@@ -180,11 +180,11 @@
     "bank": "boc",
     "type": "both",
     "color": "#b31d28",
-    "notes": "超市5%，其他0.4%（銀聯卡，不適用狂賞派）",
+    "notes": "指定Go商戶5%（Keeta/美團/惠康/京東等）；其他0.4%；手機簽賬額外積分；推廣至2026年6月30日",
     "crazyEligible": false,
     "logic": {
       "type": "go",
-      "superRate": 0.05,
+      "goRate": 0.05,
       "baseRate": 0.004
     }
   },
