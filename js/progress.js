@@ -325,7 +325,7 @@ function renderCapProgress(cards, getCardTotal) {
         sogo:   [{ label: 'ApplePay 額外+5%手機回贈封頂（上限$100/月）', cap: 2000 }],
         motion: [{ label: '餐飲/網購6%封頂', cap: 3636 }],
         waku:   [{ label: '網購6%封頂', cap: 3571 }],
-        mmpower:[{ label: '三類共享額外回贈上限$500（海外>網上>自選）', cap: Math.round(500/0.056) }],
+        mmpower:[{ label: '三類共享額外回贈上限$500（指定商戶8%/網購5%/海外4%）', cap: Math.round(500/0.046) }],
         bliss:      [{ label: '網上4%封頂（首$10,000）', cap: 10000 }, { label: '指定商戶6%封頂（首$10,000）', cap: 10000 }],
         bea_world:   [{ label: 'World MC 5%上限$460（約$9,200）', cap: Math.round(460/0.046) }],
         bea_titanium:[{ label: 'i-Titanium 網上/手機4%上限$300', cap: Math.round(300/0.04) }],

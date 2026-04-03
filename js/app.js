@@ -484,7 +484,7 @@ async function handleAnalyze() {
     const isMet = (spent + amt) >= 5000; // 中銀 Visa 門檻（狂賞派用）
     // 恒生 MMPOWER 獨立門檻：每月累積 $5,000
     const mmMonthSpent = getCardMonthTotal('mmpower');
-    const mmIsMet = (mmMonthSpent + amt) >= 5000;
+    const mmIsMet = (mmMonthSpent + amt) >= 3000; // 新門檻 $3,000
     const merchant = findMerchant(rawInput);
     const subArr = merchant ? [
         ...(merchant.sub ? [merchant.sub] : []),
