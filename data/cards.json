@@ -118,24 +118,25 @@
     "bank": "hangseng",
     "type": "both",
     "color": "#008154",
-    "notes": "達$5,000門檻：海外外幣額外5.6%(上限$8,929)，網上額外4.6%(上限$10,870)，自選額外0.6%；三類共享額外現金上限$500/月；基本0.4%另以+FUN Dollars計",
+    "notes": "達$3,000門檻；指定商戶/網上娛樂/網上服飾8%；網購5%；海外外幣4%；三類共享額外上限$500/月",
     "logic": {
       "type": "mmpower",
       "baseRate": 0.004,
-      "localRate": 0.01,
-      "overseasRate": 0.06,
-      "overseasExtraRate": 0.056,
+      "localRate": 0.004,
+      "overseasRate": 0.04,
+      "overseasExtraRate": 0.036,
       "onlineRate": 0.05,
       "onlineExtraRate": 0.046,
-      "selfPickRate": 0.01,
-      "selfPickExtraRate": 0.006,
+      "selfPickRate": 0.004,
+      "selfPickExtraRate": 0,
       "selfPickCats": [
         "Dining",
         "Electronics",
         "Leisure"
       ],
       "sharedExtraCap": 500,
-      "requiresMet": true
+      "requiresMet": true,
+      "threshold": 3000
     }
   },
   {

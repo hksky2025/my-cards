@@ -1,43 +1,5 @@
 [
   {
-    "id": "hsbc_red_designated_2026q1",
-    "bank": "hsbc",
-    "cardId": "red",
-    "name": "HSBC Red 指定商戶8%回贈",
-    "startDate": "2026-01-01",
-    "endDate": "2026-03-31",
-    "keywords": [
-      "壽司郎",
-      "sushiro",
-      "譚仔",
-      "譚仔三哥",
-      "譚仔雲南",
-      "taamjai",
-      "the coffee academics",
-      "coffee academics",
-      "gu",
-      "decathlon",
-      "迪卡儂",
-      "lululemon",
-      "namco",
-      "taito station",
-      "taito"
-    ],
-    "minAmt": 1,
-    "remarks": "⚠️ 每月首HK$1,250簽賬適用，推廣至2026年3月31日",
-    "bonus": {
-      "type": "red_designated",
-      "cashRate": 0.08,
-      "cashCap": 1250,
-      "milesRate": 1.25,
-      "overCapRate": 0.004
-    },
-    "excludeSubs": [
-      "Red8_BOC"
-    ],
-    "_updated": "20260306"
-  },
-  {
     "id": "boc_cheers_crazy_2026",
     "bank": "boc",
     "cardId": "cheers",
@@ -172,19 +134,6 @@
     "_updated": "20260306"
   },
   {
-    "id": "hangseng_mmpower_fundollars_2026",
-    "bank": "hangseng",
-    "cardId": "mmpower",
-    "name": "恒生 MMPOWER +FUN Dollars 推廣優惠",
-    "startDate": "2024-07-01",
-    "endDate": "2026-03-31",
-    "remarks": "需登記 + 每月累積簽賬滿$5,000；網購高達5%、海外外幣高達6%、自選類別高達1% +FUN Dollars",
-    "keywords": [],
-    "minAmt": 999999,
-    "displayOnly": true,
-    "_updated": "20260308"
-  },
-  {
     "id": "enjoy_daily_2026_p1",
     "bank": "hangseng",
     "cardId": "enjoy",
@@ -209,5 +158,54 @@
     "minAmt": 999999,
     "displayOnly": true,
     "_updated": "20260309"
+  },
+  {
+    "id": "hsbc_red_designated_2026q2",
+    "bank": "hsbc",
+    "cardId": "red",
+    "name": "HSBC Red 指定商戶8%回贈",
+    "startDate": "2026-04-01",
+    "endDate": "2026-06-30",
+    "keywords": [
+      "壽司郎",
+      "sushiro",
+      "譚仔",
+      "譚仔三哥",
+      "譚仔雲南",
+      "taamjai",
+      "gu",
+      "GU",
+      "decathlon",
+      "迪卡儂",
+      "namco",
+      "taito station",
+      "taito"
+    ],
+    "minAmt": 1,
+    "remarks": "⚠️ 每月首HK$1,250簽賬適用（上限$100回贈），推廣至2026年6月30日",
+    "bonus": {
+      "type": "red_designated",
+      "cashRate": 0.08,
+      "cashCap": 1250,
+      "milesRate": 1.25,
+      "overCapRate": 0.004
+    },
+    "excludeSubs": [
+      "Red8_BOC"
+    ],
+    "_updated": "20260403"
+  },
+  {
+    "id": "hangseng_mmpower_fundollars_2026q2",
+    "bank": "hangseng",
+    "cardId": "mmpower",
+    "name": "恒生 MMPOWER +FUN Dollars 獎賞計劃",
+    "startDate": "2026-04-01",
+    "endDate": "2026-12-31",
+    "remarks": "月累積$3,000門檻；指定商戶/網上娛樂/網上服飾高達8%；網購5%；海外外幣4%；每月上限$500",
+    "keywords": [],
+    "minAmt": 999999,
+    "displayOnly": true,
+    "_updated": "20260403"
   }
 ]

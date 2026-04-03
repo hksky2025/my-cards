@@ -719,7 +719,9 @@
     "cat": "Online",
     "sub": "EYE",
     "meth": "Online",
-    "subs": []
+    "subs": [
+      "MMP_8PCT"
+    ]
   },
   {
     "name": "養和醫院",
@@ -815,10 +817,12 @@
     "aliases": [
       "gu fashion"
     ],
-    "cat": "Jewelry",
+    "cat": "Sport",
     "sub": "Red8_HSBC",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "MMP_8PCT"
+    ]
   },
   {
     "name": "Decathlon",
@@ -839,7 +843,9 @@
     "cat": "Sport",
     "sub": "Red8_HSBC",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "MMP_8PCT"
+    ]
   },
   {
     "name": "TAITO STATION",
@@ -1392,7 +1398,9 @@
     "cat": "Jewelry",
     "sub": "",
     "meth": "ApplePay",
-    "subs": []
+    "subs": [
+      "MMP_8PCT"
+    ]
   },
   {
     "name": "Giordano",
@@ -1491,7 +1499,9 @@
     "cat": "Online",
     "sub": "OVERSEAS_HKD",
     "meth": "Online",
-    "subs": []
+    "subs": [
+      "MMP_8PCT"
+    ]
   },
   {
     "name": "Steam",
@@ -1988,7 +1998,9 @@
     "cat": "Online",
     "meth": "Online",
     "sub": "BLISS_SELECTED",
-    "subs": []
+    "subs": [
+      "MMP_8PCT"
+    ]
   },
   {
     "name": "Buy & Ship",
