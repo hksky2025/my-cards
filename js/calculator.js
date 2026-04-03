@@ -278,11 +278,12 @@ export function calcBaseReward(card, params) {
         }
 
         case 'go': {
-            // 超市判斷：sub tag 優先，其次 cat
-            const superTags = ['WELLCOME','PARKNSHOP','AEON_SUPER','TASTE','CITY_SUPER','JASONS','GREAT','MARKETPLACE','FUSION','SOGO_FRESH'];
-            const isSuper = (sub && sub.some(s => superTags.includes(s))) || cat === 'Super';
-            const r = isSuper ? logic.superRate : logic.baseRate;
-            return { val: amt * r, rate: `${r * 100}%` };
+            // 指定Go商戶（GO_5PCT）：5%現金回贈
+            // 其他：0.4%基本積分
+            if (sub && sub.some(s => s === 'GO_5PCT')) {
+                return { val: amt * logic.goRate, rate: `5%（指定Go商戶）` };
+            }
+            return { val: amt * logic.baseRate, rate: `${logic.baseRate * 100}%` };
         }
 
         case 'motion': {
